@@ -6,9 +6,9 @@ router = APIRouter()
 
 @router.post("/login")
 async def login():
-    pass
+    return {"message": "Login endpoint"}
 
 
 @router.post("/signup")
 async def signup():
-    pass
+    return {"message": "Signup endpoint"}
