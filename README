@@ -1,13 +1,114 @@
-You're designing a personal budget tracker app just for yourself, with the primary goal of gaining better control and awareness over your finances. Rather than relying on external tools or bank integrations, you want a hands-on, manual system where you personally input all income and expense transactions. This approach not only reinforces discipline but also makes you more mindful about where your money goes. The app will allow you to define a starting balance manually, and every transaction thereafter will either increase or decrease that balance depending on whether it's income or an expense. Each transaction will be categorized under predefined groups like Food, Rent, Transport/Fuel, Shopping, Health, Savings, and Income, which gives you clear insights into your spending habits. Manual entry is at the heart of this project — offering full control and simplicity, without unnecessary automation that can detach you from your financial reality.
+# 🧾 Personal Budget Tracker
 
-A key feature of the app will be the ability to create and manage multiple savings goals at once. You’ll be able to set a name, a target amount, and track how much you’ve saved toward each — whether it’s for a vacation, an emergency fund, or a new gadget. These savings goals will show visual progress bars, so you always know how close you are to achieving them. To complement this, the app will also support automatic recurring transactions — for example, a monthly salary deposit, rent payments, or subscription fees. You’ll set these up once, and they’ll automatically appear in your ledger on schedule, saving you time and ensuring accuracy.
+A minimalist, manual-entry personal finance tracker built for clarity, control, and financial mindfulness. This is not just another budgeting app — it's a hands-on system that helps you become more aware of your spending habits and savings goals by making you an active participant in your financial journey.
 
-The app will include a clean, visual dashboard that helps you review your financial status regularly. It will support daily check-ins for logging transactions, weekly reviews to spot trends and re-balance your spending, and monthly summaries for a more strategic overview. These summaries will include total income, total expenses, and net savings, along with category breakdowns in the form of pie charts or bar graphs. A trend view will visualize how your spending changes over days and weeks, allowing you to identify patterns, spikes, or leaks. Additionally, a detailed transaction history log will be available for you to search, filter, and review each individual transaction with optional notes.
+---
 
-You also want to be able to define budget limits for each category. For example, you might set a ₹5,000 limit on shopping or ₹3,000 on food. The app will alert you visually — perhaps with progress bars turning orange or red — when you’re nearing or exceeding those category limits, giving you early warnings and the ability to course-correct. To add even more depth, the app will use your historical data to generate weekly and monthly spending forecasts, helping you anticipate likely future expenses based on your behavior so far.
+## 📌 Purpose
 
-A particularly useful feature you plan to include is photo receipt storage. When logging a transaction, you can attach an image of a receipt or bill, and manually categorize it. There’s no need for OCR (text recognition) right now — just a way to store, retrieve, and visually match your records. This will serve as a personal archive and add credibility and traceability to your entries.
+This app is designed *just for me*, with the primary goal of gaining better control and awareness over my finances. By manually entering every income and expense transaction, I can stay disciplined and more mindful about where my money goes.
 
-Finally, one of the standout components of the app will be a dedicated income visualization interface. This view will let you track how your income has grown or changed over time, using line graphs or bar charts. It’s not just about where your money is going — but how much is coming in, and how that’s trending month by month. Along with a potential income vs expense comparison chart, this will give you a full-picture perspective of your financial journey.
+---
 
-While you may later consider adding features like reminders, push notifications, or alerts, you’ve intentionally chosen to postpone those for now and focus solely on building a solid, useful, and clear core product. This budget tracker is meant to be deeply personal, intentionally manual, and visually informative — giving you not just data, but understanding. It’s a balance between control, clarity, and ease, designed specifically around how you want to interact with your money.
+## ✨ Key Features
+
+### ✅ Manual Transactions
+- Input every transaction by hand — income or expense — for better awareness.
+- Define a **starting balance** manually to begin tracking.
+- Each transaction adjusts the balance in real-time.
+
+### 🗂 Categorized Spending
+- Predefined categories:
+  - `Food`
+  - `Rent`
+  - `Transport/Fuel`
+  - `Shopping`
+  - `Health`
+  - `Savings`
+  - `Income`
+- Clear categorization makes spending habits easy to analyze.
+
+### 🎯 Savings Goals
+- Create and manage multiple savings targets.
+- Each goal includes:
+  - Name
+  - Target amount
+  - Current saved amount
+  - Visual progress bar
+
+### 🔁 Recurring Transactions
+- Set up automatic recurring entries (e.g. rent, salary, subscriptions).
+- Recurs based on schedule you define (daily, weekly, monthly, etc.).
+
+### 📊 Dashboard & Summaries
+- Daily check-ins for adding new transactions.
+- Weekly reviews to observe spending trends.
+- Monthly summaries:
+  - Total income
+  - Total expenses
+  - Net savings
+  - Category breakdowns via pie/bar charts
+
+### 📈 Trend & Income Insights
+- Visualize your **spending trends** over time.
+- Dedicated **income tracker view** to monitor earnings.
+- Compare **income vs expenses** month-to-month.
+
+### 💡 Budget Limits
+- Define budget caps for each category.
+- Get visual alerts (color-coded progress bars) when nearing/exceeding limits.
+
+### 🔮 Forecasting
+- Based on historical data, get **weekly/monthly spending forecasts**.
+- Helps anticipate future expenses and plan better.
+
+### 🧾 Receipt Image Storage
+- Attach photo receipts to any transaction.
+- Serves as a visual archive (no OCR required).
+- Makes entries verifiable and more traceable.
+
+### 📚 Detailed History Log
+- Search, filter, and review all past transactions.
+- Add optional notes to remember context.
+
+---
+
+## 🛠 Tech Stack
+- **Frontend:** React (Vite, Tailwind CSS)
+- **Backend/API:** Python (FastAPI)
+- **Visualization:** Chart.js or Recharts
+- **Storage:** AWS (S3, DynamoDB, RDS, Cognito, Secret Manager)
+- **Other:** Boto3, Local file storage (for development)
+- **Optional Desktop Version:** Electron (for local-first experience)
+
+---
+
+## 🚫 What This App *Won’t* Do (for Now)
+- No bank integrations
+- No push notifications or reminders
+- No automated data scraping
+- No cloud sync by default
+
+This is a **manual-first, discipline-oriented, and deeply personal** financial tool.
+
+---
+
+## 📈 Future Considerations (Post-Core)
+- Reminder system for bills or recurring entries
+- Optional cloud backup or export/import feature
+- Password/PIN protection
+- Dark mode and personalization
+- Mobile companion app
+
+---
+
+## 🤝 License
+
+This project is for **personal use**, but feel free to fork, clone, and adapt it for your own budgeting needs. MIT License will be added once ready for sharing.
+
+---
+
+## 📬 Contact
+
+Built by **[Your Name]** — a finance-conscious coder designing tools for intentional living.
+
