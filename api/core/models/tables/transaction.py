@@ -7,7 +7,8 @@ class Transactions(Base):
     __tablename__ = 'transactions'
     
     user_id = Column(String(36), nullable=False)
-    transaction_id = Column(String(36), primary_key=True)
+    transaction_id = Column(String(36), primary_key=True, nullable=False)
+    transaction_type_id = Column(String(36), nullable=False)
     category_id = Column(String(36), nullable=False)
     transaction_name = Column(String(255), nullable=False)
     transaction_description = Column(String(255), nullable=True)

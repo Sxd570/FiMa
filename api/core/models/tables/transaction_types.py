@@ -7,7 +7,7 @@ class TransactionTypes(Base):
     __tablename__ = 'transaction_types'
     
     user_id = Column(String(36), nullable=False)
-    type_id = Column(String(36), primary_key=True)
+    type_id = Column(String(36), primary_key=True, nullable=False)
     type_name = Column(String(255), nullable=False)
     type_description = Column(String(255), nullable=True)
 

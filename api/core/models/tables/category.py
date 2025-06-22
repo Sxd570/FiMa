@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 class Category(Base):
-    __tablename__ = 'categories'
+    __tablename__ = 'category'
     
     user_id = Column(String(36), nullable=False)
     category_id = Column(String(36), primary_key=True)

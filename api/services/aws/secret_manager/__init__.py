@@ -1,16 +1,23 @@
-from aws.boto3 import Boto3
+import boto3
+import json
+from shared.logger import Logger
+
+logger = Logger(__name__)
 
 class SecretManager:
-    def __init__(self, region=None, profile_name=None):
-        self.boto3 = Boto3()
-        session = self.boto3.get_app_session(profile_name=profile_name, region=region)
-        self.client = session.client('secretsmanager')
+    def __init__(self, secret_name):
+        self.client = boto3.client("secretsmanager")
+        self.secret_name = secret_name
 
-
-    def get_secret(self, secret_name):
+    def get_secret(self):
         try:
-            response = self.client.get_secret_value(SecretId=secret_name)
-            return response['SecretString']
+            response = self.client.get_secret_value(SecretId=self.secret_name)
+
+            if "SecretString" in response:
+                return json.loads(response["SecretString"])
+            else:
+                raise ValueError("SecretString not found in AWS response.")
+
         except Exception as e:
-            print(f"Error retrieving secret {secret_name}: {e}")
-            raise e
+            logger.error(f"Error fetching secret [{self.secret_name}]: {e}")
+            return None
