@@ -8,6 +8,10 @@ from sqlalchemy import pool
 from alembic import context
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
+
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -28,13 +32,13 @@ target_metadata = None
 # ... etc.
 
 def get_url():
-    _db_url = "mysql+pymysql://%s:%s@%s/%s" % (
-        os.getenv("DB_USER", ""),
-        os.getenv("DB_PASSWORD", ""),
-        os.getenv("DB_HOST", ""),
-        os.getenv("DB_NAME", ""),
-    )
-    return _db_url
+    user = os.getenv("DB_USER", "")
+    password = os.getenv("DB_PASSWORD", "")
+    host = os.getenv("DB_HOST", "")
+    port = os.getenv("DB_PORT", "")
+    db = os.getenv("DB_NAME", "")
+
+    return f"mysql+pymysql://{user}:{password}@{host}:{port}/{db}"
 
 
 def run_migrations_offline():
@@ -65,7 +69,7 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
-    connectable = create_engine(get_url(), pool_pre_ping=True)
+    connectable = create_engine(get_url())
 
     with connectable.connect() as connection:
         context.configure(
