@@ -19,6 +19,8 @@ class BudgetUseCase:
             
             self.budget_total_budget = self.budget_database.get_total_budget(self.user_id)
             self.budget_total_spent = self.budget_database.get_total_spent(self.user_id)
+            self.budget_near_limit_count = 111
+            self.budget_over_limit_count = 123
             
             return GetBudgetOverviewResponse(
                 budget_total_budget = float(self.budget_total_budget),
