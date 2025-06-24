@@ -1,0 +1,46 @@
+org: sxd570
+app: fima
+service: fima
+
+provider:
+  name: aws
+  runtime: python3.12
+  region: us-east-1
+  stage: dev
+  environment:
+    ENVIRONMENT: dev
+    CONFIG_LEVEL: local
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - secretsmanager:GetSecretValue
+      Resource: "*"
+
+functions:
+  fima-lambda:
+    handler: main.handler
+    description: FIMA Lambda function
+    events:
+      - http:
+          path: /{proxy+}
+          method: any
+          cors: true
+
+plugins:
+  - serverless-python-requirements
+  - serverless-localstack
+
+custom:
+  pythonRequirements:
+    dockerizePip: false
+  localstack:
+    stages:
+      - dev
+    host: http://localhost
+    edgePort: 4566
+  package:
+    exclude:
+      - node_modules/**
+      - venv/**
+      - .git/**
+      - .gitignore
