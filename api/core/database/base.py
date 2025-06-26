@@ -1,7 +1,7 @@
 import os
 
-from shared.Utility.db_config import db_config
-from shared.logger import Logger
+from api.shared.Utility.db_config import db_config
+from api.shared.logger import Logger
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base

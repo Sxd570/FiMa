@@ -15,8 +15,8 @@ logger = Logger(__name__)
 router = APIRouter()
 
 
-@router.get("/budget/overview/{user_id}")
-async def get_budget_overview(user_id: str):
+# @router.get("/budget/overview/{user_id}")
+def get_budget_overview(user_id: str):
     try:
         budget = BudgetUseCase()
 
@@ -27,6 +27,10 @@ async def get_budget_overview(user_id: str):
         logger.error(f"Error in get_budget_overview: {e}")
         raise e
     
+
+if __name__ == "__main__":
+    user_id = "1234"
+    get_budget_overview(user_id)
 
 @router.post("/budget/add")
 async def create_budget():
