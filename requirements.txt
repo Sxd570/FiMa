@@ -23,9 +23,11 @@ CREATE TABLE transaction_types (
 CREATE TABLE category (
     user_id VARCHAR(36) NOT NULL,
     category_id VARCHAR(36) PRIMARY KEY,
+    type_id VARCHAR(36) NOT NULL,
     category_name VARCHAR(255) NOT NULL,
     category_description VARCHAR(255),
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (type_id) REFERENCES transaction_types(type_id)
 );
 
 -- Create Budget table

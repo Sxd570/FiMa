@@ -24,6 +24,7 @@ user = config["user"]
 password = config["password"]
 host = config["host"]
 database = config["database"]
+port = config["port"]
 
 
 debug_params = {}
@@ -32,7 +33,7 @@ if log_level == "DEBUG":
 
 
 engine = create_engine(
-    f"mysql+pymysql://{user}:{password}@{host}/{database}",
+    f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}",
     **debug_params
     )
 
