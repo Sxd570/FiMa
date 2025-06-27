@@ -41,7 +41,7 @@ class DeleteGoalDetailPayload(BaseModel):
 
 class AddAmountToGoalDetailPayload(BaseModel):
     goal_id: str = Field(..., description="Unique identifier for the goal")
-    amount_to_add: float = Field(..., description="Amount to be added to the goal", ge=0.0)
+    amount_to_add: int = Field(..., description="Amount to be added to the goal", ge=0.0)
 
 
 class CreateGoalDetailPayload(BaseModel):

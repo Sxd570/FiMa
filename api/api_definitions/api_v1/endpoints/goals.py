@@ -82,7 +82,7 @@ async def add_amount_to_goal(user_id: str, request: AddAmountToGoalDetailPayload
         status = goals.add_amount_to_goal(
             user_id=user_id,
             goal_id=request.goal_id,
-            params=request
+            amount_to_add=request.amount_to_add
         )
         return status
     except Exception as e:
