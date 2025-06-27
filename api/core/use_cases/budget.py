@@ -5,8 +5,8 @@ logger = Logger(__name__)
 
 class BudgetUseCase:
     def __init__(self):
-        self.budget_database = BudgetDatabase()
-
+        self.budget_database = None
+        
         self.user_id = None
         self.budget_total_budget = 0
         self.budget_total_spent = 0
@@ -15,6 +15,8 @@ class BudgetUseCase:
 
     def get_budget_overview(self, user_id):
         try:
+            self.budget_database = BudgetDatabase()
+
             self.user_id = user_id
             
             self.budget_total_budget = self.budget_database.get_total_budget(self.user_id)

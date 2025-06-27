@@ -11,7 +11,7 @@ class Budget(Base):
     budget_name = Column(String(255), nullable=False)
     budget_description = Column(String(255), nullable=True)
     budget_target_amount = Column(Integer, nullable=False)
-    budget_current_amount = Column(Integer, default=0)
+    budget_current_amount = Column(Integer, default=0, nullable=False)
 
     def __init__(self, user_id, budget_id, budget_name, budget_description, budget_current_amount, budget_target_amount):
         self.user_id = user_id

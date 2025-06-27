@@ -1,5 +1,5 @@
 import os
-from Utility import db_config_local
+from . import db_config_local
 from services.aws.rds import get_db_config
 
 config_level = os.environ.get("CONFIG_LEVEL", "local")
