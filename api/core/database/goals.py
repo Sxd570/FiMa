@@ -5,7 +5,8 @@ from core.database.base import get_db_session
 from copy import deepcopy
 from core.models.io_models.goals_io_models import (
     GoalDetailsDBResponse,
-    GoalDetail
+    GoalDetail,
+    AddGoalDetail
 )
 from core.interfaces.goals_interface import GoalsInterface
 
@@ -165,9 +166,20 @@ class GoalsDatabase(GoalsInterface):
                 self.db_session.close()
 
 
-    def create_goal(self, goal: GoalDetail):
+    def create_goal(self, goal: AddGoalDetail):
         try:
             self.db_session = get_db_session()
+
+            existing_goal = self.db_session.query(
+                Goals
+            ).filter(
+                Goals.goal_id == goal.goal_id
+            ).first()
+            if existing_goal:
+                logger.error(f"Goal with goal_id {goal.goal_id} already exists. Goal not created.")
+                return {
+                    "message": "Goal already exists",
+                }
 
             new_goal = Goals(
                 user_id=goal.user_id,
@@ -180,6 +192,11 @@ class GoalsDatabase(GoalsInterface):
 
             self.db_session.add(new_goal)
             self.db_session.commit()
+
+            return {
+                "status": "success",
+                "goal_id": goal.goal_id
+            }
         except Exception as e:
             logger.error(f"Error in create_goal: {e}")
             raise e

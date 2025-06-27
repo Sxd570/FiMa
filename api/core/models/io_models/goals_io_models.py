@@ -4,13 +4,20 @@ from typing import Optional, List, Union, Any
 
 class GoalDetail(BaseModel):
     goal_id: Optional[str] = Field(None, description="Unique identifier for the goal")
-    user_id: Optional[str] = Field(None, description="Unique identifier for the user")
     goal_name: Optional[str] = Field(None, description="Name of the goal")
     goal_description: Optional[str] = Field(None, description="Description of the goal")
     goal_target_amount: Optional[float] = Field(None, description="Target amount for the goal")
     goal_current_amount: Optional[float] = Field(None, description="Current amount towards the goal")
     goal_remaining_amount: Optional[float] = Field(None, description="Remaining amount to reach the goal")
     goal_percentage: Optional[float] = Field(None, description="Percentage of the goal achieved")
+
+class AddGoalDetail(BaseModel):
+    user_id: str = Field(..., description="Unique identifier for the user")
+    goal_id: str = Field(..., description="Unique identifier for the goal")
+    goal_name: str = Field(..., description="Name of the goal")
+    goal_description: str = Field(..., description="Description of the goal")
+    goal_target_amount: float = Field(..., description="Target amount for the goal")
+    goal_current_amount: float = Field(..., description="Current amount towards the goal", ge=0.0)
 
 
 class GoalDetailPayload(BaseModel):
