@@ -31,15 +31,88 @@ class GoalsDatabase:
                 *filter_group
             ).scalar()
 
-            if total_goals_count is None:
-                total_goals_count = 0
-
             return total_goals_count
         except Exception as e:
             logger.error(f"Error in get_goals_overview: {e}")
             raise e
+        finally:
+            if self.db_session:
+                self.db_session.close()
+
+    
+    def get_total_goals_completed(self, user_id):
+        try:
+            self.db_session = get_db_session()
+            self.user_id = user_id
+
+            filter_group = [
+                Goals.user_id == self.user_id,
+                Goals.goal_current_amount >= Goals.goal_target_amount
+            ]
+
+            total_goals_completed = self.db_session.query(
+                func.count(Goals.goal_id)
+            ).filter(
+                *filter_group
+            ).scalar()
+
+            return total_goals_completed
+        except Exception as e:
+            logger.error(f"Error in get_total_goals_completed: {e}")
+            raise e
+        finally:
+            if self.db_session:
+                self.db_session.close()
+    
+
+    def get_total_amount_saved(self, user_id):
+        try:
+            self.db_session = get_db_session()
+            self.user_id = user_id
+
+            filter_group = [
+                Goals.user_id == self.user_id,
+            ]
+
+            total_amount_saved = self.db_session.query(
+                func.sum(Goals.goal_current_amount)
+            ).filter(
+                *filter_group,
+            ).scalar()
+
+            return total_amount_saved
+        except Exception as e:
+            logger.error(f"Error in get_total_amount_saved: {e}")
+            raise e
+        finally:
+            if self.db_session:
+                self.db_session.close()
     
     
+    def get_total_goals_amount(self, user_id):
+        try:
+            self.db_session = get_db_session()
+            self.user_id = user_id
+
+            filter_group = [
+                Goals.user_id == self.user_id,
+            ]
+
+            total_goal_amount = self.db_session.query(
+                func.sum(Goals.goal_target_amount)
+            ).filter(
+                *filter_group,
+            ).scalar()
+
+            return total_goal_amount
+        except Exception as e:
+            logger.error(f"Error in get_total_goals_amount: {e}")
+            raise e
+        finally:
+            if self.db_session:
+                self.db_session.close()
+
+
     def get_goal_details(self, user_id):
         try:
             self.db_session = get_db_session()
@@ -53,17 +126,19 @@ class GoalsDatabase:
             
             if not db_response:
                 return GoalDetailsDBResponse(
-                    Goals=[]
+                    goals=[]
                 )
             
             response = deepcopy(db_response)
 
             goal_details = GoalDetailsDBResponse(
-                Goals=[
+                goals=[
                     GoalDetail(
-                        goal_id = goal.goal_id,
-                        goal_target_amount = goal.goal_target_amount,
-                        goal_current_amount = goal.goal_current_amount,
+                        goal_id=goal.goal_id,
+                        goal_name=goal.goal_name,
+                        goal_description=goal.goal_description,
+                        goal_target_amount=goal.goal_target_amount,
+                        goal_current_amount=goal.goal_current_amount,
                     ) for goal in response
                 ]
             )
@@ -72,3 +147,6 @@ class GoalsDatabase:
         except Exception as e:
             logger.error(f"Error in get_goal_details: {e}")
             raise e
+        finally:
+            if self.db_session:
+                self.db_session.close()
