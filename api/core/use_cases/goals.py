@@ -4,9 +4,11 @@ from core.database.goals import GoalsDatabase
 from core.models.io_models.goals_io_models import (
     GoalDetail,
     AddGoalDetail,
-    GoalDetailPayload,
+    CreateGoalDetailPayload,
     GoalsDetailsResponse,
-    GoalsOverviewResponse
+    GoalsOverviewResponse,
+    UpdateGoalDetailPayload, 
+    EditGoalDetail
 )
 
 logger = Logger(__name__)
@@ -20,8 +22,8 @@ class GoalsUseCase:
 
         self.goal_name = None
         self.goal_description = None
-        self.goal_target_amount = None
-        self.goal_current_amount = None
+        self.goal_target_amount = 0
+        self.goal_current_amount = 0
 
         self.total_goals_count = 0
         self.total_goals_completed = 0
@@ -74,7 +76,7 @@ class GoalsUseCase:
             raise e
         
     
-    def create_goal(self, user_id: str, params: GoalDetailPayload):
+    def create_goal(self, user_id: str, params: CreateGoalDetailPayload):
         try:
             self.user_id = user_id
             self.goal_name = params.goal_name
@@ -101,4 +103,34 @@ class GoalsUseCase:
             return status  
         except Exception as e:
             logger.error(f"Error in create_goal use case: {e}")
+            raise e
+        
+    
+    def edit_goal(self, user_id: str, params: UpdateGoalDetailPayload):
+        try:
+            self.user_id = user_id
+            self.goal_id = params.goal_id
+
+            if params.goal_name is not None:
+                self.goal_name = params.goal_name
+            if params.goal_description is not None:
+                self.goal_description = params.goal_description
+            if params.goal_target_amount is not None:
+                self.goal_target_amount = params.goal_target_amount
+            if params.goal_current_amount is not None:
+                self.goal_current_amount = params.goal_current_amount
+
+            query_input = EditGoalDetail(
+                goal_id=self.goal_id,
+                goal_name=self.goal_name,
+                goal_description=self.goal_description,
+                goal_target_amount=float(self.goal_target_amount),
+                goal_current_amount=float(self.goal_current_amount),
+            )
+
+            status = self.goal_database.edit_goal(user_id=self.user_id, goal=query_input)
+
+            return status  
+        except Exception as e:
+            logger.error(f"Error in edit_goal use case: {e}")
             raise e

@@ -6,6 +6,7 @@ from copy import deepcopy
 from core.models.io_models.goals_io_models import (
     GoalDetailsDBResponse,
     GoalDetail,
+    EditGoalDetail,
     AddGoalDetail
 )
 from core.interfaces.goals_interface import GoalsInterface
@@ -199,6 +200,54 @@ class GoalsDatabase(GoalsInterface):
             }
         except Exception as e:
             logger.error(f"Error in create_goal: {e}")
+            raise e
+        finally:
+            if self.db_session:
+                self.db_session.close()
+
+
+    def edit_goal(self, user_id, goal: EditGoalDetail):
+        try:
+            self.db_session = get_db_session()
+
+            goal_name = goal.goal_name
+            goal_description = goal.goal_description
+            goal_target_amount = goal.goal_target_amount
+            goal_current_amount = goal.goal_current_amount
+
+            filter_group = [
+                Goals.user_id == user_id,
+                Goals.goal_id == goal.goal_id
+            ]
+
+            existing_goal = self.db_session.query(
+                Goals
+            ).filter(
+                *filter_group
+            ).first()
+            if not existing_goal:
+                logger.error(f"Goal with goal_id {goal.goal_id} does not exist. Goal not updated.")
+                return {
+                    "message": "Goal does not exist",
+                }
+
+            if goal_name:
+                existing_goal.goal_name = goal_name
+            if goal_description:
+                existing_goal.goal_description = goal_description
+            if goal_target_amount:
+                existing_goal.goal_target_amount = goal_target_amount
+            if goal_current_amount:
+                existing_goal.goal_current_amount = goal_current_amount
+
+            self.db_session.commit()
+
+            return {
+                "status": "success",
+                "goal_id": goal.goal_id
+            }
+        except Exception as e:
+            logger.error(f"Error in update_goal: {e}")
             raise e
         finally:
             if self.db_session:

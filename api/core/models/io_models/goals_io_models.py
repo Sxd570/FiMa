@@ -20,10 +20,34 @@ class AddGoalDetail(BaseModel):
     goal_current_amount: float = Field(..., description="Current amount towards the goal", ge=0.0)
 
 
-class GoalDetailPayload(BaseModel):
+class EditGoalDetail(BaseModel):
+    goal_id: str = Field(..., description="Unique identifier for the goal")
+    goal_name: Optional[str] = Field(None, description="Name of the goal")
+    goal_description: Optional[str] = Field(None, description="Description of the goal")
+    goal_target_amount: Optional[float] = Field(None, description="Target amount for the goal")
+    goal_current_amount: Optional[float] = Field(None, description="Current amount towards the goal", ge=0.0)
+
+
+class UpdateGoalDetail(BaseModel):
+    goal_id: str = Field(..., description="Unique identifier for the goal")
+    goal_name: Optional[str] = Field(None, description="Name of the goal")
+    goal_description: Optional[str] = Field(None, description="Description of the goal")
+    goal_target_amount: Optional[float] = Field(None, description="Target amount for the goal")
+    goal_current_amount: Optional[float] = Field(None, description="Current amount towards the goal", ge=0.0)
+
+
+class CreateGoalDetailPayload(BaseModel):
     goal_name: str = Field(..., description="Name of the goal")
     goal_description: Optional[str] = Field(None, description="Description of the goal")
     goal_target_amount: float = Field(..., description="Target amount for the goal")
+
+
+class UpdateGoalDetailPayload(BaseModel):
+    goal_id: str = Field(..., description="Unique identifier for the goal")
+    goal_name: Optional[str] = Field(None, description="Name of the goal")
+    goal_description: Optional[str] = Field(None, description="Description of the goal")
+    goal_target_amount: Optional[float] = Field(None, description="Target amount for the goal")
+    goal_current_amount: Optional[float] = Field(None, description="Current amount towards the goal", ge=0.0)
 
 
 class GoalDetailsDBResponse(BaseModel):
