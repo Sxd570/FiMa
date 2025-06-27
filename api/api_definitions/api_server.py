@@ -1,12 +1,10 @@
 from fastapi import FastAPI
-from mangum import Mangum
 from fastapi.middleware.cors import CORSMiddleware
-from api.api_definitions.api_v1.api_router import api_router
+from api_v1.api_router import api_router
 from dotenv import load_dotenv
 load_dotenv()
 
 app = FastAPI()
-handler = Mangum(app)
 
 app.add_middleware(
     CORSMiddleware,

@@ -13,8 +13,10 @@ Base = declarative_base()
 Session = None
 _Session = None
 
+engine = None
 
-log_level = os.environ.get("LOG_LEVEL", "INFO")
+log_level = os.environ.get("LOG_LEVEL")
+config_level = os.environ.get("CONFIG_LEVEL")
 
 
 config = db_config()
@@ -32,10 +34,16 @@ if log_level == "DEBUG":
     debug_params["echo"] = True
 
 
-engine = create_engine(
-    f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}",
-    **debug_params
-    )
+if config_level == "local":
+    engine = create_engine(
+        f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}",
+        **debug_params
+        )
+else:
+    engine = create_engine(
+        f"mysql+pymysql://{user}:{password}@{host}/{database}",
+        **debug_params
+        )
 
 
 def get_db_session():
