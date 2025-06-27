@@ -150,3 +150,26 @@ class GoalsDatabase:
         finally:
             if self.db_session:
                 self.db_session.close()
+
+
+    def create_goal(self, goal: GoalDetail):
+        try:
+            self.db_session = get_db_session()
+
+            new_goal = Goals(
+                user_id=goal.user_id,
+                goal_id=goal.goal_id,
+                goal_name=goal.goal_name,
+                goal_description=goal.goal_description,
+                goal_target_amount=goal.goal_target_amount,
+                goal_current_amount=goal.goal_current_amount
+            )
+
+            self.db_session.add(new_goal)
+            self.db_session.commit()
+        except Exception as e:
+            logger.error(f"Error in create_goal: {e}")
+            raise e
+        finally:
+            if self.db_session:
+                self.db_session.close()
