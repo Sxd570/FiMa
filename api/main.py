@@ -1,19 +1,10 @@
-from fastapi import FastAPI
 from mangum import Mangum
-from fastapi.middleware.cors import CORSMiddleware
-from api.api_definitions.api_v1.api_router import api_router
-from dotenv import load_dotenv
-load_dotenv()
+from shared.logger import Logger
+from api_definitions.api_server import app
 
-app = FastAPI()
-handler = Mangum(app)
+logger = Logger(__name__)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-app.include_router(api_router)
+try:
+    handler = Mangum(app)
+except Exception as e:
+    logger.error(f"Error in API handler: {e}")

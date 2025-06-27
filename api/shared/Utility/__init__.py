@@ -1,5 +1,7 @@
 import os
 import uuid
+from dotenv import load_dotenv
+load_dotenv()
 
 namespace_uuid = uuid.UUID('12345678-1234-5678-1234-567812345678')
 
@@ -8,15 +10,24 @@ def db_config_local():
     Local mysql database configuration.
     This function returns the configuration for a local MySQL database connection for testing purposes.
     """
-    user = os.environ.get("DB_USER", None)
-    password = os.environ.get("DB_PASSWORD", None)
-    host = os.environ.get("DB_HOST", None)
-    database = os.environ.get("DB_DATABASE", None)
-    port = os.environ.get("DB_PORT", None)
+    user = os.getenv("DB_USER", None)
+    password = os.getenv("DB_PASSWORD", None)
+    host = os.getenv("DB_HOST", None)
+    database = os.getenv("DB_NAME", None)
+    port = os.getenv("DB_PORT", None)
 
-    if not user or not password or not host or not database or not port:
-        raise ValueError("Database configuration is incomplete. Please set DB_USER, DB_PASSWORD, DB_HOST, DB_DATABASE, and DB_PORT environment variables.")
-
+    if not user:
+        raise ValueError("DB_USER environment variable is not set.")
+    if not password:
+        raise ValueError("DB_PASSWORD environment variable is not set.")
+    if not host:
+        raise ValueError("DB_HOST environment variable is not set.")
+    if not database:
+        raise ValueError("DB_NAME environment variable is not set.")
+    if not port:
+        raise ValueError("DB_PORT environment variable is not set.")
+    
+    
     return {
         "user": user,
         "password": password,

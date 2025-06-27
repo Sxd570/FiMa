@@ -18,7 +18,7 @@ provider:
 
 functions:
   fima-lambda:
-    handler: handlers.api_handler.handler
+    handler: main.handler
     description: FIMA Lambda function
     events:
       - http:
