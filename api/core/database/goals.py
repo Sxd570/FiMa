@@ -32,6 +32,9 @@ class GoalsDatabase(GoalsInterface):
                 *filter_group
             ).scalar()
 
+            if not total_goals_count:
+                total_goals_count = 0
+
             return total_goals_count
         except Exception as e:
             logger.error(f"Error in get_goals_overview: {e}")
@@ -57,6 +60,9 @@ class GoalsDatabase(GoalsInterface):
                 *filter_group
             ).scalar()
 
+            if not total_goals_completed:
+                total_goals_completed = 0
+
             return total_goals_completed
         except Exception as e:
             logger.error(f"Error in get_total_goals_completed: {e}")
@@ -81,6 +87,9 @@ class GoalsDatabase(GoalsInterface):
                 *filter_group,
             ).scalar()
 
+            if not total_amount_saved:
+                total_amount_saved = 0
+
             return total_amount_saved
         except Exception as e:
             logger.error(f"Error in get_total_amount_saved: {e}")
@@ -104,6 +113,9 @@ class GoalsDatabase(GoalsInterface):
             ).filter(
                 *filter_group,
             ).scalar()
+
+            if not total_goal_amount:
+                total_goal_amount = 0
 
             return total_goal_amount
         except Exception as e:

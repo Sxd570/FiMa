@@ -25,7 +25,7 @@ class BudgetDatabase(BudgetInterface):
             self.total_budget = self.db_session.query(
                 func.sum(Budget.budget_target_amount)
                 ).filter(
-                    **filter_group
+                    *filter_group
                 ).scalar()
                 
             if self.total_budget is None:
@@ -51,7 +51,7 @@ class BudgetDatabase(BudgetInterface):
             self.total_fund_allocated = self.db_session.query(
                 func.sum(Budget.budget_current_amount)
                 ).filter(
-                    **filter_group
+                    *filter_group
                 ).scalar()
             
             if self.total_fund_allocated is None:
