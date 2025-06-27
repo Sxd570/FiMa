@@ -36,6 +36,14 @@ class UpdateGoalDetail(BaseModel):
     goal_current_amount: Optional[float] = Field(None, description="Current amount towards the goal", ge=0.0)
 
 
+class DeleteGoalDetailPayload(BaseModel):
+    goal_id: str = Field(..., description="Unique identifier for the goal to be deleted")
+
+class AddAmountToGoalDetailPayload(BaseModel):
+    goal_id: str = Field(..., description="Unique identifier for the goal")
+    amount_to_add: float = Field(..., description="Amount to be added to the goal", ge=0.0)
+
+
 class CreateGoalDetailPayload(BaseModel):
     goal_name: str = Field(..., description="Name of the goal")
     goal_description: Optional[str] = Field(None, description="Description of the goal")

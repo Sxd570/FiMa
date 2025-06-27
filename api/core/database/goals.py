@@ -252,3 +252,72 @@ class GoalsDatabase(GoalsInterface):
         finally:
             if self.db_session:
                 self.db_session.close()
+
+
+    def delete_goal(self, user_id: str, goal_id: str):
+        try:
+            self.db_session = get_db_session()
+            filter_group = [
+                Goals.user_id == user_id, 
+                Goals.goal_id == goal_id
+            ]
+
+            goal = self.db_session.query(
+                Goals
+                ).filter(
+                    *filter_group
+                ).first()
+            if not goal:
+                logger.error(f"Goal with goal_id {goal_id} does not exist. Goal not deleted.")
+                return {
+                    "message": "Goal does not exist"
+                }
+            
+            self.db_session.delete(goal)
+            self.db_session.commit()
+            return {
+                "status": "success",
+                "goal_id": goal_id
+            }
+        except Exception as e:
+            logger.error(f"Error in delete_goal: {e}")
+            raise e
+        finally:
+            if self.db_session:
+                self.db_session.close()
+
+    
+    def add_amount_to_goal(self, user_id: str, goal_id: str, amount_to_add: float):
+        try:
+            self.db_session = get_db_session()
+
+            filter_group = [
+                Goals.user_id == user_id, 
+                Goals.goal_id == goal_id
+            ]
+
+            goal = self.db_session.query(
+                Goals
+            ).filter(
+                *filter_group
+            ).first()
+            if not goal:
+                logger.error(f"Goal with goal_id {goal_id} does not exist. Amount not added.")
+                return {
+                    "message": "Goal does not exist"
+                }
+
+            goal.goal_current_amount += amount_to_add
+
+            self.db_session.commit()
+
+            return {
+                "status": "success",
+                "goal_id": goal_id
+            }
+        except Exception as e:
+            logger.error(f"Error in add_amount_to_goal: {e}")
+            raise e
+        finally:
+            if self.db_session:
+                self.db_session.close()

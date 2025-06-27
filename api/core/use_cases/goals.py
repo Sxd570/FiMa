@@ -128,9 +128,40 @@ class GoalsUseCase:
                 goal_current_amount=float(self.goal_current_amount),
             )
 
-            status = self.goal_database.edit_goal(user_id=self.user_id, goal=query_input)
+            status = self.goal_database.edit_goal(
+                user_id=self.user_id, goal=query_input
+            )
 
             return status  
         except Exception as e:
             logger.error(f"Error in edit_goal use case: {e}")
+            raise e
+        
+    def delete_goal(self, user_id: str, goal_id: str):
+        try:
+            self.user_id = user_id
+            self.goal_id = goal_id
+
+            status = self.goal_database.delete_goal(
+                user_id=self.user_id, 
+                goal_id=self.goal_id
+            )
+            return status
+        except Exception as e:
+            logger.error(f"Error in delete_goal use case: {e}")
+            raise e
+        
+    def add_amount_to_goal(self, user_id: str, goal_id: str, amount_to_add: float):
+        try:
+            self.user_id = user_id
+            self.goal_id = goal_id
+
+            status = self.goal_database.add_amount_to_goal(
+                user_id=self.user_id, 
+                goal_id=self.goal_id, 
+                amount_to_add=amount_to_add
+            )
+            return status
+        except Exception as e:
+            logger.error(f"Error in add_amount_to_goal use case: {e}")
             raise e

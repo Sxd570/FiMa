@@ -3,7 +3,9 @@ from shared.logger import Logger
 from core.use_cases.goals import GoalsUseCase
 from core.models.io_models.goals_io_models import (
     CreateGoalDetailPayload, 
-    UpdateGoalDetailPayload
+    UpdateGoalDetailPayload,
+    DeleteGoalDetailPayload,
+    AddAmountToGoalDetailPayload
 )
 
 logger = Logger(__name__)
@@ -56,4 +58,33 @@ async def edit_goal(user_id: str, request: UpdateGoalDetailPayload):
         return status
     except Exception as e:
         logger.error(f"Error in edit_goal: {e}")
+        raise e
+    
+
+@router.delete("/goals/{user_id}")
+async def delete_goal(user_id: str, request: DeleteGoalDetailPayload):
+    try:
+        goals = GoalsUseCase()
+        status = goals.delete_goal(
+            user_id=user_id,
+            goal_id=request.goal_id
+        )
+        return status
+    except Exception as e:
+        logger.error(f"Error in delete_goal: {e}")
+        raise e
+    
+
+@router.patch("/goals/{user_id}")
+async def add_amount_to_goal(user_id: str, request: AddAmountToGoalDetailPayload):
+    try:
+        goals = GoalsUseCase()
+        status = goals.add_amount_to_goal(
+            user_id=user_id,
+            goal_id=request.goal_id,
+            params=request
+        )
+        return status
+    except Exception as e:
+        logger.error(f"Error in add_amount_to_goal: {e}")
         raise e
