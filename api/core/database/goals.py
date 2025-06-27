@@ -7,15 +7,16 @@ from core.models.io_models.goals_io_models import (
     GoalDetailsDBResponse,
     GoalDetail
 )
+from core.interfaces.goals_interface import GoalsInterface
 
 logger = Logger(__name__)
 
-class GoalsDatabase:
+class GoalsDatabase(GoalsInterface):
     def __init__(self):
         self.db_session = None
         self.user_id = None
 
-    def get_total_goals_count(self, user_id):
+    def get_total_goals_count(self, user_id:str):
         try:
             self.db_session = get_db_session()
 
@@ -39,8 +40,8 @@ class GoalsDatabase:
             if self.db_session:
                 self.db_session.close()
 
-    
-    def get_total_goals_completed(self, user_id):
+
+    def get_total_goals_completed(self, user_id: str):
         try:
             self.db_session = get_db_session()
             self.user_id = user_id
@@ -65,7 +66,7 @@ class GoalsDatabase:
                 self.db_session.close()
     
 
-    def get_total_amount_saved(self, user_id):
+    def get_total_amount_saved(self, user_id: str):
         try:
             self.db_session = get_db_session()
             self.user_id = user_id
@@ -87,9 +88,9 @@ class GoalsDatabase:
         finally:
             if self.db_session:
                 self.db_session.close()
-    
-    
-    def get_total_goals_amount(self, user_id):
+
+
+    def get_total_goals_amount(self, user_id: str):
         try:
             self.db_session = get_db_session()
             self.user_id = user_id
@@ -113,7 +114,7 @@ class GoalsDatabase:
                 self.db_session.close()
 
 
-    def get_goal_details(self, user_id):
+    def get_goal_details(self, user_id: str):
         try:
             self.db_session = get_db_session()
             self.user_id = user_id
