@@ -20,7 +20,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def drop_description_from_transactions_table() -> None:
     """Drop description column from transactions table."""
-    op.drop_column("transactions", "description")
+    op.drop_column("transactions", "transaction_description")
 
 
 def add_description_to_transactions_table() -> None:
