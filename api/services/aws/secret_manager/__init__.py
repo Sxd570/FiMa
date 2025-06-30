@@ -5,11 +5,12 @@ from shared.logger import Logger
 logger = Logger(__name__)
 
 class SecretManager:
-    def __init__(self, secret_name):
+    def __init__(self):
         self.client = boto3.client("secretsmanager")
-        self.secret_name = secret_name
+        self.secret_name = None
 
-    def get_secret(self):
+    def get_secret(self, secret_name):
+        self.secret_name = secret_name
         try:
             response = self.client.get_secret_value(SecretId=self.secret_name)
 
