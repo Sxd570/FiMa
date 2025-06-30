@@ -10,6 +10,7 @@ from core.models.io_models.goals_io_models import (
     AddGoalDetail
 )
 from core.interfaces.goals_interface import GoalsInterface
+from typing import Optional
 
 logger = Logger(__name__)
 
@@ -128,16 +129,23 @@ class GoalsDatabase(GoalsInterface):
                 self.db_session.close()
 
 
-    def get_goal_details(self, user_id: str):
+    def get_goal_details(self, user_id: str, limit: Optional[int] = None, offset: Optional[int] = 0):
         try:
             self.db_session = get_db_session()
             self.user_id = user_id
 
-            db_response = self.db_session.query(
+            query = self.db_session.query(
                     Goals
                 ).filter(
                     Goals.user_id == self.user_id
-                ).all()
+                )
+
+            if offset:
+                query = query.offset(offset)
+            if limit is not None:
+                query = query.limit(limit)
+                
+            db_response = query.all()
             
             if not db_response:
                 return GoalDetailsDBResponse(

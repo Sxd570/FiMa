@@ -88,3 +88,14 @@ async def add_amount_to_goal(user_id: str, request: AddAmountToGoalDetailPayload
     except Exception as e:
         logger.error(f"Error in add_amount_to_goal: {e}")
         raise e
+    
+
+@router.get("/goals/dashboard/{user_id}")
+async def get_goals_dashboard(user_id: str, limit: int = 4, offset: int = 0):
+    try:
+        goals = GoalsUseCase()
+        dashboard_data = goals.get_goals_dashboard(user_id, limit, offset)
+        return dashboard_data
+    except Exception as e:
+        logger.error(f"Error in get_goals_dashboard: {e}")
+        raise e

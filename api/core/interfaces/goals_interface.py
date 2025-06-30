@@ -43,7 +43,7 @@ class GoalsInterface(ABC):
         pass
 
     @abstractmethod
-    def get_goal_details(self, user_id):
+    def get_goal_details(self, user_id, limit=None, offset=None):
         """
         Get the details of a specific goal for a user.
 

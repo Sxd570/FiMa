@@ -137,6 +137,7 @@ class GoalsUseCase:
             logger.error(f"Error in edit_goal use case: {e}")
             raise e
         
+
     def delete_goal(self, user_id: str, goal_id: str):
         try:
             self.user_id = user_id
@@ -150,7 +151,8 @@ class GoalsUseCase:
         except Exception as e:
             logger.error(f"Error in delete_goal use case: {e}")
             raise e
-        
+
+
     def add_amount_to_goal(self, user_id: str, goal_id: str, amount_to_add: float):
         try:
             self.user_id = user_id
@@ -164,4 +166,32 @@ class GoalsUseCase:
             return status
         except Exception as e:
             logger.error(f"Error in add_amount_to_goal use case: {e}")
+            raise e
+        
+    
+    def get_goals_dashboard(self, user_id: str, limit: int, offset: int):
+        try:
+            self.user_id = user_id
+
+            goals_response = self.goal_database.get_goal_details(
+                user_id=self.user_id, 
+                limit=limit, 
+                offset=offset
+            )
+
+            return GoalsDetailsResponse(
+                goals=[
+                    GoalDetail(
+                        goal_id=goal.goal_id,
+                        goal_name=goal.goal_name,
+                        goal_description=goal.goal_description,
+                        goal_target_amount=float(goal.goal_target_amount),
+                        goal_current_amount=float(goal.goal_current_amount),
+                        goal_remaining_amount=float(goal.goal_target_amount - goal.goal_current_amount),
+                        goal_percentage=float(goal.goal_current_amount / goal.goal_target_amount * 100 if goal.goal_target_amount > 0 else 0)
+                    ) for goal in goals_response.goals
+                ]
+            )
+        except Exception as e:
+            logger.error(f"Error in get_goals_dashboard use case: {e}")
             raise e
