@@ -134,10 +134,10 @@ class GoalsDatabase(GoalsInterface):
             self.user_id = user_id
 
             db_response = self.db_session.query(
-                Goals
-            ).filter(
-                Goals.user_id == self.user_id
-            ).all()
+                    Goals
+                ).filter(
+                    Goals.user_id == self.user_id
+                ).all()
             
             if not db_response:
                 return GoalDetailsDBResponse(
@@ -221,10 +221,10 @@ class GoalsDatabase(GoalsInterface):
             ]
 
             existing_goal = self.db_session.query(
-                Goals
-            ).filter(
-                *filter_group
-            ).first()
+                    Goals
+                ).filter(
+                    *filter_group
+                ).first()
             if not existing_goal:
                 logger.error(f"Goal with goal_id {goal.goal_id} does not exist. Goal not updated.")
                 return {
@@ -297,10 +297,10 @@ class GoalsDatabase(GoalsInterface):
             ]
 
             goal = self.db_session.query(
-                Goals
-            ).filter(
-                *filter_group
-            ).first()
+                    Goals
+                ).filter(
+                    *filter_group
+                ).first()
             if not goal:
                 logger.error(f"Goal with goal_id {goal_id} does not exist. Amount not added.")
                 return {
