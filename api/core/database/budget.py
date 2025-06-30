@@ -2,7 +2,7 @@ from sqlalchemy import *
 from shared.logger import Logger
 from core.interfaces.budget_interface import BudgetInterface
 from core.models.tables.budget import Budget
-from core.database.base import get_db_session
+from shared.Utility.db_base import get_db_session
 logger = Logger(__name__)
 
 class BudgetDatabase(BudgetInterface):

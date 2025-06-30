@@ -1,7 +1,7 @@
 from sqlalchemy import *
 from shared.logger import Logger
 from core.models.tables.goals import Goals
-from core.database.base import get_db_session
+from shared.Utility.db_base import get_db_session
 from copy import deepcopy
 from core.models.io_models.goals_io_models import (
     GoalDetailsDBResponse,

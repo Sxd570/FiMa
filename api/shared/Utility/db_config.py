@@ -1,16 +1,13 @@
-import os
-from . import db_config_local
-from services.aws.rds import get_db_config
+from services.aws.rds import RDS
+from logger import Logger
 
-config_level = os.environ.get("CONFIG_LEVEL", "local")
-
-
-def db_config_cloud():
-    return get_db_config()
-    
+logger = Logger()
 
 def db_config():
-    if config_level == "local":
-        return db_config_local()
-    else:
-        return db_config_cloud()
+    try:
+        rds = RDS()
+        db_config = rds.get_connection_config()
+        return db_config
+    except Exception as e:
+        logger.error(f"Error retrieving database configuration: {e}")
+        raise e
