@@ -2,6 +2,9 @@ from enum import Enum
 from pydantic import BaseModel, Field
 from typing import Optional, List, Union, Any
 
+class BudgetOverviewRequest(BaseModel):
+    month: str = Field(..., description="The month for which the budget overview is requested, formatted as 'YYYY-MM'.")
+
 class GetBudgetOverviewResponse(BaseModel):
     budget_total_budget: float = Field(..., description="Total budget amount")
     budget_total_spent: float = Field(..., description="Total amount spent")

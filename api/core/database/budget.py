@@ -12,18 +12,20 @@ class BudgetDatabase(BudgetInterface):
         self.total_budget = 0
         self.total_fund_allocated = 0
         
-    def get_total_budget(self, user_id):
+    def get_total_budget(self, user_id, date):
         try:
             self.db_session = get_db_session()
             
             self.user_id = user_id
+            self.date = date
 
             filter_group = [
-                Budget.user_id == self.user_id
+                Budget.user_id == self.user_id,
+                Budget.allocated_month == self.date
             ]
 
             self.total_budget = self.db_session.query(
-                func.sum(Budget.budget_target_amount)
+                func.sum(Budget.allocated_amount)
                 ).filter(
                     *filter_group
                 ).scalar()
@@ -36,20 +38,22 @@ class BudgetDatabase(BudgetInterface):
         except Exception as e:
             logger.error(f"Error in get_total_budget: {e}")
             raise e
-        
-        
-    def get_total_spent(self, user_id):
+
+
+    def get_total_spent(self, user_id, date):
         try:
             self.db_session = get_db_session()
 
             self.user_id = user_id
+            self.date = date
 
             filter_group = [
-                Budget.user_id == self.user_id
+                Budget.user_id == self.user_id,
+                Budget.allocated_month == self.date
             ]
   
             self.total_fund_allocated = self.db_session.query(
-                func.sum(Budget.budget_current_amount)
+                func.sum(Budget.spent_amount)
                 ).filter(
                     *filter_group
                 ).scalar()
@@ -60,4 +64,55 @@ class BudgetDatabase(BudgetInterface):
             return self.total_fund_allocated
         except Exception as e:
             logger.error(f"Error in get_total_spent: {e}")
+            raise e
+        
+    def get_near_limit_count(self, user_id, date):
+        try:
+            self.db_session = get_db_session()
+
+            self.user_id = user_id
+            self.date = date
+
+            filter_group = [
+                Budget.user_id == self.user_id,
+                Budget.allocated_month == self.date,
+                Budget.is_limit_reached == True,
+                Budget.is_over_limit == False
+            ]
+
+            near_limit_count = self.db_session.query(
+                func.count(Budget.budget_id)
+                ).filter(
+                    *filter_group
+                ).scalar()
+
+            return near_limit_count if near_limit_count is not None else 0
+
+        except Exception as e:
+            logger.error(f"Error in get_near_limit_count: {e}")
+            raise e
+        
+    def get_over_limit_count(self, user_id, date):
+        try:
+            self.db_session = get_db_session()
+
+            self.user_id = user_id
+            self.date = date
+
+            filter_group = [
+                Budget.user_id == self.user_id,
+                Budget.allocated_month == self.date,
+                Budget.is_over_limit == True
+            ]
+
+            over_limit_count = self.db_session.query(
+                func.count(Budget.budget_id)
+                ).filter(
+                    *filter_group
+                ).scalar()
+
+            return over_limit_count if over_limit_count is not None else 0
+
+        except Exception as e:
+            logger.error(f"Error in get_over_limit_count: {e}")
             raise e
