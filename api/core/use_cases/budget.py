@@ -38,3 +38,18 @@ class BudgetUseCase:
         except Exception as e:
             logger.error(f"Error in get_budget_overview use case: {e}")
             raise e
+        
+    def get_budget_details(self, user_id, date):
+        try:
+            self.budget_database = BudgetDatabase()
+
+            self.user_id = user_id
+            self.date = date
+
+            budget_details = self.budget_database.get_budget_details(self.user_id, self.date)
+
+            return budget_details
+
+        except Exception as e:
+            logger.error(f"Error in get_budget_details use case: {e}")
+            raise e

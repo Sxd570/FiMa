@@ -1,3 +1,4 @@
+from typing import Optional
 from sqlalchemy import *
 from shared.logger import Logger
 from core.interfaces.budget_interface import BudgetInterface
@@ -93,7 +94,7 @@ class BudgetDatabase(BudgetInterface):
             logger.error(f"Error in get_near_limit_count: {e}")
             raise e
         
-        
+
     def get_over_limit_count(self, user_id, date):
         try:
             self.db_session = get_db_session()
@@ -117,4 +118,30 @@ class BudgetDatabase(BudgetInterface):
 
         except Exception as e:
             logger.error(f"Error in get_over_limit_count: {e}")
+            raise e
+        
+
+    def get_budget_details(
+        self, 
+        user_id: str, 
+        date: str,
+        limit: Optional[int] = None,
+        offset: Optional[int] = 0
+    ):
+        try:
+            self.db_session = get_db_session()
+
+            self.user_id = user_id
+            self.date = date
+
+            filter_group = [
+                Budget.user_id == self.user_id,
+                Budget.allocated_month == self.date
+            ]
+
+            # TODO - implement this logic
+            
+
+        except Exception as e:
+            logger.error(f"Error in get_budget_details: {e}")
             raise e

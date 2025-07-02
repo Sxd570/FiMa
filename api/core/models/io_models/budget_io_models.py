@@ -5,6 +5,10 @@ from typing import Optional, List, Union, Any
 class BudgetOverviewRequest(BaseModel):
     month: str = Field(..., description="The month for which the budget overview is requested, formatted as 'YYYY-MM'.")
 
+
+class BudgetDetailsRequest(BaseModel):
+    month: str = Field(..., description="The month for which the budget details are requested, formatted as 'YYYY-MM'.")
+
 class GetBudgetOverviewResponse(BaseModel):
     budget_total_budget: float = Field(..., description="Total budget amount")
     budget_total_spent: float = Field(..., description="Total amount spent")
