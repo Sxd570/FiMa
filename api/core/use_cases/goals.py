@@ -67,7 +67,8 @@ class GoalsUseCase:
                         goal_target_amount=float(goal.goal_target_amount),
                         goal_current_amount=float(goal.goal_current_amount),
                         goal_remaining_amount=float(goal.goal_target_amount - goal.goal_current_amount),
-                        goal_percentage=float(goal.goal_current_amount / goal.goal_target_amount * 100 if goal.goal_target_amount > 0 else 0)
+                        goal_percentage=float(goal.goal_current_amount / goal.goal_target_amount * 100 if goal.goal_target_amount > 0 else 0),
+                        is_goal_reached=goal.is_goal_reached
                     ) for goal in goal_details.goals
                 ]
             )
@@ -188,7 +189,8 @@ class GoalsUseCase:
                         goal_target_amount=float(goal.goal_target_amount),
                         goal_current_amount=float(goal.goal_current_amount),
                         goal_remaining_amount=float(goal.goal_target_amount - goal.goal_current_amount),
-                        goal_percentage=float(goal.goal_current_amount / goal.goal_target_amount * 100 if goal.goal_target_amount > 0 else 0)
+                        goal_percentage=float(goal.goal_current_amount / goal.goal_target_amount * 100 if goal.goal_target_amount > 0 else 0),
+                        is_goal_reached=goal.is_goal_reached
                     ) for goal in goals_response.goals
                 ]
             )

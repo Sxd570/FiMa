@@ -42,9 +42,7 @@ class GoalsDatabase(GoalsInterface):
         except Exception as e:
             logger.error(f"Error in get_goals_overview: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()
+
 
 
     def get_total_goals_completed(self, user_id: str):
@@ -70,9 +68,7 @@ class GoalsDatabase(GoalsInterface):
         except Exception as e:
             logger.error(f"Error in get_total_goals_completed: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()
+
     
 
     def get_total_amount_saved(self, user_id: str):
@@ -97,9 +93,7 @@ class GoalsDatabase(GoalsInterface):
         except Exception as e:
             logger.error(f"Error in get_total_amount_saved: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()
+
 
 
     def get_total_goals_amount(self, user_id: str):
@@ -124,9 +118,7 @@ class GoalsDatabase(GoalsInterface):
         except Exception as e:
             logger.error(f"Error in get_total_goals_amount: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()
+
 
 
     def get_goal_details(self, user_id: str, limit: Optional[int] = None, offset: Optional[int] = 0):
@@ -162,6 +154,7 @@ class GoalsDatabase(GoalsInterface):
                         goal_description=goal.goal_description,
                         goal_target_amount=goal.goal_target_amount,
                         goal_current_amount=goal.goal_current_amount,
+                        is_goal_reached=goal.is_goal_reached
                     ) for goal in response
                 ]
             )
@@ -170,9 +163,7 @@ class GoalsDatabase(GoalsInterface):
         except Exception as e:
             logger.error(f"Error in get_goal_details: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()
+
 
 
     def create_goal(self, goal: AddGoalDetail):
@@ -209,9 +200,7 @@ class GoalsDatabase(GoalsInterface):
         except Exception as e:
             logger.error(f"Error in create_goal: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()
+
 
 
     def edit_goal(self, user_id, goal: EditGoalDetail):
@@ -248,6 +237,11 @@ class GoalsDatabase(GoalsInterface):
             if goal_current_amount:
                 existing_goal.goal_current_amount = goal_current_amount
 
+            if existing_goal.goal_current_amount >= existing_goal.goal_target_amount:
+                existing_goal.is_goal_reached = True
+            else:
+                existing_goal.is_goal_reached = False
+
             self.db_session.commit()
 
             return {
@@ -257,10 +251,6 @@ class GoalsDatabase(GoalsInterface):
         except Exception as e:
             logger.error(f"Error in update_goal: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()
-
 
     def delete_goal(self, user_id: str, goal_id: str):
         try:
@@ -290,9 +280,7 @@ class GoalsDatabase(GoalsInterface):
         except Exception as e:
             logger.error(f"Error in delete_goal: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()
+
 
     
     def add_amount_to_goal(self, user_id: str, goal_id: str, amount_to_add: float):
@@ -317,6 +305,11 @@ class GoalsDatabase(GoalsInterface):
 
             goal.goal_current_amount += amount_to_add
 
+            if goal.goal_current_amount >= goal.goal_target_amount:
+                goal.is_goal_reached = True
+            else:
+                goal.is_goal_reached = False
+
             self.db_session.commit()
 
             return {
@@ -326,6 +319,3 @@ class GoalsDatabase(GoalsInterface):
         except Exception as e:
             logger.error(f"Error in add_amount_to_goal: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()

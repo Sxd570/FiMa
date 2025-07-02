@@ -10,6 +10,7 @@ class GoalDetail(BaseModel):
     goal_current_amount: Optional[float] = Field(None, description="Current amount towards the goal")
     goal_remaining_amount: Optional[float] = Field(None, description="Remaining amount to reach the goal")
     goal_percentage: Optional[float] = Field(None, description="Percentage of the goal achieved")
+    is_goal_reached: Optional[bool] = Field(None, description="Indicates if the goal has been reached")
 
 class AddGoalDetail(BaseModel):
     user_id: str = Field(..., description="Unique identifier for the user")
