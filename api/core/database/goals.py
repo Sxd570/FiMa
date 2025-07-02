@@ -1,6 +1,6 @@
 from sqlalchemy import *
 from shared.logger import Logger
-from core.models.tables.goals import Goals
+from core.models.tables.goal import Goal
 from shared.Utility.db_base import get_db_session
 from copy import deepcopy
 from core.models.io_models.goals_io_models import (
@@ -26,11 +26,11 @@ class GoalsDatabase(GoalsInterface):
             self.user_id = user_id
 
             filter_group = [
-                Goals.user_id == self.user_id
+                Goal.user_id == self.user_id
             ]
 
             total_goals_count = self.db_session.query(
-                func.count(Goals.goal_id)
+                func.count(Goal.goal_id)
             ).filter(
                 *filter_group
             ).scalar()
@@ -53,12 +53,12 @@ class GoalsDatabase(GoalsInterface):
             self.user_id = user_id
 
             filter_group = [
-                Goals.user_id == self.user_id,
-                Goals.goal_current_amount >= Goals.goal_target_amount
+                Goal.user_id == self.user_id,
+                Goal.goal_current_amount >= Goal.goal_target_amount
             ]
 
             total_goals_completed = self.db_session.query(
-                func.count(Goals.goal_id)
+                func.count(Goal.goal_id)
             ).filter(
                 *filter_group
             ).scalar()
@@ -81,11 +81,11 @@ class GoalsDatabase(GoalsInterface):
             self.user_id = user_id
 
             filter_group = [
-                Goals.user_id == self.user_id,
+                Goal.user_id == self.user_id,
             ]
 
             total_amount_saved = self.db_session.query(
-                func.sum(Goals.goal_current_amount)
+                func.sum(Goal.goal_current_amount)
             ).filter(
                 *filter_group,
             ).scalar()
@@ -108,11 +108,11 @@ class GoalsDatabase(GoalsInterface):
             self.user_id = user_id
 
             filter_group = [
-                Goals.user_id == self.user_id,
+                Goal.user_id == self.user_id,
             ]
 
             total_goal_amount = self.db_session.query(
-                func.sum(Goals.goal_target_amount)
+                func.sum(Goal.goal_target_amount)
             ).filter(
                 *filter_group,
             ).scalar()
@@ -135,9 +135,9 @@ class GoalsDatabase(GoalsInterface):
             self.user_id = user_id
 
             query = self.db_session.query(
-                    Goals
+                    Goal
                 ).filter(
-                    Goals.user_id == self.user_id
+                    Goal.user_id == self.user_id
                 )
 
             if offset:
@@ -149,13 +149,13 @@ class GoalsDatabase(GoalsInterface):
             
             if not db_response:
                 return GoalDetailsDBResponse(
-                    goals=[]
+                    Goal=[]
                 )
             
             response = deepcopy(db_response)
 
             goal_details = GoalDetailsDBResponse(
-                goals=[
+                Goal=[
                     GoalDetail(
                         goal_id=goal.goal_id,
                         goal_name=goal.goal_name,
@@ -180,9 +180,9 @@ class GoalsDatabase(GoalsInterface):
             self.db_session = get_db_session()
 
             existing_goal = self.db_session.query(
-                Goals
+                Goal
             ).filter(
-                Goals.goal_id == goal.goal_id
+                Goal.goal_id == goal.goal_id
             ).first()
             if existing_goal:
                 logger.error(f"Goal with goal_id {goal.goal_id} already exists. Goal not created.")
@@ -190,7 +190,7 @@ class GoalsDatabase(GoalsInterface):
                     "message": "Goal already exists",
                 }
 
-            new_goal = Goals(
+            new_goal = Goal(
                 user_id=goal.user_id,
                 goal_id=goal.goal_id,
                 goal_name=goal.goal_name,
@@ -224,12 +224,12 @@ class GoalsDatabase(GoalsInterface):
             goal_current_amount = goal.goal_current_amount
 
             filter_group = [
-                Goals.user_id == user_id,
-                Goals.goal_id == goal.goal_id
+                Goal.user_id == user_id,
+                Goal.goal_id == goal.goal_id
             ]
 
             existing_goal = self.db_session.query(
-                    Goals
+                    Goal
                 ).filter(
                     *filter_group
                 ).first()
@@ -266,12 +266,12 @@ class GoalsDatabase(GoalsInterface):
         try:
             self.db_session = get_db_session()
             filter_group = [
-                Goals.user_id == user_id, 
-                Goals.goal_id == goal_id
+                Goal.user_id == user_id, 
+                Goal.goal_id == goal_id
             ]
 
             goal = self.db_session.query(
-                Goals
+                Goal
                 ).filter(
                     *filter_group
                 ).first()
@@ -300,12 +300,12 @@ class GoalsDatabase(GoalsInterface):
             self.db_session = get_db_session()
 
             filter_group = [
-                Goals.user_id == user_id, 
-                Goals.goal_id == goal_id
+                Goal.user_id == user_id, 
+                Goal.goal_id == goal_id
             ]
 
             goal = self.db_session.query(
-                    Goals
+                    Goal
                 ).filter(
                     *filter_group
                 ).first()
