@@ -3,8 +3,8 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-class Transactions(Base):
-    __tablename__ = 'transactions'
+class Transaction(Base):
+    __tablename__ = 'transaction'
     
     user_id = Column(String(36), nullable=False)
     transaction_id = Column(String(36), primary_key=True, nullable=False)
