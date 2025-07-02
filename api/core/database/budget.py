@@ -66,6 +66,7 @@ class BudgetDatabase(BudgetInterface):
             logger.error(f"Error in get_total_spent: {e}")
             raise e
         
+        
     def get_near_limit_count(self, user_id, date):
         try:
             self.db_session = get_db_session()
@@ -91,6 +92,7 @@ class BudgetDatabase(BudgetInterface):
         except Exception as e:
             logger.error(f"Error in get_near_limit_count: {e}")
             raise e
+        
         
     def get_over_limit_count(self, user_id, date):
         try:
