@@ -7,8 +7,15 @@ from core.models.io_models.goals_io_models import (
     CreateGoalDetailPayload,
     GoalsDetailsResponse,
     GoalsOverviewResponse,
-    UpdateGoalDetailPayload, 
-    EditGoalDetail
+    UpdateGoalDetailPayload,
+    EditGoalDetailDBRequest,
+    DeleteGoalDetailDBRequest,
+    DeleteGoalDetailPayload,
+    AddAmountToGoalDetailPayload,
+    AddAmountToGoalDetailDBRequest,
+    GetGoalsDashboardPayload,
+    GetGoalsDashboardDBRequest,
+    GetGoalsDBRequest,
 )
 
 logger = Logger(__name__)
@@ -20,63 +27,67 @@ class GoalsUseCase:
         self.user_id = None
         self.goal_id = None
 
-        self.goal_name = None
-        self.goal_description = None
-        self.goal_target_amount = 0
-        self.goal_current_amount = 0
-
-        self.total_goals_count = 0
-        self.total_goals_completed = 0
-        self.total_amount_saved = 0
-        self.total_goal_amount = 0
-
-
     def get_goals_overview(self, user_id: str):
         try:
             self.user_id = user_id
 
-            self.total_goals_count = self.goal_database.get_total_goals_count(self.user_id)
-            self.total_goals_completed = self.goal_database.get_total_goals_completed(self.user_id)
-            self.total_amount_saved = self.goal_database.get_total_amount_saved(self.user_id)
-            self.total_goal_amount = self.goal_database.get_total_goals_amount(self.user_id)
+            self.total_goals_count = self.goal_database.get_total_goals_count(
+                self.user_id
+            )
+            self.total_goals_completed = self.goal_database.get_total_goals_completed(
+                self.user_id
+            )
+            self.total_amount_saved = self.goal_database.get_total_amount_saved(
+                self.user_id
+            )
+            self.total_goal_amount = self.goal_database.get_total_goals_amount(
+                self.user_id
+            )
 
             return GoalsOverviewResponse(
                 total_goals_count=self.total_goals_count,
                 total_goals_completed=self.total_goals_completed,
                 total_amount_saved=float(self.total_amount_saved),
-                total_goal_amount=float(self.total_goal_amount)
+                total_goal_amount=float(self.total_goal_amount),
             )
 
         except Exception as e:
             logger.error(f"Error in get_goals_overview use case: {e}")
             raise e
-        
-    
+
     def get_goal_details(self, user_id: str):
         try:
             self.user_id = user_id
 
-            goal_details = self.goal_database.get_goal_details(self.user_id)
-            
+            db_request = GetGoalsDBRequest(user_id=self.user_id)
+
+            goal_details = self.goal_database.get_goal_details(db_request=db_request)
+
             return GoalsDetailsResponse(
-                goals = [
+                goals=[
                     GoalDetail(
                         goal_id=goal.goal_id,
                         goal_name=goal.goal_name,
                         goal_description=goal.goal_description,
                         goal_target_amount=float(goal.goal_target_amount),
                         goal_current_amount=float(goal.goal_current_amount),
-                        goal_remaining_amount=float(goal.goal_target_amount - goal.goal_current_amount),
-                        goal_percentage=float(goal.goal_current_amount / goal.goal_target_amount * 100 if goal.goal_target_amount > 0 else 0),
-                        is_goal_reached=goal.is_goal_reached
-                    ) for goal in goal_details.goals
+                        goal_remaining_amount=float(
+                            goal.goal_target_amount - goal.goal_current_amount
+                        ),
+                        goal_percentage=float(
+                            goal.goal_current_amount / goal.goal_target_amount * 100
+                            if goal.goal_target_amount > 0
+                            else 0
+                        ),
+                        is_goal_reached=goal.is_goal_reached,
+                    )
+                    for goal in goal_details.goals
                 ]
             )
         except Exception as e:
             logger.error(f"Error in get_goal_details use case: {e}")
             raise e
-        
-    
+
     def create_goal(self, user_id: str, params: CreateGoalDetailPayload):
         try:
             self.user_id = user_id
@@ -85,10 +96,7 @@ class GoalsUseCase:
             self.goal_target_amount = params.goal_target_amount
             self.goal_current_amount = 0
 
-            self.goal_id = goal_id(
-                goal_name=self.goal_name, 
-                user_id=self.user_id
-            )
+            self.goal_id = goal_id(goal_name=self.goal_name, user_id=self.user_id)
 
             db_request = AddGoalDetailDBRequest(
                 goal_id=self.goal_id,
@@ -99,31 +107,29 @@ class GoalsUseCase:
                 goal_current_amount=float(self.goal_current_amount),
             )
 
-            status = self.goal_database.create_goal(
-                db_request=db_request
-            )
+            status = self.goal_database.create_goal(db_request=db_request)
 
-            return status  
+            return status
         except Exception as e:
             logger.error(f"Error in create_goal use case: {e}")
             raise e
-        
-    
-    def edit_goal(self, user_id: str, params: UpdateGoalDetailPayload):
+
+    def edit_goal(self, payload: UpdateGoalDetailPayload):
         try:
-            self.user_id = user_id
-            self.goal_id = params.goal_id
+            self.user_id = payload.user_id
+            self.goal_id = payload.goal_id
 
-            if params.goal_name is not None:
-                self.goal_name = params.goal_name
-            if params.goal_description is not None:
-                self.goal_description = params.goal_description
-            if params.goal_target_amount is not None:
-                self.goal_target_amount = params.goal_target_amount
-            if params.goal_current_amount is not None:
-                self.goal_current_amount = params.goal_current_amount
+            if payload.goal_name:
+                self.goal_name = payload.goal_name
+            if payload.goal_description:
+                self.goal_description = payload.goal_description
+            if payload.goal_target_amount:
+                self.goal_target_amount = payload.goal_target_amount
+            if payload.goal_current_amount:
+                self.goal_current_amount = payload.goal_current_amount
 
-            query_input = EditGoalDetail(
+            db_request = EditGoalDetailDBRequest(
+                user_id=self.user_id,
                 goal_id=self.goal_id,
                 goal_name=self.goal_name,
                 goal_description=self.goal_description,
@@ -131,56 +137,58 @@ class GoalsUseCase:
                 goal_current_amount=float(self.goal_current_amount),
             )
 
-            status = self.goal_database.edit_goal(
-                user_id=self.user_id, goal=query_input
-            )
+            status = self.goal_database.edit_goal(db_request=db_request)
 
-            return status  
+            return status
         except Exception as e:
             logger.error(f"Error in edit_goal use case: {e}")
             raise e
-        
 
-    def delete_goal(self, user_id: str, goal_id: str):
+    def delete_goal(self, payload: DeleteGoalDetailPayload):
         try:
-            self.user_id = user_id
-            self.goal_id = goal_id
+            self.user_id = payload.user_id
+            self.goal_id = payload.goal_id
 
-            status = self.goal_database.delete_goal(
-                user_id=self.user_id, 
-                goal_id=self.goal_id
+            db_request = DeleteGoalDetailDBRequest(
+                user_id=self.user_id, goal_id=self.goal_id
             )
+
+            status = self.goal_database.delete_goal(db_request=db_request)
             return status
         except Exception as e:
             logger.error(f"Error in delete_goal use case: {e}")
             raise e
 
-
-    def add_amount_to_goal(self, user_id: str, goal_id: str, amount_to_add: float):
+    def add_amount_to_goal(self, payload: AddAmountToGoalDetailPayload):
         try:
-            self.user_id = user_id
-            self.goal_id = goal_id
+            self.user_id = payload.user_id
+            self.goal_id = payload.goal_id
+            self.amount_to_add = payload.amount_to_add
 
-            status = self.goal_database.add_amount_to_goal(
-                user_id=self.user_id, 
-                goal_id=self.goal_id, 
-                amount_to_add=amount_to_add
+            db_request = AddAmountToGoalDetailDBRequest(
+                user_id=self.user_id,
+                goal_id=self.goal_id,
+                amount_to_add=self.amount_to_add,
             )
+
+            status = self.goal_database.add_amount_to_goal(db_request=db_request)
+
             return status
         except Exception as e:
             logger.error(f"Error in add_amount_to_goal use case: {e}")
             raise e
-        
-    
-    def get_goals_dashboard(self, user_id: str, limit: int, offset: int):
-        try:
-            self.user_id = user_id
 
-            goals_response = self.goal_database.get_goal_details(
-                user_id=self.user_id, 
-                limit=limit, 
-                offset=offset
+    def get_goals_dashboard(self, payload: GetGoalsDashboardPayload):
+        try:
+            self.user_id = payload.user_id
+            self.limit = payload.limit
+            self.offset = payload.offset
+
+            db_request = GetGoalsDashboardDBRequest(
+                user_id=self.user_id, limit=self.limit, offset=self.offset
             )
+
+            goals_response = self.goal_database.get_goal_details(db_request=db_request)
 
             return GoalsDetailsResponse(
                 goals=[

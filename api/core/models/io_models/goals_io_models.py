@@ -21,7 +21,8 @@ class AddGoalDetailDBRequest(BaseModel):
     goal_current_amount: float = Field(..., description="Current amount towards the goal", ge=0.0)
 
 
-class EditGoalDetail(BaseModel):
+class EditGoalDetailDBRequest(BaseModel):
+    user_id: str = Field(..., description="Unique identifier for the user")
     goal_id: str = Field(..., description="Unique identifier for the goal")
     goal_name: Optional[str] = Field(None, description="Name of the goal")
     goal_description: Optional[str] = Field(None, description="Description of the goal")
@@ -39,10 +40,71 @@ class UpdateGoalDetail(BaseModel):
 
 class DeleteGoalDetailPayload(BaseModel):
     goal_id: str = Field(..., description="Unique identifier for the goal to be deleted")
+    user_id: Optional[str] = Field(
+        None, description="Unique identifier for the user, if applicable"
+    )
+
+
+class DeleteGoalDetailDBRequest(BaseModel):
+    goal_id: str = Field(
+        ..., description="Unique identifier for the goal to be deleted"
+    )
+    user_id: Optional[str] = Field(
+        None, description="Unique identifier for the user, if applicable"
+    )
+
+
+class DeleteGoalDetailRequest(BaseModel):
+    goal_id: str = Field(
+        ..., description="Unique identifier for the goal to be deleted"
+    )
+    user_id: Optional[str] = Field(
+        None, description="Unique identifier for the user, if applicable"
+    )
 
 class AddAmountToGoalDetailPayload(BaseModel):
+    user_id: str = Field(..., description="Unique identifier for the user")
+    goal_id: str = Field(..., description="Unique identifier for the goal")
+    amount_to_add: int = Field(
+        ..., description="Amount to be added to the goal", ge=0.0
+    )
+
+
+class AddAmountToGoalDetailRequest(BaseModel):
     goal_id: str = Field(..., description="Unique identifier for the goal")
     amount_to_add: int = Field(..., description="Amount to be added to the goal", ge=0.0)
+
+
+class AddAmountToGoalDetailDBRequest(BaseModel):
+    user_id: str = Field(..., description="Unique identifier for the user")
+    goal_id: str = Field(..., description="Unique identifier for the goal")
+    amount_to_add: float = Field(
+        ..., description="Amount to be added to the goal", ge=0.0
+    )
+
+
+class GetGoalsDashboardRequest(BaseModel):
+    limit: Optional[int] = Field(5, description="Number of goals to return")
+    offset: Optional[int] = Field(0, description="Offset for pagination")
+
+
+class GetGoalsDashboardPayload(BaseModel):
+    user_id: str = Field(..., description="Unique identifier for the user")
+    limit: Optional[int] = Field(5, description="Number of goals to return")
+    offset: Optional[int] = Field(0, description="Offset for pagination")
+
+
+class GetGoalsDashboardDBRequest(BaseModel):
+    user_id: str = Field(..., description="Unique identifier for the user")
+    limit: Optional[int] = Field(5, description="Number of goals to return")
+    offset: Optional[int] = Field(0, description="Offset for pagination")
+
+
+class GetGoalsDBRequest(BaseModel):
+    user_id: str = Field(..., description="Unique identifier for the user")
+    limit: Optional[int] = Field(None, description="Number of goals to return")
+    offset: Optional[int] = Field(None, description="Offset for pagination")
+
 
 class CreateGoalDetailRequest(BaseModel):
     goal_name: str = Field(..., description="Name of the goal")
@@ -57,6 +119,19 @@ class CreateGoalDetailPayload(BaseModel):
 
 
 class UpdateGoalDetailPayload(BaseModel):
+    user_id: str = Field(..., description="Unique identifier for the user")
+    goal_id: str = Field(..., description="Unique identifier for the goal")
+    goal_name: Optional[str] = Field(None, description="Name of the goal")
+    goal_description: Optional[str] = Field(None, description="Description of the goal")
+    goal_target_amount: Optional[float] = Field(
+        None, description="Target amount for the goal"
+    )
+    goal_current_amount: Optional[float] = Field(
+        None, description="Current amount towards the goal", ge=0.0
+    )
+
+
+class UpdateGoalDetailRequest(BaseModel):
     goal_id: str = Field(..., description="Unique identifier for the goal")
     goal_name: Optional[str] = Field(None, description="Name of the goal")
     goal_description: Optional[str] = Field(None, description="Description of the goal")

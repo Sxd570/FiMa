@@ -4,9 +4,14 @@ from core.use_cases.goals import GoalsUseCase
 from core.models.io_models.goals_io_models import (
     CreateGoalDetailRequest,
     CreateGoalDetailPayload,
+    UpdateGoalDetailRequest,
     UpdateGoalDetailPayload,
+    DeleteGoalDetailRequest,
     DeleteGoalDetailPayload,
-    AddAmountToGoalDetailPayload
+    AddAmountToGoalDetailPayload,
+    AddAmountToGoalDetailRequest,
+    GetGoalsDashboardRequest,
+    GetGoalsDashboardPayload
 )
 
 logger = Logger(__name__)
@@ -56,12 +61,20 @@ async def create_goal(user_id: str, request: CreateGoalDetailRequest):
     
 
 @router.put("/goals/{user_id}")
-async def edit_goal(user_id: str, request: UpdateGoalDetailPayload):
+async def edit_goal(user_id: str, request: UpdateGoalDetailRequest):
     try:
-        goals = GoalsUseCase()
-        status = goals.edit_goal(
+        payload = UpdateGoalDetailPayload(
             user_id=user_id,
-            params=request
+            goal_id=request.goal_id,
+            goal_name=request.goal_name,
+            goal_description=request.goal_description,
+            goal_target_amount=request.goal_target_amount,
+            goal_current_amount=request.goal_current_amount
+        )
+        goals = GoalsUseCase()
+
+        status = goals.edit_goal(
+            payload=payload
         )
         return status
     except Exception as e:
@@ -70,13 +83,19 @@ async def edit_goal(user_id: str, request: UpdateGoalDetailPayload):
     
 
 @router.delete("/goals/{user_id}")
-async def delete_goal(user_id: str, request: DeleteGoalDetailPayload):
+async def delete_goal(user_id: str, request: DeleteGoalDetailRequest):
     try:
-        goals = GoalsUseCase()
-        status = goals.delete_goal(
-            user_id=user_id,
-            goal_id=request.goal_id
+        payload = DeleteGoalDetailPayload(
+            goal_id=request.goal_id,
+            user_id=user_id
         )
+
+        goals = GoalsUseCase()
+
+        status = goals.delete_goal(
+            payload=payload
+        )
+
         return status
     except Exception as e:
         logger.error(f"Error in delete_goal: {e}")
@@ -84,14 +103,20 @@ async def delete_goal(user_id: str, request: DeleteGoalDetailPayload):
     
 
 @router.patch("/goals/{user_id}")
-async def add_amount_to_goal(user_id: str, request: AddAmountToGoalDetailPayload):
+async def add_amount_to_goal(user_id: str, request: AddAmountToGoalDetailRequest):
     try:
-        goals = GoalsUseCase()
-        status = goals.add_amount_to_goal(
+        payload = AddAmountToGoalDetailPayload(
             user_id=user_id,
             goal_id=request.goal_id,
             amount_to_add=request.amount_to_add
         )
+
+        goals = GoalsUseCase()
+
+        status = goals.add_amount_to_goal(
+            payload=payload
+        )
+
         return status
     except Exception as e:
         logger.error(f"Error in add_amount_to_goal: {e}")
@@ -99,10 +124,20 @@ async def add_amount_to_goal(user_id: str, request: AddAmountToGoalDetailPayload
     
 
 @router.get("/goals/dashboard/{user_id}")
-async def get_goals_dashboard(user_id: str, limit: int = 4, offset: int = 0):
+async def get_goals_dashboard(user_id: str, request: GetGoalsDashboardRequest):
     try:
+        payload = GetGoalsDashboardPayload(
+            user_id=user_id,
+            limit=request.limit,
+            offset=request.offset
+        )
+
         goals = GoalsUseCase()
-        dashboard_data = goals.get_goals_dashboard(user_id, limit, offset)
+
+        dashboard_data = goals.get_goals_dashboard(
+            payload=payload
+        )
+
         return dashboard_data
     except Exception as e:
         logger.error(f"Error in get_goals_dashboard: {e}")
