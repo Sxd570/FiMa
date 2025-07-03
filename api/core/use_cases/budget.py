@@ -1,6 +1,10 @@
 from shared.logger import Logger
 from core.database.budget import BudgetDatabase
-from core.models.io_models.budget_io_models import GetBudgetOverviewResponse
+from core.models.io_models.budget_io_models import (
+    GetBudgetOverviewResponse,
+    GetBudgetDetailsResponse,
+    BudgetDetail
+)
 logger = Logger(__name__)
 
 class BudgetUseCase:
@@ -48,7 +52,20 @@ class BudgetUseCase:
 
             budget_details = self.budget_database.get_budget_details(self.user_id, self.date)
 
-            return budget_details
+            return GetBudgetDetailsResponse(
+                budget_details = [
+                    BudgetDetail(
+                        budget_id=detail.budget_id,
+                        category_name=detail.category_name,
+                        budget_allocated_amount=float(detail.budget_allocated_amount),
+                        budget_spent_amount=float(detail.budget_spent_amount),
+                        budget_allocated_month=detail.budget_allocated_month,
+                        budget_remaining_amount=float(detail.budget_allocated_amount) - float(detail.budget_spent_amount),
+                        is_limit_reached=detail.is_limit_reached,
+                        is_over_limit=detail.is_over_limit
+                    ) for detail in budget_details.budget_details
+                ]
+            )
 
         except Exception as e:
             logger.error(f"Error in get_budget_details use case: {e}")

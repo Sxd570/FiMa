@@ -14,3 +14,19 @@ class GetBudgetOverviewResponse(BaseModel):
     budget_total_spent: float = Field(..., description="Total amount spent")
     budget_near_limit_count: int = Field(..., description="Count of budgets near their limit")
     budget_over_limit_count: int = Field(..., description="Count of budgets that are over their limit")
+
+class BudgetDetail(BaseModel):
+    budget_id: int = Field(..., description="Unique identifier for the budget")
+    category_name: str = Field(..., description="Name of the budget category")
+    budget_allocated_amount: float = Field(..., description="Allocated amount for the budget")
+    budget_spent_amount: float = Field(..., description="Amount spent from the budget")
+    budget_allocated_month: str = Field(..., description="Month for which the budget is allocated, formatted as 'YYYY-MM'")
+    budget_remaining_amount: Optional[float] = Field(None, description="Remaining amount in the budget")
+    is_limit_reached: bool = Field(..., description="Indicates if the budget limit has been reached")
+    is_over_limit: bool = Field(..., description="Indicates if the budget is over its limit")
+
+class BudgetDetailsDBResponse(BaseModel):
+    budget_details: List[BudgetDetail] = Field(..., description="List of budget details for the specified month")
+
+class GetBudgetDetailsResponse(BaseModel):
+    budget_details: List[BudgetDetail] = Field(..., description="List of budget details for the specified month")
