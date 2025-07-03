@@ -66,6 +66,7 @@ class BudgetUseCase:
                     if self.budget_total_budget and self.budget_total_budget != 0
                     else None
                 ),
+                budget_date=self.date
             )
 
         except Exception as e:

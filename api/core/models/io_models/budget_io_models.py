@@ -22,7 +22,7 @@ class GetBudgetOverviewResponse(BaseModel):
     budget_over_limit_count: int = Field(..., description="Count of budgets that are over their limit")
     budget_remaining_amount: Optional[float] = Field(None, description="Total remaining budget amount for the month")
     budget_percentage_spent: Optional[float] = Field(None, description="Percentage of the budget that has been spent, calculated as (budget_total_spent / budget_total_budget) * 100 if budget_total_budget is not None and not zero")
-
+    budget_date: str = Field(..., description="The month for which the budget overview is provided, formatted as 'YYYY-MM'")
 
 class BudgetDetail(BaseModel):
     budget_id: int = Field(..., description="Unique identifier for the budget")
