@@ -3,7 +3,7 @@ from shared.Utility.generate_id import goal_id
 from core.database.goals import GoalsDatabase
 from core.models.io_models.goals_io_models import (
     GoalDetail,
-    AddGoalDetail,
+    AddGoalDetailDBRequest,
     CreateGoalDetailPayload,
     GoalsDetailsResponse,
     GoalsOverviewResponse,
@@ -90,7 +90,7 @@ class GoalsUseCase:
                 user_id=self.user_id
             )
 
-            query_input = AddGoalDetail(
+            db_request = AddGoalDetailDBRequest(
                 goal_id=self.goal_id,
                 user_id=self.user_id,
                 goal_name=self.goal_name,
@@ -99,7 +99,9 @@ class GoalsUseCase:
                 goal_current_amount=float(self.goal_current_amount),
             )
 
-            status = self.goal_database.create_goal(query_input)
+            status = self.goal_database.create_goal(
+                db_request=db_request
+            )
 
             return status  
         except Exception as e:

@@ -12,7 +12,7 @@ class GoalDetail(BaseModel):
     goal_percentage: Optional[float] = Field(None, description="Percentage of the goal achieved")
     is_goal_reached: Optional[bool] = Field(None, description="Indicates if the goal has been reached")
 
-class AddGoalDetail(BaseModel):
+class AddGoalDetailDBRequest(BaseModel):
     user_id: str = Field(..., description="Unique identifier for the user")
     goal_id: str = Field(..., description="Unique identifier for the goal")
     goal_name: str = Field(..., description="Name of the goal")
@@ -44,8 +44,13 @@ class AddAmountToGoalDetailPayload(BaseModel):
     goal_id: str = Field(..., description="Unique identifier for the goal")
     amount_to_add: int = Field(..., description="Amount to be added to the goal", ge=0.0)
 
+class CreateGoalDetailRequest(BaseModel):
+    goal_name: str = Field(..., description="Name of the goal")
+    goal_description: Optional[str] = Field(None, description="Description of the goal")
+    goal_target_amount: float = Field(..., description="Target amount for the goal")
 
 class CreateGoalDetailPayload(BaseModel):
+    user_id: str = Field(..., description="Unique identifier for the user")
     goal_name: str = Field(..., description="Name of the goal")
     goal_description: Optional[str] = Field(None, description="Description of the goal")
     goal_target_amount: float = Field(..., description="Target amount for the goal")

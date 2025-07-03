@@ -2,7 +2,8 @@ from fastapi import APIRouter
 from shared.logger import Logger
 from core.use_cases.goals import GoalsUseCase
 from core.models.io_models.goals_io_models import (
-    CreateGoalDetailPayload, 
+    CreateGoalDetailRequest,
+    CreateGoalDetailPayload,
     UpdateGoalDetailPayload,
     DeleteGoalDetailPayload,
     AddAmountToGoalDetailPayload
@@ -34,12 +35,19 @@ async def get_goal_details(user_id: str):
     
 
 @router.post("/goals/{user_id}")
-async def create_goal(user_id: str, request: CreateGoalDetailPayload):
+async def create_goal(user_id: str, request: CreateGoalDetailRequest):
     try:
-        goals = GoalsUseCase()
-        status = goals.create_goal(
+        payload = CreateGoalDetailPayload(
             user_id=user_id,
-            params=request
+            goal_name=request.goal_name,
+            goal_description=request.goal_description,
+            goal_target_amount=request.goal_target_amount
+        )
+
+        goals = GoalsUseCase()
+
+        status = goals.create_goal(
+            payload=payload
         )
         return status
     except Exception as e:

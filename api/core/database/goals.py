@@ -7,7 +7,7 @@ from core.models.io_models.goals_io_models import (
     GoalDetailsDBResponse,
     GoalDetail,
     EditGoalDetail,
-    AddGoalDetail
+    AddGoalDetailDBRequest
 )
 from core.interfaces.goals_interface import GoalsInterface
 from typing import Optional
@@ -166,7 +166,7 @@ class GoalsDatabase(GoalsInterface):
 
 
 
-    def create_goal(self, goal: AddGoalDetail):
+    def create_goal(self, goal: AddGoalDetailDBRequest):
         try:
             self.db_session = get_db_session()
 
@@ -175,6 +175,7 @@ class GoalsDatabase(GoalsInterface):
             ).filter(
                 Goal.goal_id == goal.goal_id
             ).first()
+            
             if existing_goal:
                 logger.error(f"Goal with goal_id {goal.goal_id} already exists. Goal not created.")
                 return {
@@ -194,8 +195,7 @@ class GoalsDatabase(GoalsInterface):
             self.db_session.commit()
 
             return {
-                "status": "success",
-                "goal_id": goal.goal_id
+                "status": "success"
             }
         except Exception as e:
             logger.error(f"Error in create_goal: {e}")
