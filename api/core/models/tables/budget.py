@@ -9,18 +9,18 @@ class Budget(Base):
     user_id = Column(String(36), nullable=False)
     category_id = Column(String(36), nullable=False)
     budget_id = Column(String(36), primary_key=True, nullable=False)
-    allocated_amount = Column(Integer, nullable=False)
-    spent_amount = Column(Integer, nullable=False)
-    allocated_month = Column(String(7), nullable=False)
-    is_limit_reached = Column(Boolean, nullable=False)
-    is_over_limit = Column(Boolean, nullable=False)
+    budget_allocated_amount = Column(Integer, nullable=False)
+    budget_spent_amount = Column(Integer, nullable=False)
+    budget_allocated_month = Column(String(7), nullable=False)
+    is_budget_limit_reached = Column(Boolean, nullable=False)
+    is_budget_over_limit = Column(Boolean, nullable=False)
 
-    def __init__(self, user_id, category_id, budget_id, allocated_amount, spent_amount, allocated_month, is_limit_reached, is_over_limit):
+    def __init__(self, user_id, category_id, budget_id, budget_allocated_amount, budget_spent_amount, budget_allocated_month, is_budget_limit_reached, is_budget_over_limit):
         self.user_id = user_id
         self.category_id = category_id
         self.budget_id = budget_id
-        self.allocated_amount = allocated_amount
-        self.spent_amount = spent_amount
-        self.allocated_month = allocated_month  
-        self.is_limit_reached = is_limit_reached
-        self.is_over_limit = is_over_limit
+        self.budget_allocated_amount = budget_allocated_amount
+        self.budget_spent_amount = budget_spent_amount
+        self.budget_allocated_month = budget_allocated_month  
+        self.is_budget_limit_reached = is_budget_limit_reached
+        self.is_budget_over_limit = is_budget_over_limit
