@@ -5,7 +5,10 @@ from shared.logger import Logger
 from core.interfaces.budget_interface import BudgetInterface
 from core.models.io_models.budget_io_models import (
     BudgetDetailsDBResponse,
-    BudgetDetail)
+    BudgetDetail,
+    EditBudgetDetailDBRequest,
+    DeleteBudgetDetailDBRequest
+)
 from core.models.tables.budget import Budget
 from core.models.tables.category import Category
 from shared.Utility.db_base import get_db_session
@@ -15,8 +18,6 @@ class BudgetDatabase(BudgetInterface):
     def __init__(self):
         self.db_session = None
         self.user_id = None
-        self.total_budget = 0
-        self.total_fund_allocated = 0
         
     def get_total_budget(self, user_id, date):
         try:
@@ -163,7 +164,7 @@ class BudgetDatabase(BudgetInterface):
             ).filter(
                 *filter_group
             )
-            
+
             if limit is not None:
                 query = query.limit(limit)
             if offset is not None:
@@ -202,4 +203,70 @@ class BudgetDatabase(BudgetInterface):
             return budget_details
         except Exception as e:
             logger.error(f"Error in get_budget_details: {e}")
+            raise e
+        
+    
+    def edit_budget_limit(self, db_request: EditBudgetDetailDBRequest):
+        try:
+            self.db_session = get_db_session()
+
+            self.user_id = db_request.user_id
+            self.budget_id = db_request.budget_id
+            self.new_budget_limit = db_request.new_budget_limit
+
+            filter_group = [
+                Budget.budget_id == self.budget_id,
+                Budget.user_id == self.user_id
+            ]
+
+            budget_detail = self.db_session.query(
+                Budget
+                ).filter(
+                    *filter_group
+                ).first()
+
+            if not budget_detail:
+                raise ValueError("Budget not found to edit.")
+
+            budget_detail.budget_allocated_amount = self.new_budget_limit
+
+            self.db_session.commit()
+
+            return {
+                "message": "Budget limit updated successfully.",
+            }
+        except Exception as e:
+            logger.error(f"Error in edit_budget_limit: {e}")
+            raise e
+        
+    
+    def delete_budget(self, db_request: DeleteBudgetDetailDBRequest):
+        try:
+            self.db_session = get_db_session()
+
+            self.user_id = db_request.user_id
+            self.budget_id = db_request.budget_id
+
+            filter_group = [
+                Budget.budget_id == self.budget_id,
+                Budget.user_id == self.user_id
+            ]
+
+            budget_detail = self.db_session.query(
+                Budget
+                ).filter(
+                    *filter_group
+                ).first()
+
+            if not budget_detail:
+                raise ValueError("Budget not found to delete.")
+
+            self.db_session.delete(budget_detail)
+            self.db_session.commit()
+
+            return {
+                "message": "Budget deleted successfully.",
+            }
+        except Exception as e:
+            logger.error(f"Error in delete_budget: {e}")
             raise e

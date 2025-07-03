@@ -4,6 +4,10 @@ from core.models.io_models.budget_io_models import (
     GetBudgetOverviewResponse,
     GetBudgetDetailsResponse,
     BudgetDetail,
+    EditBudgetDetailPayload,
+    EditBudgetDetailDBRequest,
+    DeleteBudgetDetailPayload,
+    DeleteBudgetDetailDBRequest
 )
 
 logger = Logger(__name__)
@@ -92,4 +96,45 @@ class BudgetUseCase:
 
         except Exception as e:
             logger.error(f"Error in get_budget_details use case: {e}")
+            raise e
+        
+
+    def edit_budget_limit(self, payload: EditBudgetDetailPayload):
+        try:
+            self.budget_database = BudgetDatabase()
+
+            db_request = EditBudgetDetailDBRequest(
+                budget_id=payload.budget_id,
+                new_budget_limit=payload.new_budget_limit,
+                user_id=payload.user_id
+            )
+
+            updated_budget_status = self.budget_database.edit_budget_limit(
+                db_request=db_request
+            )
+
+            return updated_budget_status
+
+        except Exception as e:
+            logger.error(f"Error in edit_budget_limit use case: {e}")
+            raise e
+        
+    
+    def delete_budget(self, payload: DeleteBudgetDetailPayload):
+        try:
+            self.budget_database = BudgetDatabase()
+
+            db_request = DeleteBudgetDetailDBRequest(
+                user_id=payload.user_id,
+                budget_id=payload.budget_id
+            )
+
+            deleted_budget_status = self.budget_database.delete_budget(
+                db_request=db_request
+            )
+
+            return deleted_budget_status
+
+        except Exception as e:
+            logger.error(f"Error in delete_budget use case: {e}")
             raise e

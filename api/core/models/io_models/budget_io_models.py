@@ -2,11 +2,11 @@ from enum import Enum
 from pydantic import BaseModel, Field
 from typing import Optional, List, Union, Any
 
-class BudgetOverviewRequest(BaseModel):
+class GetBudgetOverviewRequest(BaseModel):
     month: str = Field(..., description="The month for which the budget overview is requested, formatted as 'YYYY-MM'.")
 
 
-class BudgetDetailsRequest(BaseModel):
+class GetBudgetDetailsRequest(BaseModel):
     month: str = Field(..., description="The month for which the budget details are requested, formatted as 'YYYY-MM'.")
 
 
@@ -37,3 +37,36 @@ class BudgetDetailsDBResponse(BaseModel):
 
 class GetBudgetDetailsResponse(BaseModel):
     budget_details: List[BudgetDetail] = Field(..., description="List of budget details for the specified month")
+
+
+class EditBudgetDetailRequest(BaseModel):
+    user_id: str = Field(..., description="User ID of the person editing the budget")
+    new_budget_limit: float = Field(..., description="New budget limit to be set for the budget")
+
+
+class EditBudgetDetailPayload(BaseModel):
+    budget_id: str = Field(..., description="Unique identifier for the budget to be edited")
+    new_budget_limit: float = Field(..., description="New budget limit to be set for the budget")
+    user_id: str = Field(..., description="User ID of the person editing the budget")
+
+class EditBudgetDetailDBRequest(BaseModel):
+    budget_id: str = Field(..., description="Unique identifier for the budget to be edited")
+    new_budget_limit: float = Field(..., description="New budget limit to be set for the budget")
+    user_id: str = Field(..., description="User ID of the person editing the budget")
+
+
+class DeleteBudgetDetailRequest(BaseModel):
+    user_id: str = Field(..., description="User ID of the person deleting the budget")
+    budget_id: str = Field(..., description="Unique identifier for the budget to be deleted")
+
+class DeleteBudgetDetailDBRequest(BaseModel):
+    user_id: str = Field(..., description="User ID of the person deleting the budget")
+    budget_id: str = Field(..., description="Unique identifier for the budget to be deleted")
+
+class DeleteBudgetDetailPayload(BaseModel):
+    user_id: str = Field(..., description="User ID of the person deleting the budget")
+    budget_id: str = Field(..., description="Unique identifier for the budget to be deleted")
+
+class DeleteBudgetDetailDBRequest(BaseModel):
+    user_id: str = Field(..., description="User ID of the person deleting the budget")
+    budget_id: str = Field(..., description="Unique identifier for the budget to be deleted")
