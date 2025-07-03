@@ -10,6 +10,11 @@ class GetBudgetDetailsRequest(BaseModel):
     month: str = Field(..., description="The month for which the budget details are requested, formatted as 'YYYY-MM'.")
 
 
+class GetBudgetOverviewPayload(BaseModel):
+    user_id: str = Field(..., description="User ID of the person requesting the budget overview")
+    date: str = Field(..., description="The month for which the budget overview is requested, formatted as 'YYYY-MM'")
+
+
 class GetBudgetOverviewResponse(BaseModel):
     budget_total_budget: float = Field(..., description="Total budget amount")
     budget_total_spent: float = Field(..., description="Total amount spent")
@@ -37,6 +42,23 @@ class BudgetDetailsDBResponse(BaseModel):
 
 class GetBudgetDetailsResponse(BaseModel):
     budget_details: List[BudgetDetail] = Field(..., description="List of budget details for the specified month")
+
+
+class GetBudgetDetailsPayload(BaseModel):
+    user_id: str = Field(..., description="User ID of the person requesting the budget details")
+    date: str = Field(..., description="The month for which the budget details are requested, formatted as 'YYYY-MM'")
+
+
+class GetBudgetDetailsDBRequest(BaseModel):
+    user_id: str = Field(..., description="User ID of the person requesting the budget details")
+    date: str = Field(..., description="The month for which the budget details are requested, formatted as 'YYYY-MM'")
+    limit: Optional[int] = Field(None, description="Optional limit on the number of budget details to return")
+    offset: Optional[int] = Field(None, description="Optional offset for pagination of budget details")
+
+
+class GetBudgetOverviewDBRequest(BaseModel):
+    user_id: str = Field(..., description="User ID of the person requesting the budget overview")
+    date: str = Field(..., description="The month for which the budget overview is requested, formatted as 'YYYY-MM'")
 
 
 class EditBudgetDetailRequest(BaseModel):

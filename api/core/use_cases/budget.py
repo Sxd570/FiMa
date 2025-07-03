@@ -1,6 +1,10 @@
 from shared.logger import Logger
 from core.database.budget import BudgetDatabase
 from core.models.io_models.budget_io_models import (
+    GetBudgetOverviewPayload,
+    GetBudgetDetailsPayload,
+    GetBudgetOverviewDBRequest,
+    GetBudgetDetailsDBRequest,
     GetBudgetOverviewResponse,
     GetBudgetDetailsResponse,
     BudgetDetail,
@@ -23,23 +27,28 @@ class BudgetUseCase:
         self.budget_near_limit_count = 0
         self.budget_over_limit_count = 0
 
-    def get_budget_overview(self, user_id, date):
+    def get_budget_overview(self, payload: GetBudgetOverviewPayload):
         try:
             self.budget_database = BudgetDatabase()
-            self.user_id = user_id
-            self.date = date
+            self.user_id = payload.user_id
+            self.date = payload.date
+
+            db_request = GetBudgetOverviewDBRequest(
+                user_id=self.user_id,
+                date=self.date
+            )
 
             self.budget_total_budget = self.budget_database.get_total_budget(
-                self.user_id, self.date
+                db_request=db_request
             )
             self.budget_total_spent = self.budget_database.get_total_spent(
-                self.user_id, self.date
+                db_request=db_request
             )
             self.budget_near_limit_count = self.budget_database.get_near_limit_count(
-                self.user_id, self.date
+                db_request=db_request
             )
             self.budget_over_limit_count = self.budget_database.get_over_limit_count(
-                self.user_id, self.date
+                db_request=db_request
             )
 
             return GetBudgetOverviewResponse(
@@ -63,13 +72,18 @@ class BudgetUseCase:
             logger.error(f"Error in get_budget_overview use case: {e}")
             raise e
 
-    def get_budget_details(self, user_id, date):
+    def get_budget_details(self, payload: GetBudgetDetailsPayload):
         try:
             self.budget_database = BudgetDatabase()
-            self.user_id = user_id
-            self.date = date
+            self.user_id = payload.user_id
+            self.date = payload.date
 
-            budget_details = self.budget_database.get_budget_details(self.user_id, self.date)
+            db_request = GetBudgetDetailsDBRequest(
+                user_id=self.user_id,
+                date=self.date
+            )
+
+            budget_details = self.budget_database.get_budget_details(db_request=db_request)
 
             return GetBudgetDetailsResponse(
                 budget_details=[

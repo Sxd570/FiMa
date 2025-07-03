@@ -4,6 +4,8 @@ from sqlalchemy import *
 from shared.logger import Logger
 from core.interfaces.budget_interface import BudgetInterface
 from core.models.io_models.budget_io_models import (
+    GetBudgetOverviewDBRequest,
+    GetBudgetDetailsDBRequest,
     BudgetDetailsDBResponse,
     BudgetDetail,
     EditBudgetDetailDBRequest,
@@ -19,12 +21,12 @@ class BudgetDatabase(BudgetInterface):
         self.db_session = None
         self.user_id = None
         
-    def get_total_budget(self, user_id, date):
+    def get_total_budget(self, db_request: GetBudgetOverviewDBRequest):
         try:
             self.db_session = get_db_session()
-            
-            self.user_id = user_id
-            self.date = date
+
+            self.user_id = db_request.user_id
+            self.date = db_request.date
 
             filter_group = [
                 Budget.user_id == self.user_id,
@@ -47,12 +49,12 @@ class BudgetDatabase(BudgetInterface):
             raise e
 
 
-    def get_total_spent(self, user_id, date):
+    def get_total_spent(self, db_request: GetBudgetOverviewDBRequest):
         try:
             self.db_session = get_db_session()
 
-            self.user_id = user_id
-            self.date = date
+            self.user_id = db_request.user_id
+            self.date = db_request.date
 
             filter_group = [
                 Budget.user_id == self.user_id,
@@ -74,12 +76,12 @@ class BudgetDatabase(BudgetInterface):
             raise e
         
         
-    def get_near_limit_count(self, user_id, date):
+    def get_near_limit_count(self, db_request: GetBudgetOverviewDBRequest):
         try:
             self.db_session = get_db_session()
 
-            self.user_id = user_id
-            self.date = date
+            self.user_id = db_request.user_id
+            self.date = db_request.date
 
             filter_group = [
                 Budget.user_id == self.user_id,
@@ -104,12 +106,12 @@ class BudgetDatabase(BudgetInterface):
             raise e
         
 
-    def get_over_limit_count(self, user_id, date):
+    def get_over_limit_count(self, db_request: GetBudgetOverviewDBRequest):
         try:
             self.db_session = get_db_session()
 
-            self.user_id = user_id
-            self.date = date
+            self.user_id = db_request.user_id
+            self.date = db_request.date
 
             filter_group = [
                 Budget.user_id == self.user_id,
@@ -133,18 +135,18 @@ class BudgetDatabase(BudgetInterface):
             raise e
         
 
-    def get_budget_details(
-        self, 
-        user_id: str, 
-        date: str,
-        limit: Optional[int] = None,
-        offset: Optional[int] = 0
-    ):
+    def get_budget_details(self, db_request: GetBudgetDetailsDBRequest):
         try:
             self.db_session = get_db_session()
 
-            self.user_id = user_id
-            self.date = date
+            self.user_id = db_request.user_id
+            self.date = db_request.date
+
+            if db_request.limit:
+                self.limit = db_request.limit
+
+            if db_request.offset:
+                self.offset = db_request.offset
 
             filter_group = [
                 Budget.user_id == self.user_id,
@@ -165,10 +167,10 @@ class BudgetDatabase(BudgetInterface):
                 *filter_group
             )
 
-            if limit is not None:
-                query = query.limit(limit)
-            if offset is not None:
-                query = query.offset(offset)
+            if self.limit is not None:
+                query = query.limit(self.limit)
+            if self.offset is not None:
+                query = query.offset(self.offset)
             
             db_response = query.all()
 

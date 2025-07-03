@@ -4,7 +4,9 @@ from shared.logger import Logger
 from core.use_cases.budget import BudgetUseCase
 from core.models.io_models.budget_io_models import (
     GetBudgetOverviewRequest,
+    GetBudgetOverviewPayload,
     GetBudgetDetailsRequest,
+    GetBudgetDetailsPayload,
     EditBudgetDetailRequest,
     EditBudgetDetailPayload,
     DeleteBudgetDetailPayload,
@@ -20,9 +22,14 @@ async def get_budget_overview(user_id: str, request: GetBudgetOverviewRequest):
     try:
         date = request.month
 
+        payload = GetBudgetOverviewPayload(
+            user_id=user_id,
+            date=date
+        )
+
         budget = BudgetUseCase()
 
-        budget_overview = budget.get_budget_overview(user_id, date)
+        budget_overview = budget.get_budget_overview(payload=payload)
 
         return budget_overview
     except Exception as e:
@@ -37,7 +44,14 @@ async def get_budget_details(user_id: str, request: GetBudgetDetailsRequest):
 
         budget = BudgetUseCase()
 
-        budget_details = budget.get_budget_details(user_id, date)
+        payload = GetBudgetDetailsPayload(
+            user_id=user_id,
+            date=date
+        )
+
+        budget_details = budget.get_budget_details(
+            payload=payload
+        )
 
         return budget_details
     except Exception as e:
