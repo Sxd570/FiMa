@@ -9,7 +9,8 @@ from core.models.io_models.budget_io_models import (
     BudgetDetailsDBResponse,
     BudgetDetail,
     EditBudgetDetailDBRequest,
-    DeleteBudgetDetailDBRequest
+    DeleteBudgetDetailDBRequest,
+    CreateBudgetDBRequest
 )
 from core.models.tables.budget import Budget
 from core.models.tables.category import Category
@@ -271,4 +272,40 @@ class BudgetDatabase(BudgetInterface):
             }
         except Exception as e:
             logger.error(f"Error in delete_budget: {e}")
+            raise e
+        
+    def create_budget(self, db_request: CreateBudgetDBRequest):
+        try:
+            self.db_session = get_db_session()
+
+            user_id = db_request.user_id
+            category_id = db_request.category_id
+            category_name = db_request.category_name
+            budget_id = db_request.budget_id
+            budget_allocated_amount = db_request.budget_allocated_amount
+            budget_allocated_month = db_request.budget_allocated_month
+
+            new_budget = Budget(
+                user_id=user_id,
+                category_id=category_id,
+                budget_id=budget_id,
+                budget_allocated_amount=budget_allocated_amount,
+                budget_allocated_month=budget_allocated_month
+            )
+
+            new_category = Category(
+                category_id=category_id,
+                category_name=category_name
+            )
+
+            self.db_session.add(new_budget)
+            self.db_session.add(new_category)
+            self.db_session.commit()
+
+            return {
+                "message": "Budget created successfully.",
+                "budget_id": budget_id
+            }
+        except Exception as e:
+            logger.error(f"Error in create_budget: {e}")
             raise e

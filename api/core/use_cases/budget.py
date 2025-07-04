@@ -16,7 +16,8 @@ from core.models.io_models.budget_io_models import (
     EditBudgetDetailDBRequest,
     DeleteBudgetDetailPayload,
     DeleteBudgetDetailDBRequest,
-    CreateBudgetPayload
+    CreateBudgetPayload,
+    CreateBudgetDBRequest
 )
 
 logger = Logger(__name__)
@@ -179,10 +180,12 @@ class BudgetUseCase:
             )
 
             db_request = CreateBudgetDBRequest(
-                user_id=payload.user_id,
-                category_name=payload.category_name,
-                budget_allocated_amount=payload.budget_allocated_amount,
-                budget_allocated_month=payload.budget_allocated_month
+                user_id=user_id,
+                category_id=category_id,
+                category_name=category_name,
+                budget_id=budget_id,
+                budget_allocated_amount=budget_allocated_amount,
+                budget_allocated_month=budget_allocated_month
             )
 
             created_budget_status = self.budget_database.create_budget(

@@ -9,5 +9,4 @@ CREATE TABLE `transaction` (
     `transaction_date` VARCHAR(50) NOT NULL,
     FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
     FOREIGN KEY (`category_id`) REFERENCES `category`(`category_id`),
-    FOREIGN KEY (`transaction_type_id`) REFERENCES `transaction_types`(`transaction_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

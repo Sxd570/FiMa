@@ -80,42 +80,23 @@ def category_id(
     return str(uuid.uuid5(namespace_uuid, mapping))
 
 
-def transaction_type_id(
-    user_id: str,
-    type_name: str
-) -> str:
-    """
-    Generate a unique transaction type identifier based on the user ID and type name.
-
-    Args:
-        user_id (str): The unique identifier of the user.
-        type_name (str): The name of the transaction type.
-
-    Returns:
-        str: A unique identifier for the transaction type.
-    """
-    sanitized_type_name = type_name.replace(" ", "").lower()
-    mapping = f"{user_id}_{sanitized_type_name}"
-    return str(uuid.uuid5(namespace_uuid, mapping))
-
-
 def transaction_id(
     user_id: str,
-    transaction_type_id: str,
+    category_id: str,
     transaction_date: str,
     amount: float
 ) -> str:
     """
-    Generate a unique transaction identifier based on the user ID, transaction type ID, date, and amount.
+    Generate a unique transaction identifier based on the user ID, category ID, date, and amount.
 
     Args:
         user_id (str): The unique identifier of the user.
-        transaction_type_id (str): The unique identifier of the transaction type.
+        category_id (str): The unique identifier of the category.
         transaction_date (str): The date of the transaction.
         amount (float): The amount of the transaction.
 
     Returns:
         str: A unique identifier for the transaction.
     """
-    mapping = f"{user_id}_{transaction_type_id}_{transaction_date}_{amount}"
+    mapping = f"{user_id}_{category_id}_{transaction_date}_{amount}"
     return str(uuid.uuid5(namespace_uuid, mapping))

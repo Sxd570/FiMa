@@ -106,3 +106,12 @@ class CreateBudgetPayload(BaseModel):
     month: str = Field(..., description="The month for which the budget is being created, formatted as 'YYYY-MM'")
     budget_limit_amount: float = Field(..., description="The budget limit to be set for the specified month")
     name: str = Field(..., description="Name of the budget category")
+
+
+class CreateBudgetDBRequest(BaseModel):
+    user_id: str = Field(..., description="User ID of the person creating the budget")
+    category_id: str = Field(..., description="Category ID for the budget")
+    category_name: str = Field(..., description="Name of the budget category")
+    budget_id: str = Field(..., description="Unique identifier for the budget")
+    budget_allocated_amount: float = Field(..., description="The budget limit to be set for the specified month")
+    budget_allocated_month: str = Field(..., description="The month for which the budget is being created, formatted as 'YYYY-MM'")
