@@ -112,12 +112,14 @@ async def create_budget(request: CreateBudgetRequest):
         budget_limit_amount = request.budget_limit
         name = request.name
         month = request.month
+        transaction_type = request.transaction_type
 
         payload = CreateBudgetPayload(
             user_id=user_id,
             month=month,
             budget_limit_amount=budget_limit_amount,
-            name=name   
+            name=name,
+            transaction_type=transaction_type
         )
 
         budget = BudgetUseCase()

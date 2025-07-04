@@ -3,7 +3,7 @@ CREATE TABLE `transaction` (
     `transaction_id` VARCHAR(36) PRIMARY NOT NULL,
     `user_id` VARCHAR(36) NOT NULL,
     `category_id` VARCHAR(36) NOT NULL,
-    `transaction_type_id` VARCHAR(36) NOT NULL,
+    `transaction_type` VARCHAR(36) NOT NULL,
     `transaction_info` VARCHAR(255) NOT NULL,
     `transaction_amount` INT NOT NULL,
     `transaction_date` VARCHAR(50) NOT NULL,

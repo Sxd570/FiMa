@@ -99,6 +99,7 @@ class CreateBudgetRequest(BaseModel):
     month: str = Field(..., description="The month for which the budget is being created, formatted as 'YYYY-MM'")
     budget_limit: float = Field(..., description="The budget limit to be set for the specified month")
     name: str = Field(..., description="Name of the budget category")
+    transaction_type: str = Field(..., description="Transaction type for the budget, if applicable. This can be used to specify a predefined type or a custom one.")
 
 
 class CreateBudgetPayload(BaseModel):
@@ -106,6 +107,7 @@ class CreateBudgetPayload(BaseModel):
     month: str = Field(..., description="The month for which the budget is being created, formatted as 'YYYY-MM'")
     budget_limit_amount: float = Field(..., description="The budget limit to be set for the specified month")
     name: str = Field(..., description="Name of the budget category")
+    transaction_type: str = Field(..., description="Transaction type for the budget, if applicable. This can be used to specify a predefined type or a custom one.")
 
 
 class CreateBudgetDBRequest(BaseModel):
@@ -115,3 +117,4 @@ class CreateBudgetDBRequest(BaseModel):
     budget_id: str = Field(..., description="Unique identifier for the budget")
     budget_allocated_amount: float = Field(..., description="The budget limit to be set for the specified month")
     budget_allocated_month: str = Field(..., description="The month for which the budget is being created, formatted as 'YYYY-MM'")
+    transaction_type: str = Field(..., description="Transaction type for the budget, if applicable. This can be used to specify a predefined type or a custom one.")

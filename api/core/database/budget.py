@@ -284,18 +284,24 @@ class BudgetDatabase(BudgetInterface):
             budget_id = db_request.budget_id
             budget_allocated_amount = db_request.budget_allocated_amount
             budget_allocated_month = db_request.budget_allocated_month
+            transaction_type = db_request.transaction_type
 
             new_budget = Budget(
                 user_id=user_id,
                 category_id=category_id,
                 budget_id=budget_id,
                 budget_allocated_amount=budget_allocated_amount,
-                budget_allocated_month=budget_allocated_month
+                budget_allocated_month=budget_allocated_month,
+                budget_spent_amount=0,
+                is_budget_limit_reached=False,
+                is_budget_over_limit=False
             )
 
             new_category = Category(
+                user_id=user_id,
                 category_id=category_id,
-                category_name=category_name
+                category_name=category_name,
+                transaction_type=transaction_type
             )
 
             self.db_session.add(new_budget)
