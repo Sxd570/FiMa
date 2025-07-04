@@ -9,7 +9,6 @@ provider:
   stage: dev
   environment:
     ENVIRONMENT: dev
-    CONFIG_LEVEL: local
   iamRoleStatements:
     - Effect: Allow
       Action:

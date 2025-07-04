@@ -1,15 +1,19 @@
 from sqlalchemy import *
 from shared.logger import Logger
-from core.models.tables.goals import Goals
-from core.database.base import get_db_session
+from core.models.tables.goal import Goal
+from shared.Utility.db_base import get_db_session
 from copy import deepcopy
 from core.models.io_models.goals_io_models import (
     GoalDetailsDBResponse,
     GoalDetail,
-    EditGoalDetail,
-    AddGoalDetail
+    EditGoalDetailDBRequest,
+    AddGoalDetailDBRequest,
+    DeleteGoalDetailDBRequest,
+    AddAmountToGoalDetailDBRequest,
+    GetGoalsDBRequest,
 )
 from core.interfaces.goals_interface import GoalsInterface
+from typing import Optional
 
 logger = Logger(__name__)
 
@@ -25,11 +29,11 @@ class GoalsDatabase(GoalsInterface):
             self.user_id = user_id
 
             filter_group = [
-                Goals.user_id == self.user_id
+                Goal.user_id == self.user_id
             ]
 
             total_goals_count = self.db_session.query(
-                func.count(Goals.goal_id)
+                func.count(Goal.goal_id)
             ).filter(
                 *filter_group
             ).scalar()
@@ -41,9 +45,7 @@ class GoalsDatabase(GoalsInterface):
         except Exception as e:
             logger.error(f"Error in get_goals_overview: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()
+
 
 
     def get_total_goals_completed(self, user_id: str):
@@ -52,12 +54,12 @@ class GoalsDatabase(GoalsInterface):
             self.user_id = user_id
 
             filter_group = [
-                Goals.user_id == self.user_id,
-                Goals.goal_current_amount >= Goals.goal_target_amount
+                Goal.user_id == self.user_id,
+                Goal.goal_current_amount >= Goal.goal_target_amount
             ]
 
             total_goals_completed = self.db_session.query(
-                func.count(Goals.goal_id)
+                func.count(Goal.goal_id)
             ).filter(
                 *filter_group
             ).scalar()
@@ -69,9 +71,7 @@ class GoalsDatabase(GoalsInterface):
         except Exception as e:
             logger.error(f"Error in get_total_goals_completed: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()
+
     
 
     def get_total_amount_saved(self, user_id: str):
@@ -80,11 +80,11 @@ class GoalsDatabase(GoalsInterface):
             self.user_id = user_id
 
             filter_group = [
-                Goals.user_id == self.user_id,
+                Goal.user_id == self.user_id,
             ]
 
             total_amount_saved = self.db_session.query(
-                func.sum(Goals.goal_current_amount)
+                func.sum(Goal.goal_current_amount)
             ).filter(
                 *filter_group,
             ).scalar()
@@ -96,9 +96,7 @@ class GoalsDatabase(GoalsInterface):
         except Exception as e:
             logger.error(f"Error in get_total_amount_saved: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()
+
 
 
     def get_total_goals_amount(self, user_id: str):
@@ -107,11 +105,11 @@ class GoalsDatabase(GoalsInterface):
             self.user_id = user_id
 
             filter_group = [
-                Goals.user_id == self.user_id,
+                Goal.user_id == self.user_id,
             ]
 
             total_goal_amount = self.db_session.query(
-                func.sum(Goals.goal_target_amount)
+                func.sum(Goal.goal_target_amount)
             ).filter(
                 *filter_group,
             ).scalar()
@@ -123,37 +121,45 @@ class GoalsDatabase(GoalsInterface):
         except Exception as e:
             logger.error(f"Error in get_total_goals_amount: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()
 
-
-    def get_goal_details(self, user_id: str):
+    def get_goal_details(self, db_request: GetGoalsDBRequest):
         try:
             self.db_session = get_db_session()
-            self.user_id = user_id
 
-            db_response = self.db_session.query(
-                Goals
-            ).filter(
-                Goals.user_id == self.user_id
-            ).all()
+            self.user_id = db_request.user_id
+
+            query = self.db_session.query(
+                    Goal
+                ).filter(
+                    Goal.user_id == self.user_id
+                )
+
+            offset = getattr(db_request, "offset", None)
+            limit = getattr(db_request, "limit", None)
+
+            if offset is not None:
+                query = query.offset(offset)
+            if limit is not None:
+                query = query.limit(limit)
+
+            db_response = query.all()
             
             if not db_response:
                 return GoalDetailsDBResponse(
-                    goals=[]
+                    Goal=[]
                 )
             
             response = deepcopy(db_response)
 
             goal_details = GoalDetailsDBResponse(
-                goals=[
+                Goal=[
                     GoalDetail(
                         goal_id=goal.goal_id,
                         goal_name=goal.goal_name,
                         goal_description=goal.goal_description,
                         goal_target_amount=goal.goal_target_amount,
                         goal_current_amount=goal.goal_current_amount,
+                        is_goal_reached=goal.is_goal_reached
                     ) for goal in response
                 ]
             )
@@ -162,27 +168,26 @@ class GoalsDatabase(GoalsInterface):
         except Exception as e:
             logger.error(f"Error in get_goal_details: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()
 
 
-    def create_goal(self, goal: AddGoalDetail):
+
+    def create_goal(self, goal: AddGoalDetailDBRequest):
         try:
             self.db_session = get_db_session()
 
             existing_goal = self.db_session.query(
-                Goals
+                Goal
             ).filter(
-                Goals.goal_id == goal.goal_id
+                Goal.goal_id == goal.goal_id
             ).first()
+            
             if existing_goal:
                 logger.error(f"Goal with goal_id {goal.goal_id} already exists. Goal not created.")
                 return {
                     "message": "Goal already exists",
                 }
 
-            new_goal = Goals(
+            new_goal = Goal(
                 user_id=goal.user_id,
                 goal_id=goal.goal_id,
                 goal_name=goal.goal_name,
@@ -195,75 +200,72 @@ class GoalsDatabase(GoalsInterface):
             self.db_session.commit()
 
             return {
-                "status": "success",
-                "goal_id": goal.goal_id
+                "status": "success"
             }
         except Exception as e:
             logger.error(f"Error in create_goal: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()
 
-
-    def edit_goal(self, user_id, goal: EditGoalDetail):
+    def edit_goal(self, db_request: EditGoalDetailDBRequest):
         try:
             self.db_session = get_db_session()
 
-            goal_name = goal.goal_name
-            goal_description = goal.goal_description
-            goal_target_amount = goal.goal_target_amount
-            goal_current_amount = goal.goal_current_amount
+            self.user_id = db_request.user_id
+            self.goal_id = db_request.goal_id
+            self.goal_name = db_request.goal_name
+            self.goal_description = db_request.goal_description
+            self.goal_target_amount = db_request.goal_target_amount
+            self.goal_current_amount = db_request.goal_current_amount
 
-            filter_group = [
-                Goals.user_id == user_id,
-                Goals.goal_id == goal.goal_id
-            ]
+            filter_group = [Goal.user_id == self.user_id, Goal.goal_id == self.goal_id]
 
             existing_goal = self.db_session.query(
-                Goals
-            ).filter(
-                *filter_group
-            ).first()
+                    Goal
+                ).filter(
+                    *filter_group
+                ).first()
             if not existing_goal:
-                logger.error(f"Goal with goal_id {goal.goal_id} does not exist. Goal not updated.")
+                logger.error(
+                    f"Goal with goal_id {self.goal_id} does not exist. Goal not updated."
+                )
                 return {
                     "message": "Goal does not exist",
                 }
 
-            if goal_name:
-                existing_goal.goal_name = goal_name
-            if goal_description:
-                existing_goal.goal_description = goal_description
-            if goal_target_amount:
-                existing_goal.goal_target_amount = goal_target_amount
-            if goal_current_amount:
-                existing_goal.goal_current_amount = goal_current_amount
+            if self.goal_name:
+                existing_goal.goal_name = self.goal_name
+            if self.goal_description:
+                existing_goal.goal_description = self.goal_description
+            if self.goal_target_amount:
+                existing_goal.goal_target_amount = self.goal_target_amount
+            if self.goal_current_amount:
+                existing_goal.goal_current_amount = self.goal_current_amount
+
+            if existing_goal.goal_current_amount >= existing_goal.goal_target_amount:
+                existing_goal.is_goal_reached = True
+            else:
+                existing_goal.is_goal_reached = False
 
             self.db_session.commit()
 
             return {
                 "status": "success",
-                "goal_id": goal.goal_id
             }
         except Exception as e:
             logger.error(f"Error in update_goal: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()
 
-
-    def delete_goal(self, user_id: str, goal_id: str):
+    def delete_goal(self, db_request: DeleteGoalDetailDBRequest):
         try:
             self.db_session = get_db_session()
-            filter_group = [
-                Goals.user_id == user_id, 
-                Goals.goal_id == goal_id
-            ]
+
+            goal_id = db_request.goal_id
+            user_id = db_request.user_id
+
+            filter_group = [Goal.user_id == user_id, Goal.goal_id == goal_id]
 
             goal = self.db_session.query(
-                Goals
+                Goal
                 ).filter(
                     *filter_group
                 ).first()
@@ -282,25 +284,25 @@ class GoalsDatabase(GoalsInterface):
         except Exception as e:
             logger.error(f"Error in delete_goal: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()
 
-    
-    def add_amount_to_goal(self, user_id: str, goal_id: str, amount_to_add: float):
+    def add_amount_to_goal(self, db_request: AddAmountToGoalDetailDBRequest):
         try:
             self.db_session = get_db_session()
 
+            user_id = db_request.user_id
+            goal_id = db_request.goal_id
+            amount_to_add = db_request.amount_to_add
+
             filter_group = [
-                Goals.user_id == user_id, 
-                Goals.goal_id == goal_id
+                Goal.user_id == user_id, 
+                Goal.goal_id == goal_id
             ]
 
             goal = self.db_session.query(
-                Goals
-            ).filter(
-                *filter_group
-            ).first()
+                    Goal
+                ).filter(
+                    *filter_group
+                ).first()
             if not goal:
                 logger.error(f"Goal with goal_id {goal_id} does not exist. Amount not added.")
                 return {
@@ -309,15 +311,14 @@ class GoalsDatabase(GoalsInterface):
 
             goal.goal_current_amount += amount_to_add
 
+            if goal.goal_current_amount >= goal.goal_target_amount:
+                goal.is_goal_reached = True
+            else:
+                goal.is_goal_reached = False
+
             self.db_session.commit()
 
-            return {
-                "status": "success",
-                "goal_id": goal_id
-            }
+            return {"status": "success"}
         except Exception as e:
             logger.error(f"Error in add_amount_to_goal: {e}")
             raise e
-        finally:
-            if self.db_session:
-                self.db_session.close()

@@ -1,16 +1,21 @@
 import os
-from . import db_config_local
-from services.aws.rds import get_db_config
+from services.aws.secret_manager import SecretManager
+from logger import Logger
 
-config_level = os.environ.get("CONFIG_LEVEL", "local")
+logger = Logger()
 
+FIMA_RDS_SECRET = "fima-{}-rds-secret"
+env = os.environ.get("ENVIRONMENT", "dev")
 
-def db_config_cloud():
-    return get_db_config()
-    
+def get_db_path():
+    return FIMA_RDS_SECRET.format(env)
 
 def db_config():
-    if config_level == "local":
-        return db_config_local()
-    else:
-        return db_config_cloud()
+    path = get_db_path()
+    try:
+        secret_manager_session = SecretManager()
+        db_config = secret_manager_session.get_secret(path)
+        return db_config
+    except Exception as e:
+        logger.error(f"Error retrieving database configuration: {e}")
+        raise e
