@@ -10,7 +10,9 @@ from core.models.io_models.budget_io_models import (
     EditBudgetDetailRequest,
     EditBudgetDetailPayload,
     DeleteBudgetDetailPayload,
-    DeleteBudgetDetailRequest
+    DeleteBudgetDetailRequest,
+    CreateBudgetRequest,
+    CreateBudgetPayload
 )
 
 logger = Logger(__name__)
@@ -100,4 +102,30 @@ async def delete_budget(budget_id: str, request: DeleteBudgetDetailRequest):
         return deletion_status
     except Exception as e:
         logger.error(f"Error in delete_budget: {e}")
+        raise e
+    
+
+@router.post("budget/create")
+async def create_budget(request: CreateBudgetRequest):
+    try:
+        user_id = request.user_id
+        budget_limit_amount = request.budget_limit
+        name = request.name
+        month = request.month
+
+        payload = CreateBudgetPayload(
+            user_id=user_id,
+            month=month,
+            budget_limit_amount=budget_limit_amount,
+            name=name   
+        )
+
+        budget = BudgetUseCase()
+        creation_status = budget.create_budget(
+            payload=payload
+        )
+
+        return creation_status
+    except Exception as e:
+        logger.error(f"Error in create_budget: {e}")
         raise e

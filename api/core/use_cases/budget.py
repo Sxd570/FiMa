@@ -1,4 +1,8 @@
 from shared.logger import Logger
+from shared.Utility.generate_id import (
+    budget_id,
+    category_id,
+)
 from core.database.budget import BudgetDatabase
 from core.models.io_models.budget_io_models import (
     GetBudgetOverviewPayload,
@@ -11,7 +15,8 @@ from core.models.io_models.budget_io_models import (
     EditBudgetDetailPayload,
     EditBudgetDetailDBRequest,
     DeleteBudgetDetailPayload,
-    DeleteBudgetDetailDBRequest
+    DeleteBudgetDetailDBRequest,
+    CreateBudgetPayload
 )
 
 logger = Logger(__name__)
@@ -152,4 +157,40 @@ class BudgetUseCase:
 
         except Exception as e:
             logger.error(f"Error in delete_budget use case: {e}")
+            raise e
+        
+    
+    def create_budget(self, payload: CreateBudgetPayload):
+        try:
+            user_id = payload.user_id
+            category_name = payload.name
+            budget_allocated_amount = payload.budget_limit_amount
+            budget_allocated_month = payload.month
+
+            category_id = category_id(
+                user_id=user_id,
+                category_name=category_name
+            )
+
+            budget_id = budget_id(
+                user_id=user_id,
+                category_id=category_id,
+                allocated_month=budget_allocated_month
+            )
+
+            db_request = CreateBudgetDBRequest(
+                user_id=payload.user_id,
+                category_name=payload.category_name,
+                budget_allocated_amount=payload.budget_allocated_amount,
+                budget_allocated_month=payload.budget_allocated_month
+            )
+
+            created_budget_status = self.budget_database.create_budget(
+                db_request=db_request
+            )
+
+            return created_budget_status
+
+        except Exception as e:
+            logger.error(f"Error in create_budget use case: {e}")
             raise e

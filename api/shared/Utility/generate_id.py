@@ -62,7 +62,6 @@ def budget_id(
 
 def category_id(
     user_id: str,
-    transaction_type_id: str,
     category_name: str
 ) -> str:
     """
@@ -77,7 +76,7 @@ def category_id(
         str: A unique identifier for the category.
     """
     sanitized_category_name = category_name.replace(" ", "").lower()
-    mapping = f"{user_id}_{transaction_type_id}_{sanitized_category_name}"
+    mapping = f"{user_id}_{sanitized_category_name}"
     return str(uuid.uuid5(namespace_uuid, mapping))
 
 
