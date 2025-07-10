@@ -85,11 +85,16 @@ class TransactionDatabase(TransactionInterface):
                         transaction_amount=transaction_amount,
                         transaction_date=transaction_date
                     )
-                    for transaction_id, transaction_type_id, transaction_info, transaction_amount, transaction_date, category_name in results
+                    for (
+                        transaction_id, 
+                        transaction_type_id, 
+                        transaction_info, 
+                        transaction_amount, 
+                        transaction_date, 
+                        category_name
+                    ) in results
                 ]
             )
-
-
         except Exception as e:
             logger.error(f"Error fetching transactions: {e}")
             raise e
