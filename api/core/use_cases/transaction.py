@@ -5,7 +5,9 @@ from core.models.io_models.transaction_io_models import (
     GetTransactionPayload,
     GetTransactionDBRequest,
     GetTransactionResponse,
-    TransactionDetail
+    TransactionDetail,
+    CreateTransactionPayload,
+    CreateTransactionDBRequest
 )
 
 logger = Logger(__name__)
@@ -13,9 +15,6 @@ logger = Logger(__name__)
 class TransactionUseCase:
     def __init__(self):
         self.goal_database = TransactionDatabase()
-
-        self.user_id = None
-        self.transaction_id = None
 
     def get_transactions(self, payload: GetTransactionPayload):
         try:
@@ -52,4 +51,43 @@ class TransactionUseCase:
             return transaction_details
         except Exception as e:
             logger.error(f"Error in get_transactions use case: {e}")
+            raise e
+        
+
+    def create_transaction(self, payload: CreateTransactionPayload):
+        try:
+            user_id = payload.user_id
+            category_id = payload.category_id
+            transaction_type_id = payload.transaction_type_id
+            transaction_info = payload.transaction_info
+            transaction_amount = payload.transaction_amount
+            transaction_date = payload.transaction_date
+
+            transaction_id = generate_transaction_id(
+                user_id=user_id,
+                category_id=category_id,
+                transaction_type=transaction_type_id,
+                transaction_date=transaction_date,
+                amount=transaction_amount
+            )
+
+            db_request = CreateTransactionDBRequest(
+                user_id=user_id,
+                transaction_id=transaction_id,
+                category_id=category_id,
+                transaction_type_id=transaction_type_id,
+                transaction_info=transaction_info,
+                transaction_amount=transaction_amount,
+                transaction_date=transaction_date
+            
+            )
+
+            create_transaction_response = self.goal_database.create_transaction(
+                db_request=db_request
+            )
+
+            return create_transaction_response
+
+        except Exception as e:
+            logger.error(f"Error in create_transaction use case: {e}")
             raise e

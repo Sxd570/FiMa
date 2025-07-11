@@ -3,7 +3,9 @@ from shared.logger import Logger
 from core.use_cases.transaction import TransactionUseCase
 from core.models.io_models.transaction_io_models import (
     GetTransactionRequest,
-    GetTransactionPayload
+    GetTransactionPayload,
+    CreateTransactionRequest,
+    CreateTransactionPayload
 )
 
 router = APIRouter()
@@ -39,9 +41,31 @@ def get_transactions(user_id: str, request: GetTransactionRequest):
     
 
 @router.post("/transactions/{user_id}")
-def create_transaction(user_id: str):
+def create_transaction(user_id: str, request: CreateTransactionRequest):
     try:
-        ...
+        category_id = request.category_id
+        transaction_type_id = request.transaction_type_id
+        transaction_info = request.transaction_info
+        transaction_amount = request.transaction_amount
+        transaction_date = request.transaction_date
+
+        payload = CreateTransactionPayload(
+            user_id=user_id,
+            category_id=category_id,
+            transaction_type_id=transaction_type_id,
+            transaction_info=transaction_info,
+            transaction_amount=transaction_amount,
+            transaction_date=transaction_date
+        )
+
+        transaction = TransactionUseCase()
+
+        response = transaction.create_transaction(
+            payload=payload
+        )
+
+        return response
+
     except Exception as e:
         logger.error(f"Error creating transaction for user {user_id}: {e}")
         raise e

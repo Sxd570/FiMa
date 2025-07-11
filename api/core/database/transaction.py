@@ -7,7 +7,8 @@ from shared.Utility.db_base import get_db_session
 from core.models.io_models.transaction_io_models import (
     TransactionDetail,
     GetTransactionDBRequest,
-    GetTransactionDBResponse
+    GetTransactionDBResponse,
+    CreateTransactionDBRequest,
 )
 
 logger = Logger(__name__)
@@ -97,4 +98,39 @@ class TransactionDatabase(TransactionInterface):
             )
         except Exception as e:
             logger.error(f"Error fetching transactions: {e}")
+            raise e
+        
+    
+    def create_transaction(self, db_request: CreateTransactionDBRequest):
+        try:
+            self.db_session = get_db_session()
+
+            user_id = db_request.user_id
+            transaction_id = db_request.transaction_id
+            category_id = db_request.category_id
+            transaction_type_id = db_request.transaction_type_id
+            transaction_info = db_request.transaction_info
+            transaction_amount = db_request.transaction_amount
+            transaction_date = db_request.transaction_date
+
+            new_transaction = Transaction(
+                user_id=user_id,
+                transaction_id=transaction_id,
+                category_id=category_id,
+                transaction_type_id=transaction_type_id,
+                transaction_info=transaction_info,
+                transaction_amount=transaction_amount,
+                transaction_date=transaction_date
+            )
+
+            self.db_session.add(new_transaction)
+            self.db_session.commit()
+
+            return {
+                "message": "Transaction created successfully",
+                "transaction_id": transaction_id
+            }
+        except Exception as e:
+            logger.error(f"Error creating transaction: {e}")
+            self.db_session.rollback()
             raise e
