@@ -1,9 +1,9 @@
 import os
 from services.aws.secret_manager import SecretManager
-from logger import Logger
+from shared.logger import Logger
 
-logger = Logger()
-
+logger = Logger(__name__)
+ 
 FIMA_RDS_SECRET = "fima-{}-rds-secret"
 env = os.environ.get("ENVIRONMENT", "dev")
 
