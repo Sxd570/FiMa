@@ -39,7 +39,7 @@ class TransactionUseCase:
                 transactions=[
                     TransactionDetail(
                         transaction_id=transaction.transaction_id,
-                        transaction_type_id=transaction.transaction_type_id,
+                        transaction_type=transaction.transaction_type,
                         transaction_info=transaction.transaction_info,
                         transaction_amount=float(transaction.transaction_amount),
                         transaction_date=transaction.transaction_date,
@@ -58,7 +58,7 @@ class TransactionUseCase:
         try:
             user_id = payload.user_id
             category_id = payload.category_id
-            transaction_type_id = payload.transaction_type_id
+            transaction_type = payload.transaction_type
             transaction_info = payload.transaction_info
             transaction_amount = payload.transaction_amount
             transaction_date = payload.transaction_date
@@ -66,7 +66,7 @@ class TransactionUseCase:
             transaction_id = generate_transaction_id(
                 user_id=user_id,
                 category_id=category_id,
-                transaction_type=transaction_type_id,
+                transaction_type=transaction_type,
                 transaction_date=transaction_date,
                 amount=transaction_amount
             )
@@ -75,7 +75,7 @@ class TransactionUseCase:
                 user_id=user_id,
                 transaction_id=transaction_id,
                 category_id=category_id,
-                transaction_type_id=transaction_type_id,
+                transaction_type=transaction_type,
                 transaction_info=transaction_info,
                 transaction_amount=transaction_amount,
                 transaction_date=transaction_date

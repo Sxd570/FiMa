@@ -52,7 +52,7 @@ class TransactionDatabase(TransactionInterface):
 
             query = self.db_session.query(
                 Transaction.transaction_id,
-                Transaction.transaction_type_id,
+                Transaction.transaction_type,
                 Transaction.transaction_info,
                 Transaction.transaction_amount,
                 Transaction.transaction_date,
@@ -81,14 +81,14 @@ class TransactionDatabase(TransactionInterface):
                     TransactionDetail(
                         transaction_id=transaction_id,
                         category_name=category_name,
-                        transaction_type_id=transaction_type_id,
+                        transaction_type=transaction_type,
                         transaction_info=transaction_info,
                         transaction_amount=transaction_amount,
                         transaction_date=transaction_date
                     )
                     for (
                         transaction_id, 
-                        transaction_type_id, 
+                        transaction_type, 
                         transaction_info, 
                         transaction_amount, 
                         transaction_date, 
@@ -108,7 +108,7 @@ class TransactionDatabase(TransactionInterface):
             user_id = db_request.user_id
             transaction_id = db_request.transaction_id
             category_id = db_request.category_id
-            transaction_type_id = db_request.transaction_type_id
+            transaction_type = db_request.transaction_type
             transaction_info = db_request.transaction_info
             transaction_amount = db_request.transaction_amount
             transaction_date = db_request.transaction_date
@@ -117,7 +117,7 @@ class TransactionDatabase(TransactionInterface):
                 user_id=user_id,
                 transaction_id=transaction_id,
                 category_id=category_id,
-                transaction_type_id=transaction_type_id,
+                transaction_type=transaction_type,
                 transaction_info=transaction_info,
                 transaction_amount=transaction_amount,
                 transaction_date=transaction_date

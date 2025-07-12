@@ -92,8 +92,8 @@ def drop_goals_table():
 def create_transaction_table():
     op.execute('''
     CREATE TABLE `transaction` (
-        `transaction_id` VARCHAR(36) PRIMARY NOT NULL,
         `user_id` VARCHAR(36) NOT NULL,
+        `transaction_id` VARCHAR(36) PRIMARY KEY NOT NULL,
         `category_id` VARCHAR(36) NOT NULL,
         `transaction_type` VARCHAR(36) NOT NULL,
         `transaction_info` VARCHAR(255) NOT NULL,

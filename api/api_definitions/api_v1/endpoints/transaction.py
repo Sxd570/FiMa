@@ -44,7 +44,7 @@ def get_transactions(user_id: str, request: GetTransactionRequest):
 def create_transaction(user_id: str, request: CreateTransactionRequest):
     try:
         category_id = request.category_id
-        transaction_type_id = request.transaction_type_id
+        transaction_type = request.transaction_type
         transaction_info = request.transaction_info
         transaction_amount = request.transaction_amount
         transaction_date = request.transaction_date
@@ -52,7 +52,7 @@ def create_transaction(user_id: str, request: CreateTransactionRequest):
         payload = CreateTransactionPayload(
             user_id=user_id,
             category_id=category_id,
-            transaction_type_id=transaction_type_id,
+            transaction_type=transaction_type,
             transaction_info=transaction_info,
             transaction_amount=transaction_amount,
             transaction_date=transaction_date
