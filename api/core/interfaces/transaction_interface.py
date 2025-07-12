@@ -11,3 +11,13 @@ class TransactionInterface(ABC):
         :return: A list of transactions matching the request criteria.
         """
         pass
+
+    @abstractmethod
+    def create_transaction(self, db_request):
+        """
+        Create a new transaction based on the provided request.
+        
+        :param db_request: An instance of CreateTransactionDBRequest containing transaction details.
+        :return: The created transaction details.
+        """
+        pass
