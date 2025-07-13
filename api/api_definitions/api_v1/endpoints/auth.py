@@ -60,3 +60,20 @@ async def signup(request: SignupRequest):
     except Exception as e:
         logger.error(f"Signup failed: {str(e)}")
         raise e
+    
+
+@router.post("/refresh_token")
+async def refresh_token(request: RefreshTokenRequest):
+    try:
+        refresh_token = request.refresh_token
+
+        auth = AuthUseCase()
+
+        response = auth.refresh_tokens(
+            refresh_token=refresh_token
+        )
+
+        return response
+    except Exception as e:
+        logger.error(f"Token refresh failed: {str(e)}")
+        raise e
