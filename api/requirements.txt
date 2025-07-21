@@ -8,3 +8,4 @@ boto3
 sqlalchemy
 python-dotenv
 alembic
+cryptography

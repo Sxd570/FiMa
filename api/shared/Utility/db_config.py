@@ -19,3 +19,12 @@ def db_config():
     except Exception as e:
         logger.error(f"Error retrieving database configuration: {e}")
         raise e
+
+def db_config_offline():
+    return {
+        "user": "fima",
+        "password": "rmAQjjCOfM",
+        "host": "localhost",
+        "port": 3306,
+        "database": "fima"
+    }
