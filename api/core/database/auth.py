@@ -84,5 +84,4 @@ class AuthDatabase(AuthInterface):
 
         except Exception as e:
             logger.error(f"Error during login: {str(e)}")
-            self.db_session.rollback()
             raise e

@@ -1,5 +1,5 @@
 from shared.logger import Logger
-from shared.Utility.generate_id import goal_id
+from shared.Utility.generate_id import generate_goal_id
 from core.database.goals import GoalsDatabase
 from core.models.io_models.goals_io_models import (
     GoalDetail,
@@ -96,7 +96,7 @@ class GoalsUseCase:
             self.goal_target_amount = params.goal_target_amount
             self.goal_current_amount = 0
 
-            self.goal_id = goal_id(goal_name=self.goal_name, user_id=self.user_id)
+            self.goal_id = generate_goal_id(goal_name=self.goal_name, user_id=self.user_id)
 
             db_request = AddGoalDetailDBRequest(
                 goal_id=self.goal_id,
