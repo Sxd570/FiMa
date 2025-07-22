@@ -1,19 +1,11 @@
-import os
-from cryptography.fernet import Fernet
-from dotenv import load_dotenv
-
-load_dotenv()
-
-ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY')
-
-fernet = Fernet(ENCRYPTION_KEY.encode())
+import bcrypt
 
 def encrypt_password(password: str) -> str:
-    return fernet.encrypt(password.encode()).decode()
+    """Hashes the password using bcrypt."""
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password.encode(), salt)
+    return hashed.decode()
 
-def decrypt_password(encrypted_password: str) -> str:
-    return fernet.decrypt(encrypted_password.encode()).decode()
-
-
-if __name__ == "__main__":
-    print(ENCRYPTION_KEY)
+def verify_password(hashed_password: str, plain_password: str) -> bool:
+    """Verifies a plain password against the stored bcrypt hash."""
+    return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())

@@ -58,11 +58,9 @@ class AuthDatabase(AuthInterface):
     def login(self, db_payload: LoginDBRequest):
         try:
             user_email = db_payload.user_email
-            password = db_payload.password
 
             filter_group = [
                 User.user_email == user_email,
-                User.user_password == password
             ]
 
             self.db_session = get_db_session()

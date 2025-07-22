@@ -14,7 +14,6 @@ class LoginPayload(BaseModel):
 
 class LoginDBRequest(BaseModel):
     user_email: str = Field(..., description="Email of the user")
-    password: str = Field(..., description="Password of the user")
 
 
 class LoginDBResponse(BaseModel):
@@ -24,7 +23,6 @@ class LoginDBResponse(BaseModel):
 
 class LoginResponse(BaseModel):
     user_id: str = Field(..., description="Unique identifier for the user")
-    user_password: str = Field(..., description="Encrypted password of the user")
 
 
 class SignupRequest(BaseModel):
