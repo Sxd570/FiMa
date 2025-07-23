@@ -1,12 +1,12 @@
-import boto3
 import json
 from shared.logger import Logger
+from infrastructure.aws.boto3 import Boto3
 
 logger = Logger(__name__)
 
 class SecretManager:
     def __init__(self):
-        self.client = boto3.client("secretsmanager")
+        self.client = Boto3().client("secretsmanager")
         self.secret_name = None
 
     def get_secret(self, secret_name):

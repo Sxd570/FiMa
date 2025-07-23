@@ -22,8 +22,7 @@ if log_level == "DEBUG":
 
 
 
-# config = db_config()
-config = db_config_offline()
+config = db_config()
 
 user = config["user"]
 password = config["password"]
