@@ -1,14 +1,12 @@
-import os
 from infrastructure.aws.secret_manager import SecretManager
 from shared.logger import Logger
 
 logger = Logger(__name__)
- 
-FIMA_RDS_SECRET = "fima-{}-rds-secret"
-env = os.environ.get("ENVIRONMENT", "dev")
+
+FIMA_DB_SECRET = "fima-db-creds"
 
 def get_db_path():
-    return FIMA_RDS_SECRET.format(env)
+    return FIMA_DB_SECRET
 
 def db_config():
     path = get_db_path()
