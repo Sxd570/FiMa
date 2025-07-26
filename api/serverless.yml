@@ -7,6 +7,7 @@ provider:
   runtime: python3.12
   region: us-east-1
   stage: dev
+  versionFunctions: false
   environment:
     ENVIRONMENT: dev
   iamRoleStatements:
@@ -17,6 +18,7 @@ provider:
 
 functions:
   fima-lambda:
+    name: fima
     handler: main.handler
     description: FIMA Lambda function
     events:
