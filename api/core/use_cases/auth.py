@@ -1,4 +1,3 @@
-from infrastructure.aws.cognito import Cognito
 from shared.logger import Logger
 from shared.Utility.password_crypto import encrypt_password, verify_password
 from shared.Utility.generate_id import (
