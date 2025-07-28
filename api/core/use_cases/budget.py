@@ -1,4 +1,8 @@
 from shared.logger import Logger
+from shared.Utility.generate_id import (
+    generate_budget_id,
+    generate_category_id,
+)
 from core.database.budget import BudgetDatabase
 from core.models.io_models.budget_io_models import (
     GetBudgetOverviewPayload,
@@ -11,10 +15,13 @@ from core.models.io_models.budget_io_models import (
     EditBudgetDetailPayload,
     EditBudgetDetailDBRequest,
     DeleteBudgetDetailPayload,
-    DeleteBudgetDetailDBRequest
+    DeleteBudgetDetailDBRequest,
+    CreateBudgetPayload,
+    CreateBudgetDBRequest
 )
 
 logger = Logger(__name__)
+
 
 
 class BudgetUseCase:
@@ -22,11 +29,13 @@ class BudgetUseCase:
         self.budget_database = None
         self.user_id = None
         self.date = None
+        self.date = None
         self.budget_total_budget = 0
         self.budget_total_spent = 0
         self.budget_near_limit_count = 0
         self.budget_over_limit_count = 0
 
+    def get_budget_overview(self, payload: GetBudgetOverviewPayload):
     def get_budget_overview(self, payload: GetBudgetOverviewPayload):
         try:
             self.budget_database = BudgetDatabase()
@@ -51,7 +60,43 @@ class BudgetUseCase:
                 db_request=db_request
             )
 
+            self.user_id = payload.user_id
+            self.date = payload.date
+
+            db_request = GetBudgetOverviewDBRequest(
+                user_id=self.user_id,
+                date=self.date
+            )
+
+            self.budget_total_budget = self.budget_database.get_total_budget(
+                db_request=db_request
+            )
+            self.budget_total_spent = self.budget_database.get_total_spent(
+                db_request=db_request
+            )
+            self.budget_near_limit_count = self.budget_database.get_near_limit_count(
+                db_request=db_request
+            )
+            self.budget_over_limit_count = self.budget_database.get_over_limit_count(
+                db_request=db_request
+            )
+
             return GetBudgetOverviewResponse(
+                budget_total_budget=float(self.budget_total_budget),
+                budget_total_spent=float(self.budget_total_spent),
+                budget_near_limit_count=int(self.budget_near_limit_count),
+                budget_over_limit_count=int(self.budget_over_limit_count),
+                budget_remaining_amount=(
+                    float(self.budget_total_budget) - float(self.budget_total_spent)
+                    if self.budget_total_budget
+                    else None
+                ),
+                budget_percentage_spent=(
+                    (float(self.budget_total_spent) / float(self.budget_total_budget) * 100)
+                    if self.budget_total_budget and self.budget_total_budget != 0
+                    else None
+                ),
+                budget_date=self.date
                 budget_total_budget=float(self.budget_total_budget),
                 budget_total_spent=float(self.budget_total_spent),
                 budget_near_limit_count=int(self.budget_near_limit_count),
@@ -152,4 +197,45 @@ class BudgetUseCase:
 
         except Exception as e:
             logger.error(f"Error in delete_budget use case: {e}")
+            raise e
+        
+    
+    def create_budget(self, payload: CreateBudgetPayload):
+        try:
+            user_id = payload.user_id
+            category_name = payload.name
+            budget_allocated_amount = payload.budget_limit_amount
+            budget_allocated_month = payload.month
+            transaction_type = payload.transaction_type
+
+            category_id = generate_category_id(
+                user_id=user_id,
+                category_name=category_name,
+                transaction_type=transaction_type
+            )
+
+            budget_id = generate_budget_id(
+                user_id=user_id,
+                category_id=category_id,
+                allocated_month=budget_allocated_month
+            )
+
+            db_request = CreateBudgetDBRequest(
+                user_id=user_id,
+                category_id=category_id,
+                category_name=category_name,
+                budget_id=budget_id,
+                budget_allocated_amount=budget_allocated_amount,
+                budget_allocated_month=budget_allocated_month,
+                transaction_type=transaction_type
+            )
+
+            created_budget_status = self.budget_database.create_budget(
+                db_request=db_request
+            )
+
+            return created_budget_status
+
+        except Exception as e:
+            logger.error(f"Error in create_budget use case: {e}")
             raise e

@@ -1,5 +1,7 @@
 from typing import Optional
 from copy import deepcopy
+from typing import Optional
+from copy import deepcopy
 from sqlalchemy import *
 from shared.logger import Logger
 from core.interfaces.budget_interface import BudgetInterface
@@ -9,9 +11,12 @@ from core.models.io_models.budget_io_models import (
     BudgetDetailsDBResponse,
     BudgetDetail,
     EditBudgetDetailDBRequest,
-    DeleteBudgetDetailDBRequest
+    DeleteBudgetDetailDBRequest,
+    CreateBudgetDBRequest
 )
 from core.models.tables.budget import Budget
+from core.models.tables.category import Category
+from shared.Utility.db_base import get_db_session
 from core.models.tables.category import Category
 from shared.Utility.db_base import get_db_session
 logger = Logger(__name__)
@@ -22,8 +27,12 @@ class BudgetDatabase(BudgetInterface):
         self.user_id = None
         
     def get_total_budget(self, db_request: GetBudgetOverviewDBRequest):
+    def get_total_budget(self, db_request: GetBudgetOverviewDBRequest):
         try:
             self.db_session = get_db_session()
+
+            self.user_id = db_request.user_id
+            self.date = db_request.date
 
             self.user_id = db_request.user_id
             self.date = db_request.date
@@ -31,9 +40,12 @@ class BudgetDatabase(BudgetInterface):
             filter_group = [
                 Budget.user_id == self.user_id,
                 Budget.budget_allocated_month == self.date
+                Budget.user_id == self.user_id,
+                Budget.budget_allocated_month == self.date
             ]
 
             self.total_budget = self.db_session.query(
+                func.sum(Budget.budget_allocated_amount)
                 func.sum(Budget.budget_allocated_amount)
                 ).filter(
                     *filter_group
@@ -50,18 +62,26 @@ class BudgetDatabase(BudgetInterface):
 
 
     def get_total_spent(self, db_request: GetBudgetOverviewDBRequest):
+
+
+    def get_total_spent(self, db_request: GetBudgetOverviewDBRequest):
         try:
             self.db_session = get_db_session()
 
+            self.user_id = db_request.user_id
+            self.date = db_request.date
             self.user_id = db_request.user_id
             self.date = db_request.date
 
             filter_group = [
                 Budget.user_id == self.user_id,
                 Budget.budget_allocated_month == self.date
+                Budget.user_id == self.user_id,
+                Budget.budget_allocated_month == self.date
             ]
   
             self.total_fund_allocated = self.db_session.query(
+                func.sum(Budget.budget_spent_amount)
                 func.sum(Budget.budget_spent_amount)
                 ).filter(
                     *filter_group
@@ -271,4 +291,46 @@ class BudgetDatabase(BudgetInterface):
             }
         except Exception as e:
             logger.error(f"Error in delete_budget: {e}")
+            raise e
+        
+    def create_budget(self, db_request: CreateBudgetDBRequest):
+        try:
+            self.db_session = get_db_session()
+
+            user_id = db_request.user_id
+            category_id = db_request.category_id
+            category_name = db_request.category_name
+            budget_id = db_request.budget_id
+            budget_allocated_amount = db_request.budget_allocated_amount
+            budget_allocated_month = db_request.budget_allocated_month
+            transaction_type = db_request.transaction_type
+
+            new_budget = Budget(
+                user_id=user_id,
+                category_id=category_id,
+                budget_id=budget_id,
+                budget_allocated_amount=budget_allocated_amount,
+                budget_allocated_month=budget_allocated_month,
+                budget_spent_amount=0,
+                is_budget_limit_reached=False,
+                is_budget_over_limit=False
+            )
+
+            new_category = Category(
+                user_id=user_id,
+                category_id=category_id,
+                category_name=category_name,
+                transaction_type=transaction_type
+            )
+
+            self.db_session.add(new_budget)
+            self.db_session.add(new_category)
+            self.db_session.commit()
+
+            return {
+                "message": "Budget created successfully.",
+                "budget_id": budget_id
+            }
+        except Exception as e:
+            logger.error(f"Error in create_budget: {e}")
             raise e

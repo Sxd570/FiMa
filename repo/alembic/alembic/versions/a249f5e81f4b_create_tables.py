@@ -23,7 +23,8 @@ def create_user_table():
     CREATE TABLE `user` (
         `user_id` VARCHAR(36) PRIMARY KEY NOT NULL,
         `user_name` VARCHAR(255) NOT NULL,
-        `user_email` VARCHAR(255) NOT NULL UNIQUE
+        `user_email` VARCHAR(255) NOT NULL UNIQUE,
+        `user_password` VARCHAR(255) NOT NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     ''')
 
@@ -32,32 +33,15 @@ def drop_user_table():
     op.execute('DROP TABLE IF EXISTS `user`;')
 
 
-def create_transaction_type_table():
-    op.execute('''
-    CREATE TABLE `transaction_type` (
-        `user_id` VARCHAR(36) NOT NULL,
-        `transaction_type_id` VARCHAR(36) PRIMARY KEY NOT NULL,
-        `transaction_type_name` VARCHAR(255) NOT NULL,
-        `transaction_type_description` VARCHAR(255),
-        FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-    ''')
-
-
-def drop_transaction_type_table():
-    op.execute('DROP TABLE IF EXISTS `transaction_type`;')
-
-
 def create_category_table():
     op.execute('''
     CREATE TABLE `category` (
         `user_id` VARCHAR(36) NOT NULL,
-        `transaction_type_id` VARCHAR(36) NOT NULL,
+        `transaction_type` VARCHAR(36) NOT NULL,
         `category_id` VARCHAR(36) PRIMARY KEY,
         `category_name` VARCHAR(255) NOT NULL,
         `category_description` VARCHAR(255),
-        FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-        FOREIGN KEY (`transaction_type_id`) REFERENCES `transaction_type` (`transaction_type_id`)
+        FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     ''')
 
@@ -109,16 +93,15 @@ def drop_goals_table():
 def create_transaction_table():
     op.execute('''
     CREATE TABLE `transaction` (
-        `transaction_id` VARCHAR(36) PRIMARY NOT NULL,
         `user_id` VARCHAR(36) NOT NULL,
+        `transaction_id` VARCHAR(36) PRIMARY KEY NOT NULL,
         `category_id` VARCHAR(36) NOT NULL,
-        `transaction_type_id` VARCHAR(36) NOT NULL,
+        `transaction_type` VARCHAR(36) NOT NULL,
         `transaction_info` VARCHAR(255) NOT NULL,
         `transaction_amount` INT NOT NULL,
         `transaction_date` VARCHAR(50) NOT NULL,
         FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
-        FOREIGN KEY (`category_id`) REFERENCES `category`(`category_id`),
-        FOREIGN KEY (`transaction_type_id`) REFERENCES `transaction_type`(`transaction_type_id`)
+        FOREIGN KEY (`category_id`) REFERENCES `category`(`category_id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     ''')
 
@@ -130,7 +113,6 @@ def drop_transaction_table():
 def upgrade() -> None:
     """Upgrade schema."""
     create_user_table()
-    create_transaction_type_table()
     create_category_table()
     create_budget_table()
     create_goals_table()
@@ -143,5 +125,4 @@ def downgrade() -> None:
     drop_goals_table()
     drop_budget_table()
     drop_category_table()
-    drop_transaction_type_table()
     drop_user_table()

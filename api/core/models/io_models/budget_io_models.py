@@ -15,6 +15,19 @@ class GetBudgetOverviewPayload(BaseModel):
     date: str = Field(..., description="The month for which the budget overview is requested, formatted as 'YYYY-MM'")
 
 
+class GetBudgetOverviewRequest(BaseModel):
+    month: str = Field(..., description="The month for which the budget overview is requested, formatted as 'YYYY-MM'.")
+
+
+class GetBudgetDetailsRequest(BaseModel):
+    month: str = Field(..., description="The month for which the budget details are requested, formatted as 'YYYY-MM'.")
+
+
+class GetBudgetOverviewPayload(BaseModel):
+    user_id: str = Field(..., description="User ID of the person requesting the budget overview")
+    date: str = Field(..., description="The month for which the budget overview is requested, formatted as 'YYYY-MM'")
+
+
 class GetBudgetOverviewResponse(BaseModel):
     budget_total_budget: float = Field(..., description="Total budget amount")
     budget_total_spent: float = Field(..., description="Total amount spent")
@@ -92,3 +105,29 @@ class DeleteBudgetDetailPayload(BaseModel):
 class DeleteBudgetDetailDBRequest(BaseModel):
     user_id: str = Field(..., description="User ID of the person deleting the budget")
     budget_id: str = Field(..., description="Unique identifier for the budget to be deleted")
+
+
+class CreateBudgetRequest(BaseModel):
+    user_id: str = Field(..., description="User ID of the person creating the budget")
+    month: str = Field(..., description="The month for which the budget is being created, formatted as 'YYYY-MM'")
+    budget_limit: float = Field(..., description="The budget limit to be set for the specified month")
+    name: str = Field(..., description="Name of the budget category")
+    transaction_type: str = Field(..., description="Transaction type for the budget, if applicable. This can be used to specify a predefined type or a custom one.")
+
+
+class CreateBudgetPayload(BaseModel):
+    user_id: str = Field(..., description="User ID of the person creating the budget")
+    month: str = Field(..., description="The month for which the budget is being created, formatted as 'YYYY-MM'")
+    budget_limit_amount: float = Field(..., description="The budget limit to be set for the specified month")
+    name: str = Field(..., description="Name of the budget category")
+    transaction_type: str = Field(..., description="Transaction type for the budget, if applicable. This can be used to specify a predefined type or a custom one.")
+
+
+class CreateBudgetDBRequest(BaseModel):
+    user_id: str = Field(..., description="User ID of the person creating the budget")
+    category_id: str = Field(..., description="Category ID for the budget")
+    category_name: str = Field(..., description="Name of the budget category")
+    budget_id: str = Field(..., description="Unique identifier for the budget")
+    budget_allocated_amount: float = Field(..., description="The budget limit to be set for the specified month")
+    budget_allocated_month: str = Field(..., description="The month for which the budget is being created, formatted as 'YYYY-MM'")
+    transaction_type: str = Field(..., description="Transaction type for the budget, if applicable. This can be used to specify a predefined type or a custom one.")

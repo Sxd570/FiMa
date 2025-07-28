@@ -3,7 +3,7 @@ import uuid
 namespace_uuid = uuid.UUID('12345678-1234-5678-1234-567812345678')
 
 
-def user_id(
+def generate_user_id(
     email: str,
 ) -> str:
     """
@@ -18,7 +18,7 @@ def user_id(
     return str(uuid.uuid5(namespace_uuid, email))
 
 
-def goal_id(
+def generate_goal_id(
     goal_name: str,
     user_id: str,
     ) -> str:
@@ -40,7 +40,7 @@ def goal_id(
     return str(uuid.uuid5(namespace_uuid, mapping))
 
 
-def budget_id(
+def generate_budget_id(
     user_id: str,
     category_id: str,
     allocated_month: str
@@ -60,9 +60,9 @@ def budget_id(
     return str(uuid.uuid5(namespace_uuid, mapping))
 
 
-def category_id(
+def generate_category_id(
     user_id: str,
-    transaction_type_id: str,
+    transaction_type: str,
     category_name: str
 ) -> str:
     """
@@ -70,53 +70,36 @@ def category_id(
 
     Args:
         user_id (str): The unique identifier of the user.
-        transaction_type_id (str): The unique identifier of the transaction type.
+        transaction_type (str): The unique identifier of the transaction type.
         category_name (str): The name of the category.
 
     Returns:
         str: A unique identifier for the category.
     """
     sanitized_category_name = category_name.replace(" ", "").lower()
-    mapping = f"{user_id}_{transaction_type_id}_{sanitized_category_name}"
+    mapping = f"{user_id}_{transaction_type}_{sanitized_category_name}"
     return str(uuid.uuid5(namespace_uuid, mapping))
 
 
-def transaction_type_id(
+def generate_transaction_id(
     user_id: str,
-    type_name: str
-) -> str:
-    """
-    Generate a unique transaction type identifier based on the user ID and type name.
-
-    Args:
-        user_id (str): The unique identifier of the user.
-        type_name (str): The name of the transaction type.
-
-    Returns:
-        str: A unique identifier for the transaction type.
-    """
-    sanitized_type_name = type_name.replace(" ", "").lower()
-    mapping = f"{user_id}_{sanitized_type_name}"
-    return str(uuid.uuid5(namespace_uuid, mapping))
-
-
-def transaction_id(
-    user_id: str,
-    transaction_type_id: str,
+    category_id: str,
+    transaction_type: str,
     transaction_date: str,
     amount: float
 ) -> str:
     """
-    Generate a unique transaction identifier based on the user ID, transaction type ID, date, and amount.
+    Generate a unique transaction identifier based on the user ID, category ID, date, and amount.
 
     Args:
         user_id (str): The unique identifier of the user.
-        transaction_type_id (str): The unique identifier of the transaction type.
+        category_id (str): The unique identifier of the category.
         transaction_date (str): The date of the transaction.
         amount (float): The amount of the transaction.
+        transaction_type (str): The unique identifier of the transaction.
 
     Returns:
         str: A unique identifier for the transaction.
     """
-    mapping = f"{user_id}_{transaction_type_id}_{transaction_date}_{amount}"
+    mapping = f"{user_id}_{category_id}_{transaction_type}_{transaction_date}_{amount}"
     return str(uuid.uuid5(namespace_uuid, mapping))

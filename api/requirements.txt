@@ -1,4 +1,5 @@
 fastapi
+fastapi[standard]
 mangum
 uvicorn
 pydantic
@@ -7,3 +8,5 @@ boto3
 sqlalchemy
 python-dotenv
 alembic
+cryptography
+bcrypt

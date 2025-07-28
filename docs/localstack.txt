@@ -1,0 +1,2 @@
+localstack persistence repo:
+https://github.com/GREsau/localstack-persist
