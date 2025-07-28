@@ -1,0 +1,33 @@
+project/
+├── api/                        # FastAPI backend (existing)
+│   ├── api_definitions/        # API schemas & contracts
+│   │   ├── api_v1/             # Versioned API endpoints
+│   │   │   ├── endpoints/      # API endpoint implementations
+│   ├── constants/              # Constants (e.g., URLs, config)
+│   ├── core/                   # Core business logic
+│   │   ├── database/           # Database models and access
+│   │   ├── exceptions/         # Custom exception classes
+│   │   ├── interfaces/         # Interface definitions
+│   │   ├── models/             # Data models
+│   │   │   ├── io_models/      # Input/output data models
+│   │   │   ├── tables/         # Database table models
+│   │   ├── use_cases/          # Business use case logic
+│   ├── infrastructure/         # DB, external service integrations
+│   │   ├── aws/                # AWS integrations
+│   ├── shared/                 # Shared utilities (logger, helpers)
+│   │   ├── logger/             # Logging utilities
+│   │   └── Utility/            # Utility functions
+
+
+├── docs/                       # Documentation (architecture, diagrams)
+│   ├── mcp/                    # MCP documentation
+
+├── mcp/                        # Model Context Provider service
+│   └── shared/                 # Shared utilities for MCP
+│       └── logger/             # Logging utilities for MCP
+├── repo/                       # Database and migration scripts
+│   ├── alembic/                # Alembic migration tool
+│   │   ├── alembic/            # Alembic migration scripts
+│   │   │   └── versions/       # Migration versions
+│   └── db/                     # Database scripts
+│       └── tables/             # SQL table definitions
