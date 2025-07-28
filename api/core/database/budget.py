@@ -1,5 +1,7 @@
 from typing import Optional
 from copy import deepcopy
+from typing import Optional
+from copy import deepcopy
 from sqlalchemy import *
 from shared.logger import Logger
 from core.interfaces.budget_interface import BudgetInterface
@@ -15,6 +17,8 @@ from core.models.io_models.budget_io_models import (
 from core.models.tables.budget import Budget
 from core.models.tables.category import Category
 from shared.Utility.db_base import get_db_session
+from core.models.tables.category import Category
+from shared.Utility.db_base import get_db_session
 logger = Logger(__name__)
 
 class BudgetDatabase(BudgetInterface):
@@ -23,8 +27,12 @@ class BudgetDatabase(BudgetInterface):
         self.user_id = None
         
     def get_total_budget(self, db_request: GetBudgetOverviewDBRequest):
+    def get_total_budget(self, db_request: GetBudgetOverviewDBRequest):
         try:
             self.db_session = get_db_session()
+
+            self.user_id = db_request.user_id
+            self.date = db_request.date
 
             self.user_id = db_request.user_id
             self.date = db_request.date
@@ -32,9 +40,12 @@ class BudgetDatabase(BudgetInterface):
             filter_group = [
                 Budget.user_id == self.user_id,
                 Budget.budget_allocated_month == self.date
+                Budget.user_id == self.user_id,
+                Budget.budget_allocated_month == self.date
             ]
 
             self.total_budget = self.db_session.query(
+                func.sum(Budget.budget_allocated_amount)
                 func.sum(Budget.budget_allocated_amount)
                 ).filter(
                     *filter_group
@@ -51,18 +62,26 @@ class BudgetDatabase(BudgetInterface):
 
 
     def get_total_spent(self, db_request: GetBudgetOverviewDBRequest):
+
+
+    def get_total_spent(self, db_request: GetBudgetOverviewDBRequest):
         try:
             self.db_session = get_db_session()
 
+            self.user_id = db_request.user_id
+            self.date = db_request.date
             self.user_id = db_request.user_id
             self.date = db_request.date
 
             filter_group = [
                 Budget.user_id == self.user_id,
                 Budget.budget_allocated_month == self.date
+                Budget.user_id == self.user_id,
+                Budget.budget_allocated_month == self.date
             ]
   
             self.total_fund_allocated = self.db_session.query(
+                func.sum(Budget.budget_spent_amount)
                 func.sum(Budget.budget_spent_amount)
                 ).filter(
                     *filter_group

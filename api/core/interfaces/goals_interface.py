@@ -11,28 +11,28 @@ from core.models.io_models.goals_io_models import (
 
 class GoalsInterface(ABC):
     @abstractmethod
-    def get_total_goals_count(self, user_id: str) -> int:
+    def get_total_goals_count(self, user_id):
         """
         Get the total number of goals for a user.
         """
         pass
 
     @abstractmethod
-    def get_total_goals_completed(self, user_id: str) -> int:
+    def get_total_goals_completed(self, user_id):
         """
         Get the total number of completed goals for a user.
         """
         pass
 
     @abstractmethod
-    def get_total_amount_saved(self, user_id: str) -> float:
+    def get_total_amount_saved(self, user_id):
         """
         Get the total amount saved by a user across all goals.
         """
         pass
 
     @abstractmethod
-    def get_total_goals_amount(self, user_id: str) -> float:
+    def get_total_goals_amount(self, user_id):
         """
         Get the total amount of all goals for a user.
         """

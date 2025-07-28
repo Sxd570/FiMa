@@ -15,6 +15,19 @@ class GetBudgetOverviewPayload(BaseModel):
     date: str = Field(..., description="The month for which the budget overview is requested, formatted as 'YYYY-MM'")
 
 
+class GetBudgetOverviewRequest(BaseModel):
+    month: str = Field(..., description="The month for which the budget overview is requested, formatted as 'YYYY-MM'.")
+
+
+class GetBudgetDetailsRequest(BaseModel):
+    month: str = Field(..., description="The month for which the budget details are requested, formatted as 'YYYY-MM'.")
+
+
+class GetBudgetOverviewPayload(BaseModel):
+    user_id: str = Field(..., description="User ID of the person requesting the budget overview")
+    date: str = Field(..., description="The month for which the budget overview is requested, formatted as 'YYYY-MM'")
+
+
 class GetBudgetOverviewResponse(BaseModel):
     budget_total_budget: float = Field(..., description="Total budget amount")
     budget_total_spent: float = Field(..., description="Total amount spent")

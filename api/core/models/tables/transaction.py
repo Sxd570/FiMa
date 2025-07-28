@@ -5,6 +5,8 @@ Base = declarative_base()
 
 class Transaction(Base):
     __tablename__ = 'transaction'
+class Transaction(Base):
+    __tablename__ = 'transaction'
     
     user_id = Column(String(36), nullable=False)
     transaction_id = Column(String(36), primary_key=True, nullable=False)

@@ -146,13 +146,13 @@ class GoalsDatabase(GoalsInterface):
             
             if not db_response:
                 return GoalDetailsDBResponse(
-                    goals=[]
+                    Goal=[]
                 )
             
             response = deepcopy(db_response)
 
             goal_details = GoalDetailsDBResponse(
-                goals=[
+                Goal=[
                     GoalDetail(
                         goal_id=goal.goal_id,
                         goal_name=goal.goal_name,
