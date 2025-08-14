@@ -1,6 +1,6 @@
 import json
 from shared.logger import Logger
-from infrastructure.aws.boto3 import Boto3
+from services.aws.boto3 import Boto3
 
 logger = Logger(__name__)
 

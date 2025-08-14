@@ -1,4 +1,4 @@
-from infrastructure.aws.secret_manager import SecretManager
+from services.aws.secret_manager import SecretManager
 from shared.logger import Logger
 
 logger = Logger(__name__)
