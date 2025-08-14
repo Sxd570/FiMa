@@ -17,3 +17,13 @@ def db_config():
     except Exception as e:
         logger.error(f"Error retrieving database configuration: {e}")
         raise e
+    
+
+def get_db_config():
+    return {
+        "user": "fima",
+        "password": "Fima1234!",
+        "host": "localhost",
+        "port": 3306,
+        "database": "fima"
+    }
