@@ -27,30 +27,24 @@ class BudgetDatabase(BudgetInterface):
         self.user_id = None
         
     def get_total_budget(self, db_request: GetBudgetOverviewDBRequest):
-    def get_total_budget(self, db_request: GetBudgetOverviewDBRequest):
         try:
             self.db_session = get_db_session()
-
-            self.user_id = db_request.user_id
-            self.date = db_request.date
-
             self.user_id = db_request.user_id
             self.date = db_request.date
 
             filter_group = [
                 Budget.user_id == self.user_id,
                 Budget.budget_allocated_month == self.date
-                Budget.user_id == self.user_id,
-                Budget.budget_allocated_month == self.date
             ]
 
             self.total_budget = self.db_session.query(
-                func.sum(Budget.budget_allocated_amount)
-                func.sum(Budget.budget_allocated_amount)
-                ).filter(
-                    *filter_group
-                ).scalar()
-                
+                func.sum(
+                    Budget.budget_allocated_amount
+                )
+            ).filter(
+                *filter_group
+            ).scalar()
+            
             if self.total_budget is None:
                 self.total_budget = 0
 
@@ -62,30 +56,23 @@ class BudgetDatabase(BudgetInterface):
 
 
     def get_total_spent(self, db_request: GetBudgetOverviewDBRequest):
-
-
-    def get_total_spent(self, db_request: GetBudgetOverviewDBRequest):
         try:
             self.db_session = get_db_session()
-
-            self.user_id = db_request.user_id
-            self.date = db_request.date
             self.user_id = db_request.user_id
             self.date = db_request.date
 
             filter_group = [
                 Budget.user_id == self.user_id,
                 Budget.budget_allocated_month == self.date
-                Budget.user_id == self.user_id,
-                Budget.budget_allocated_month == self.date
             ]
-  
+
             self.total_fund_allocated = self.db_session.query(
-                func.sum(Budget.budget_spent_amount)
-                func.sum(Budget.budget_spent_amount)
-                ).filter(
-                    *filter_group
-                ).scalar()
+                func.sum(
+                    Budget.budget_spent_amount
+                )
+            ).filter(
+                *filter_group
+            ).scalar()
             
             if self.total_fund_allocated is None:
                 self.total_fund_allocated = 0
