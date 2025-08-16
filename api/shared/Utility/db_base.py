@@ -1,6 +1,6 @@
 import os
 
-from .db_config import db_config
+from .db_config import get_db_config
 from shared.logger import Logger
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -22,7 +22,7 @@ if log_level == "DEBUG":
 
 
 
-config = db_config()
+config = get_db_config()
 
 user = config["user"]
 password = config["password"]

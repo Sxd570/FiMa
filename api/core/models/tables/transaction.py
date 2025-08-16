@@ -5,11 +5,9 @@ Base = declarative_base()
 
 class Transaction(Base):
     __tablename__ = 'transaction'
-class Transaction(Base):
-    __tablename__ = 'transaction'
-    
-    user_id = Column(String(36), nullable=False)
+
     transaction_id = Column(String(36), primary_key=True, nullable=False)
+    user_id = Column(String(36), nullable=False)
     category_id = Column(String(36), nullable=False)
     transaction_type = Column(String(36), nullable=False)
     transaction_info = Column(String(255), nullable=False)
