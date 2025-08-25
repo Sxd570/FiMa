@@ -67,13 +67,13 @@ async def edit_budget_limit(budget_id: str, request: EditBudgetDetailRequest):
         user_id = request.user_id
         new_budget_limit = request.new_budget_limit
 
-        budget = BudgetUseCase()
-
         payload = EditBudgetDetailPayload(
             budget_id=budget_id,
             new_budget_limit=new_budget_limit,
             user_id=user_id
         )
+
+        budget = BudgetUseCase()
 
         updated_budget_status = budget.edit_budget_limit(
             payload=payload
