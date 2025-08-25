@@ -156,11 +156,14 @@ class BudgetUseCase:
     
     def create_budget(self, payload: CreateBudgetPayload):
         try:
+            self.budget_database = BudgetDatabase()
+
             user_id = payload.user_id
             category_name = payload.name
             budget_allocated_amount = payload.budget_limit_amount
             budget_allocated_month = payload.month
             transaction_type = payload.transaction_type
+            category_description = payload.description
 
             category_id = generate_category_id(
                 user_id=user_id,
@@ -178,6 +181,7 @@ class BudgetUseCase:
                 user_id=user_id,
                 category_id=category_id,
                 category_name=category_name,
+                category_description=category_description,
                 budget_id=budget_id,
                 budget_allocated_amount=budget_allocated_amount,
                 budget_allocated_month=budget_allocated_month,

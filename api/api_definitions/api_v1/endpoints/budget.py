@@ -61,7 +61,7 @@ async def get_budget_details(user_id: str, request: GetBudgetDetailsRequest):
         raise e
     
 
-@router.patch("budget/edit_limit/{budget_id}")
+@router.patch("/budget/edit_limit/{budget_id}")
 async def edit_budget_limit(budget_id: str, request: EditBudgetDetailRequest):
     try:
         user_id = request.user_id
@@ -85,7 +85,7 @@ async def edit_budget_limit(budget_id: str, request: EditBudgetDetailRequest):
         raise e
 
 
-@router.delete("budget/delete/{budget_id}")
+@router.delete("/budget/delete/{budget_id}")
 async def delete_budget(budget_id: str, request: DeleteBudgetDetailRequest):
     try:
         user_id = request.user_id
@@ -105,7 +105,7 @@ async def delete_budget(budget_id: str, request: DeleteBudgetDetailRequest):
         raise e
     
 
-@router.post("budget/create")
+@router.post("/budget/create")
 async def create_budget(request: CreateBudgetRequest):
     try:
         user_id = request.user_id
@@ -113,13 +113,16 @@ async def create_budget(request: CreateBudgetRequest):
         name = request.name
         month = request.month
         transaction_type = request.transaction_type
+        description = request.description
+        
 
         payload = CreateBudgetPayload(
             user_id=user_id,
             month=month,
             budget_limit_amount=budget_limit_amount,
             name=name,
-            transaction_type=transaction_type
+            transaction_type=transaction_type,
+            description=description
         )
 
         budget = BudgetUseCase()

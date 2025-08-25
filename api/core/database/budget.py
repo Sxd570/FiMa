@@ -149,12 +149,6 @@ class BudgetDatabase(BudgetInterface):
             self.user_id = db_request.user_id
             self.date = db_request.date
 
-            if db_request.limit:
-                self.limit = db_request.limit
-
-            if db_request.offset:
-                self.offset = db_request.offset
-
             filter_group = [
                 Budget.user_id == self.user_id,
                 Budget.budget_allocated_month == self.date
@@ -174,11 +168,6 @@ class BudgetDatabase(BudgetInterface):
                 *filter_group
             )
 
-            if self.limit is not None:
-                query = query.limit(self.limit)
-            if self.offset is not None:
-                query = query.offset(self.offset)
-            
             db_response = query.all()
 
             if not db_response:
@@ -207,7 +196,6 @@ class BudgetDatabase(BudgetInterface):
                     ) in db_response
                 ]
             )
-
 
             return budget_details
         except Exception as e:
@@ -291,6 +279,17 @@ class BudgetDatabase(BudgetInterface):
             budget_allocated_amount = db_request.budget_allocated_amount
             budget_allocated_month = db_request.budget_allocated_month
             transaction_type = db_request.transaction_type
+            category_description = db_request.category_description
+
+            new_category = Category(
+                user_id=user_id,
+                category_id=category_id,
+                category_name=category_name,
+                category_description=category_description,
+                transaction_type=transaction_type
+            )
+            self.db_session.add(new_category)
+            self.db_session.commit()
 
             new_budget = Budget(
                 user_id=user_id,
@@ -302,16 +301,7 @@ class BudgetDatabase(BudgetInterface):
                 is_budget_limit_reached=False,
                 is_budget_over_limit=False
             )
-
-            new_category = Category(
-                user_id=user_id,
-                category_id=category_id,
-                category_name=category_name,
-                transaction_type=transaction_type
-            )
-
             self.db_session.add(new_budget)
-            self.db_session.add(new_category)
             self.db_session.commit()
 
             return {
