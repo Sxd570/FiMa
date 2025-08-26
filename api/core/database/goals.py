@@ -146,13 +146,13 @@ class GoalsDatabase(GoalsInterface):
             
             if not db_response:
                 return GoalDetailsDBResponse(
-                    Goal=[]
+                    goal_details=[]
                 )
             
             response = deepcopy(db_response)
 
             goal_details = GoalDetailsDBResponse(
-                Goal=[
+                goal_details=[
                     GoalDetail(
                         goal_id=goal.goal_id,
                         goal_name=goal.goal_name,
@@ -171,29 +171,30 @@ class GoalsDatabase(GoalsInterface):
 
 
 
-    def create_goal(self, goal: AddGoalDetailDBRequest):
+    def create_goal(self, db_request: AddGoalDetailDBRequest):
         try:
             self.db_session = get_db_session()
 
             existing_goal = self.db_session.query(
                 Goal
             ).filter(
-                Goal.goal_id == goal.goal_id
+                Goal.goal_id == db_request.goal_id
             ).first()
             
             if existing_goal:
-                logger.error(f"Goal with goal_id {goal.goal_id} already exists. Goal not created.")
+                logger.error(f"Goal with goal_id {db_request.goal_id} already exists. Goal not created.")
                 return {
                     "message": "Goal already exists",
                 }
 
             new_goal = Goal(
-                user_id=goal.user_id,
-                goal_id=goal.goal_id,
-                goal_name=goal.goal_name,
-                goal_description=goal.goal_description,
-                goal_target_amount=goal.goal_target_amount,
-                goal_current_amount=goal.goal_current_amount
+                user_id=db_request.user_id,
+                goal_id=db_request.goal_id,
+                goal_name=db_request.goal_name,
+                goal_description=db_request.goal_description,
+                goal_target_amount=db_request.goal_target_amount,
+                goal_current_amount=db_request.goal_current_amount,
+                is_goal_reached=False
             )
 
             self.db_session.add(new_goal)

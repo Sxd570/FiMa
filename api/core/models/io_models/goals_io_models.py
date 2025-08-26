@@ -58,9 +58,6 @@ class DeleteGoalDetailRequest(BaseModel):
     goal_id: str = Field(
         ..., description="Unique identifier for the goal to be deleted"
     )
-    user_id: Optional[str] = Field(
-        None, description="Unique identifier for the user, if applicable"
-    )
 
 class AddAmountToGoalDetailPayload(BaseModel):
     user_id: str = Field(..., description="Unique identifier for the user")
@@ -140,7 +137,7 @@ class UpdateGoalDetailRequest(BaseModel):
 
 
 class GoalDetailsDBResponse(BaseModel):
-    goals: Optional[List[GoalDetail]] = None
+    goal_details: Optional[List[GoalDetail]] = None
 
 
 class GoalsOverviewResponse(BaseModel):
@@ -151,4 +148,4 @@ class GoalsOverviewResponse(BaseModel):
 
 
 class GoalsDetailsResponse(BaseModel):
-    goals: Optional[List[GoalDetail]] = None
+    goal_details: Optional[List[GoalDetail]] = None

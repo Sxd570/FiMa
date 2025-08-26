@@ -61,7 +61,7 @@ class GoalsUseCase:
             db_request = GetGoalsDBRequest(user_id=self.user_id)
             goal_details = self.goal_database.get_goal_details(db_request=db_request)
             return GoalsDetailsResponse(
-                goals=[
+                goal_details=[
                     GoalDetail(
                         goal_id=goal.goal_id,
                         goal_name=goal.goal_name,
@@ -75,7 +75,7 @@ class GoalsUseCase:
                         ),
                         is_goal_reached=goal.is_goal_reached,
                     )
-                    for goal in goal_details.goals
+                    for goal in goal_details.goal_details
                 ]
             )
         except Exception as e:
@@ -83,14 +83,19 @@ class GoalsUseCase:
             raise e
 
 
-    def create_goal(self, user_id: str, params: CreateGoalDetailPayload):
+    def create_goal(self, payload: CreateGoalDetailPayload):
         try:
-            self.user_id = user_id
-            self.goal_name = params.goal_name
-            self.goal_description = params.goal_description
-            self.goal_target_amount = params.goal_target_amount
+            self.user_id = payload.user_id
+            self.goal_name = payload.goal_name
+            self.goal_description = payload.goal_description
+            self.goal_target_amount = payload.goal_target_amount
             self.goal_current_amount = 0
-            self.goal_id = generate_goal_id(goal_name=self.goal_name, user_id=self.user_id)
+
+            self.goal_id = generate_goal_id(
+                goal_name=self.goal_name, 
+                user_id=self.user_id
+            )
+
             db_request = AddGoalDetailDBRequest(
                 goal_id=self.goal_id,
                 user_id=self.user_id,
@@ -99,7 +104,11 @@ class GoalsUseCase:
                 goal_target_amount=float(self.goal_target_amount),
                 goal_current_amount=float(self.goal_current_amount),
             )
-            status = self.goal_database.create_goal(db_request=db_request)
+
+            status = self.goal_database.create_goal(
+                db_request=db_request
+            )
+
             return status
         except Exception as e:
             logger.error(f"Error in create_goal use case: {e}")

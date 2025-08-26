@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 class Goal(Base):
-    __tablename__ = 'goal'
+    __tablename__ = 'goals'
     
     user_id = Column(String(36), nullable=False)
     goal_id = Column(String(36), primary_key=True, nullable=False)
