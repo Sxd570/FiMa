@@ -170,12 +170,19 @@ class GoalsUseCase:
             self.user_id = payload.user_id
             self.limit = payload.limit
             self.offset = payload.offset
+
             db_request = GetGoalsDashboardDBRequest(
-                user_id=self.user_id, limit=self.limit, offset=self.offset
+                user_id=self.user_id, 
+                limit=self.limit, 
+                offset=self.offset
             )
-            goals_response = self.goal_database.get_goal_details(db_request=db_request)
+
+            goals_response = self.goal_database.get_goal_details(
+                db_request=db_request
+            )
+
             return GoalsDetailsResponse(
-                goals=[
+                goal_details=[
                     GoalDetail(
                         goal_id=goal.goal_id,
                         goal_name=goal.goal_name,
@@ -185,7 +192,7 @@ class GoalsUseCase:
                         goal_remaining_amount=float(goal.goal_target_amount - goal.goal_current_amount),
                         goal_percentage=float(goal.goal_current_amount / goal.goal_target_amount * 100 if goal.goal_target_amount > 0 else 0),
                         is_goal_reached=goal.is_goal_reached
-                    ) for goal in goals_response.goals
+                    ) for goal in goals_response.goal_details
                 ]
             )
         except Exception as e:
