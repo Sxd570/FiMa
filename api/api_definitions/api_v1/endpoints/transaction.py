@@ -15,12 +15,9 @@ logger = Logger(__name__)
 @router.get("/transactions/{user_id}")
 def get_transactions(user_id: str, request: GetTransactionRequest):
     try:
-        if request.filters:
-            filters = request.filters
-        if request.limit:
-            limit = request.limit
-        if request.offset:
-            offset = request.offset
+        filters = request.filters if hasattr(request, 'filters') and request.filters is not None else None
+        limit = request.limit if hasattr(request, 'limit') and request.limit is not None else None
+        offset = request.offset if hasattr(request, 'offset') and request.offset is not None else None
 
         payload = GetTransactionPayload(
             user_id=user_id,

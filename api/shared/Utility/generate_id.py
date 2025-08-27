@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 
 namespace_uuid = uuid.UUID('12345678-1234-5678-1234-567812345678')
 
@@ -101,5 +102,6 @@ def generate_transaction_id(
     Returns:
         str: A unique identifier for the transaction.
     """
-    mapping = f"{user_id}_{category_id}_{transaction_type}_{transaction_date}_{amount}"
+    current_time = datetime.now().isoformat()
+    mapping = f"{user_id}_{category_id}_{transaction_type}_{transaction_date}_{amount}_{current_time}"
     return str(uuid.uuid5(namespace_uuid, mapping))
