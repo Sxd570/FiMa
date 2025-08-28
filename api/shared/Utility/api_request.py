@@ -1,11 +1,9 @@
-import json
-import requests
+import httpx
 from shared.logger import Logger
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
-
 logger = Logger(__name__)
 
 
@@ -19,51 +17,45 @@ class APIRequest:
 
     def generate_url(self, endpoint):
         api = "api"
-        
-        base_url = os.getenv("API_BASE_URL")
-        if not base_url:
-            logger.error("API_BASE_URL is not set in environment variables.")
-            raise ValueError("API_BASE_URL is not set in environment variables.")
-        
-        port = os.getenv("API_PORT")
-        if not port:
-            logger.error("API_PORT is not set in environment variables.")
-            raise ValueError("API_PORT is not set in environment variables.")
-        
-        version = os.getenv("API_VERSION")
-        if not version:
-            logger.error("API_VERSION is not set in environment variables.")
-            raise ValueError("API_VERSION is not set in environment variables.")
 
-        return f"{base_url}:{port}/{api}/{version}/{endpoint}"
+        base_url = os.getenv("API_BASE_URL")
+        port = os.getenv("API_PORT")
+        version = os.getenv("API_VERSION")
+
+        if not base_url or not port or not version:
+            missing = [k for k, v in {
+                "API_BASE_URL": base_url,
+                "API_PORT": port,
+                "API_VERSION": version
+            }.items() if not v]
+            logger.error(f"Missing environment variables: {', '.join(missing)}")
+            raise ValueError(f"Missing env vars: {', '.join(missing)}")
+
+        return f"{base_url}:{port}/{api}/{version}{endpoint}"
 
     def execute(self):
         try:
-            ...
+            response = httpx.request(
+                method=self.http_method,
+                url=self.url,
+                headers=self.headers,
+                json=self.payload
+            )
+            response.raise_for_status()
+            return response.json()
         except Exception as e:
             logger.error(f"Error occurred while making API request: {e}")
             return {"error": str(e)}
+        
 
 
-# def get
-
-# def api_request(http_method, endpoint, query_params):
-#     """
-#     Prepares and sends an API request.
-#     """
-#     url = f"{API_BASE_URL}:{API_PORT}/{endpoint}"
-#     headers = {"Content-Type": "application/json"}
-#     try:
-#         if http_method == "GET":
-#             response = requests.get(url, headers=headers, params=query_params)
-#         elif http_method == "POST":
-#             response = requests.post(url, headers=headers, json=query_params)
-#         else:
-#             logger.error(f"Unsupported HTTP method: {http_method}")
-#             return {"error": "Unsupported HTTP method"}, 405
-
-#         response.raise_for_status()
-#         return response.json()
-#     except requests.RequestException as e:
-#         logger.error(f"Error occurred while making API request: {e}")
-#         return {"error": str(e)}, 500
+# if __name__ == "__main__":
+#     method = "GET"
+#     endpoint = "/goals/dashboard/be2323eb-38ac-5a90-85a3-26b6f4fdfb25"
+#     payload = {
+#         "limit": 5,
+#         "offset": 0
+#     }
+#     api_request = APIRequest("GET", endpoint, payload)
+#     response = api_request.execute()
+#     print(response)
