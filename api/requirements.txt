@@ -10,3 +10,5 @@ python-dotenv
 alembic
 cryptography
 bcrypt
+strands-agents
+openai
