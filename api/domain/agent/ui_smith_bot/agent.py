@@ -10,7 +10,8 @@ logger = Logger(__name__)
 class UISmithBot:
     def __init__(self):
         self.system_prompt = self.get_system_prompt()
-        self.llm_model = LMStudioAIService.initialize_llm()
+        self.lm_studio = LMStudioAIService()
+        self.llm_model = self.lm_studio.initialize_llm()
         self.uismithbot = None
 
     def get_system_prompt(self):
@@ -29,7 +30,8 @@ class UISmithBot:
             
             self.uismithbot = Agent(
                 model=self.llm_model,
-                system_prompt=self.system_prompt
+                system_prompt=self.system_prompt,
+                callback_handler=None 
             )
             return self.uismithbot
         except Exception as e:

@@ -1,4 +1,4 @@
-PLATFORM_ROOT=/home/salman/Desktop/fima/
-ACTIVE_DOMAIN=/home/salman/Desktop/fima/api/
+PLATFORM_ROOT=/home/salman/Desktop/fima/api/
+ACTIVE_DOMAIN=/home/salman/Desktop/fima/api/domain
 
 PYTHONPATH="${PLATFORM_ROOT}:${ACTIVE_DOMAIN}"

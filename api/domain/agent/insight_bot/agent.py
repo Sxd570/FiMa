@@ -9,7 +9,8 @@ logger = Logger(__name__)
 class InsightBot:
     def __init__(self):
         self.system_prompt = self.get_system_prompt()
-        self.llm_model = LMStudioAIService.initialize_llm()
+        self.lm_studio = LMStudioAIService()
+        self.llm_model = self.lm_studio.initialize_llm()
         self.insightbot = None
 
     def get_system_prompt(self):
@@ -18,7 +19,7 @@ class InsightBot:
             prompt = prompt_path.read_text(encoding="utf-8")
             return prompt
         except Exception as e:
-            logger.error("error while getting system prompt", str(e))
+            logger.error("Error while getting system prompt", str(e))
             raise e
 
     def agent(self):
@@ -28,11 +29,10 @@ class InsightBot:
             
             self.insightbot = Agent(
                 model=self.llm_model,
-                system_prompt=self.system_prompt
+                system_prompt=self.system_prompt,
+                callback_handler=None 
             )
             return self.insightbot
         except Exception as e:
-            logger.error("error while creating agent", str(e))
+            logger.error("Error while creating agent", str(e))
             raise e
-        
-
