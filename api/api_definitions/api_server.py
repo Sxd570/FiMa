@@ -29,7 +29,7 @@ app.include_router(api_router)
 @app.middleware("http")
 async def log_user_requests(request: Request, call_next):
     # Always get user_id from headers, default to 'anonymous'
-    user_id = request.headers.get("user_id", "anonymous")
+    user_id = request.headers.get("user_id")
     logging.info(f"User: {user_id} | Method: {request.method} | Path: {request.url.path}")
     response = await call_next(request)
     return response
@@ -38,8 +38,8 @@ async def log_user_requests(request: Request, call_next):
 # Global Exception Handlers
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-    user_id = request.headers.get("user_id", "anonymous")
-    logging.error(f"User: {user_id} | Unhandled Exception: {exc} | Path: {request.url.path}")
+    user_id = request.headers.get("user_id")
+    logging.error(f"User: {user_id} | Path: {request.url.path} | Unhandled Exception: {exc}")
     return JSONResponse(
         status_code=500,
         content={"error_message": f"{str(exc)}"},
@@ -47,8 +47,8 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 @app.exception_handler(ValueError)
 async def value_error_handler(request: Request, exc: ValueError):
-    user_id = request.headers.get("user_id", "anonymous")
-    logging.warning(f"User: {user_id} | ValueError: {exc} | Path: {request.url.path}")
+    user_id = request.headers.get("user_id")
+    logging.warning(f"User: {user_id} | Path: {request.url.path} | ValueError: {exc}")
     return JSONResponse(
         status_code=400,
         content={"error_message": f"{str(exc)}"},
