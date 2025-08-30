@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-from core.models.io_models.budget_io_models import (
+from domain.models.io_models.budget_io_models import (
     GetBudgetOverviewDBRequest,
     GetBudgetDetailsDBRequest,
     BudgetDetailsDBResponse,

@@ -1,9 +1,9 @@
 from sqlalchemy import *
 from shared.logger import Logger
-from core.models.tables.goal import Goal
+from domain.models.tables.goal import Goal
 from shared.Utility.db_base import get_db_session
 from copy import deepcopy
-from core.models.io_models.goals_io_models import (
+from domain.models.io_models.goals_io_models import (
     GoalDetailsDBResponse,
     GoalDetail,
     EditGoalDetailDBRequest,
@@ -12,7 +12,7 @@ from core.models.io_models.goals_io_models import (
     AddAmountToGoalDetailDBRequest,
     GetGoalsDBRequest,
 )
-from core.interfaces.goals_interface import GoalsInterface
+from domain.interfaces.goals_interface import GoalsInterface
 from typing import Optional
 
 logger = Logger(__name__)

@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 
 from shared.logger import Logger
-from core.use_cases.budget import BudgetUseCase
-from core.models.io_models.budget_io_models import (
+from domain.use_cases.budget import BudgetUseCase
+from domain.models.io_models.budget_io_models import (
     GetBudgetOverviewRequest,
     GetBudgetOverviewPayload,
     GetBudgetDetailsRequest,

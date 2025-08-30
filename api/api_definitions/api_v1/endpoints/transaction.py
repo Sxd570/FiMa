@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from shared.logger import Logger
-from core.use_cases.transaction import TransactionUseCase
-from core.models.io_models.transaction_io_models import (
+from domain.use_cases.transaction import TransactionUseCase
+from domain.models.io_models.transaction_io_models import (
     GetTransactionRequest,
     GetTransactionPayload,
     CreateTransactionRequest,

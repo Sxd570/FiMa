@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from core.models.io_models.goals_io_models import (
+from domain.models.io_models.goals_io_models import (
     GoalDetailsDBResponse,
     EditGoalDetailDBRequest,
     AddGoalDetailDBRequest,

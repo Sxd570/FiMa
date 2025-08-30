@@ -3,8 +3,8 @@ from shared.Utility.generate_id import (
     generate_budget_id,
     generate_category_id,
 )
-from core.database.budget import BudgetDatabase
-from core.models.io_models.budget_io_models import (
+from domain.database.budget import BudgetDatabase
+from domain.models.io_models.budget_io_models import (
     GetBudgetOverviewPayload,
     GetBudgetDetailsPayload,
     GetBudgetOverviewDBRequest,

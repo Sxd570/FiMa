@@ -1,10 +1,10 @@
 from shared.logger import Logger
 from copy import deepcopy
-from core.interfaces.transaction_interface import TransactionInterface
-from core.models.tables.transaction import Transaction
-from core.models.tables.category import Category
+from domain.interfaces.transaction_interface import TransactionInterface
+from domain.models.tables.transaction import Transaction
+from domain.models.tables.category import Category
 from shared.Utility.db_base import get_db_session
-from core.models.io_models.transaction_io_models import (
+from domain.models.io_models.transaction_io_models import (
     TransactionDetail,
     GetTransactionDBRequest,
     GetTransactionDBResponse,

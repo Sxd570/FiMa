@@ -1,7 +1,7 @@
 from shared.logger import Logger
 from shared.Utility.generate_id import generate_transaction_id
-from core.database.transaction import TransactionDatabase
-from core.models.io_models.transaction_io_models import (
+from domain.database.transaction import TransactionDatabase
+from domain.models.io_models.transaction_io_models import (
     GetTransactionPayload,
     GetTransactionDBRequest,
     GetTransactionResponse,

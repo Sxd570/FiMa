@@ -3,8 +3,8 @@ from shared.Utility.password_crypto import encrypt_password, verify_password
 from shared.Utility.generate_id import (
     generate_user_id,
 )
-from core.database.auth import AuthDatabase
-from core.models.io_models.auth_io_models import (
+from domain.database.auth import AuthDatabase
+from domain.models.io_models.auth_io_models import (
     LoginPayload,
     LoginDBRequest,
     LoginResponse,

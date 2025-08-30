@@ -1,9 +1,9 @@
 from copy import deepcopy
 from shared.logger import Logger
 from sqlalchemy import *
-from core.interfaces.auth_interface import AuthInterface
-from core.models.io_models.auth_io_models import *
-from core.models.tables.user import User
+from domain.interfaces.auth_interface import AuthInterface
+from domain.models.io_models.auth_io_models import *
+from domain.models.tables.user import User
 from shared.Utility.db_base import get_db_session
 
 logger = Logger(__name__)

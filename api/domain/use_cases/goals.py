@@ -1,7 +1,7 @@
 from shared.logger import Logger
 from shared.Utility.generate_id import generate_goal_id
-from core.database.goals import GoalsDatabase
-from core.models.io_models.goals_io_models import (
+from domain.database.goals import GoalsDatabase
+from domain.models.io_models.goals_io_models import (
     GoalDetail,
     AddGoalDetailDBRequest,
     AddGoalDetailDBRequest,

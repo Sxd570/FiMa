@@ -4,8 +4,8 @@ from typing import Optional
 from copy import deepcopy
 from sqlalchemy import *
 from shared.logger import Logger
-from core.interfaces.budget_interface import BudgetInterface
-from core.models.io_models.budget_io_models import (
+from domain.interfaces.budget_interface import BudgetInterface
+from domain.models.io_models.budget_io_models import (
     GetBudgetOverviewDBRequest,
     GetBudgetDetailsDBRequest,
     BudgetDetailsDBResponse,
@@ -14,10 +14,10 @@ from core.models.io_models.budget_io_models import (
     DeleteBudgetDetailDBRequest,
     CreateBudgetDBRequest
 )
-from core.models.tables.budget import Budget
-from core.models.tables.category import Category
+from domain.models.tables.budget import Budget
+from domain.models.tables.category import Category
 from shared.Utility.db_base import get_db_session
-from core.models.tables.category import Category
+from domain.models.tables.category import Category
 from shared.Utility.db_base import get_db_session
 logger = Logger(__name__)
 
