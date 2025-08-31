@@ -92,7 +92,6 @@ class EditBudgetDetailDBRequest(BaseModel):
 
 class DeleteBudgetDetailRequest(BaseModel):
     user_id: str = Field(..., description="User ID of the person deleting the budget")
-    budget_id: str = Field(..., description="Unique identifier for the budget to be deleted")
 
 class DeleteBudgetDetailDBRequest(BaseModel):
     user_id: str = Field(..., description="User ID of the person deleting the budget")

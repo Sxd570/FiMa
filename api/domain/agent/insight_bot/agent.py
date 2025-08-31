@@ -30,7 +30,7 @@ class InsightBot:
             self.insightbot = Agent(
                 model=self.llm_model,
                 system_prompt=self.system_prompt,
-                callback_handler=None 
+                callback_handler=None
             )
             return self.insightbot
         except Exception as e:
