@@ -33,7 +33,7 @@ class InsightBot:
         tools = []
         for attr_name in dir(obj):
             attr = getattr(obj, attr_name)
-            if hasattr(attr, "_tool_spec"):  # strands marks @tool functions this way
+            if hasattr(attr, "_tool_spec"):
                 tools.append(attr)
         return tools
     
@@ -60,10 +60,3 @@ class InsightBot:
         except Exception as e:
             logger.error("Error while creating agent", str(e))
             raise e
-        
-
-if __name__ == "__main__":
-    bot = InsightBot()
-    agent = bot.agent()
-    response = agent("list tools available")
-    print(response)
