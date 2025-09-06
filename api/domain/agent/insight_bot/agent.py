@@ -60,3 +60,10 @@ class InsightBot:
         except Exception as e:
             logger.error("Error while creating agent", str(e))
             raise e
+        
+
+# if __name__ == '__main__':
+#     insight_bot = InsightBot()
+#     agent = insight_bot.agent()
+#     response = agent("can you tell me the all budgets details of user_id be2323eb-38ac-5a90-85a3-26b6f4fdfb25 for january 2025 and tell me how can i save up here")
+#     print(response)

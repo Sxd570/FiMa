@@ -29,7 +29,7 @@ app.include_router(api_router)
 @app.middleware("http")
 async def log_user_requests(request: Request, call_next):
     # Always get user_id from headers, default to 'anonymous'
-    user_id = request.headers.get("user_id")
+    user_id = request.headers.get("user_id", "anonymous")
     logging.info(f"User: {user_id} | Method: {request.method} | Path: {request.url.path}")
     response = await call_next(request)
     return response
