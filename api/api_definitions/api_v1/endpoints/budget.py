@@ -10,7 +10,6 @@ from domain.models.io_models.budget_io_models import (
     EditBudgetDetailRequest,
     EditBudgetDetailPayload,
     DeleteBudgetDetailPayload,
-    DeleteBudgetDetailRequest,
     CreateBudgetRequest,
     CreateBudgetPayload
 )
@@ -19,7 +18,7 @@ logger = Logger(__name__)
 router = APIRouter()
 
 
-@router.get("/budget/overview/{user_id}")
+@router.get("/budget/{user_id}/overview")
 async def get_budget_overview(user_id: str, request: GetBudgetOverviewRequest):
     try:
         date = request.month
@@ -39,7 +38,7 @@ async def get_budget_overview(user_id: str, request: GetBudgetOverviewRequest):
         raise e
     
 
-@router.get("/budget/details/{user_id}")
+@router.get("/budget/{user_id}/details")
 async def get_budget_details(user_id: str, request: GetBudgetDetailsRequest):
     try:
         date = request.month
@@ -61,10 +60,9 @@ async def get_budget_details(user_id: str, request: GetBudgetDetailsRequest):
         raise e
     
 
-@router.patch("/budget/edit_limit/{budget_id}")
-async def edit_budget_limit(budget_id: str, request: EditBudgetDetailRequest):
+@router.patch("/budget/{user_id}/edit_limit/{budget_id}")
+async def edit_budget_limit(user_id: str, budget_id: str, request: EditBudgetDetailRequest):
     try:
-        user_id = request.user_id
         new_budget_limit = request.new_budget_limit
 
         payload = EditBudgetDetailPayload(
@@ -85,11 +83,9 @@ async def edit_budget_limit(budget_id: str, request: EditBudgetDetailRequest):
         raise e
 
 
-@router.delete("/budget/delete/{budget_id}")
-async def delete_budget(budget_id: str, request: DeleteBudgetDetailRequest):
+@router.delete("/budget/{user_id}/delete/{budget_id}")
+async def delete_budget(user_id: str, budget_id: str):
     try:
-        user_id = request.user_id
-
         budget = BudgetUseCase()
 
         payload = DeleteBudgetDetailPayload(
@@ -105,13 +101,12 @@ async def delete_budget(budget_id: str, request: DeleteBudgetDetailRequest):
         raise e
     
 
-@router.post("/budget/create")
-async def create_budget(request: CreateBudgetRequest):
+@router.post("/budget/{user_id}/create")
+async def create_budget(user_id: str, request: CreateBudgetRequest):
     try:
-        user_id = request.user_id
         budget_limit_amount = request.budget_limit
-        name = request.name
-        month = request.month
+        name = request.budget_name
+        month = request.budget_month
         transaction_type = request.transaction_type
         description = request.description
         

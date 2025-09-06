@@ -1,8 +1,15 @@
 from enum import Enum
 
 
-class ToolConstants(Enum):
-    KEY_MONTH = "month"
+class BudgetConstants(Enum):
+    KEY_BUDGET_MONTH = "budget_month"
+    KEY_USER_ID = "user_id"
+    KEY_BUDGET_ID = "budget_id"
+    KEY_NEW_BUDGET_LIMIT = "new_budget_limit"
+    KEY_BUDGET_NAME = "budget_name"
+    KEY_TRANSACTION_TYPE = "transaction_type"
+    KEY_DESCRIPTION = "description"
+    KEY_BUDGET_LIMIT = "budget_limit"
 
 
 class APIConstants(Enum):    
