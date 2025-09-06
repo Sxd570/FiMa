@@ -7,9 +7,7 @@ logger = Logger(__name__)
 
 
 class BudgetTools:
-    def __init__(self):
-        ...
-    
+
     @tool
     def get_budget_overview(self, user_id: str, budget_month: str):
         """
