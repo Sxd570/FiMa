@@ -6,9 +6,7 @@ logger = Logger(__name__)
 
 
 class TransactionTools:
-    def __init__(self):
-        ...
-    
+
     @tool
     def get_transactions(self, user_id: str, filters: dict, limit: int, offset: int):
         """

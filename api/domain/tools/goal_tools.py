@@ -6,8 +6,6 @@ logger = Logger(__name__)
 
 
 class GoalTools:
-    def __init__(self):
-        ...
 
     @tool
     def get_goals_overview(self, user_id: str):
