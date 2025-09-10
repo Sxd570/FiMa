@@ -109,7 +109,7 @@ class DeleteBudgetDetailDBRequest(BaseModel):
 class CreateBudgetRequest(BaseModel):
     budget_month: str = Field(..., description="The month for which the budget is being created, formatted as 'YYYY-MM'")
     budget_limit: float = Field(..., description="The budget limit to be set for the specified month")
-    name: str = Field(..., description="Name of the budget category")
+    budget_name: str = Field(..., description="Name of the budget category")
     description: Optional[str] = Field(None, description="Optional description for the budget")
 
 
