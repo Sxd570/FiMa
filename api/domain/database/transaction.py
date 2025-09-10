@@ -2,7 +2,7 @@ from shared.logger import Logger
 from copy import deepcopy
 from domain.interfaces.transaction_interface import TransactionInterface
 from domain.models.tables.transaction import Transaction
-from domain.models.tables.category import Category
+from domain.models.tables.budget import Budget
 from shared.Utility.db_base import get_db_session
 from domain.models.io_models.transaction_io_models import (
     TransactionDetail,
@@ -56,9 +56,9 @@ class TransactionDatabase(TransactionInterface):
                 Transaction.transaction_info,
                 Transaction.transaction_amount,
                 Transaction.transaction_date,
-                Category.category_name
+                Budget.budget_name
             ).join(
-                Category, Transaction.category_id == Category.category_id
+                Budget, Transaction.budget_id == Budget.budget_id
             ).filter(
                 *filter_group
             )
@@ -80,19 +80,19 @@ class TransactionDatabase(TransactionInterface):
                 transactions=[
                     TransactionDetail(
                         transaction_id=transaction_id,
-                        category_name=category_name,
+                        budget_name=budget_name,
                         transaction_type=transaction_type,
                         transaction_info=transaction_info,
                         transaction_amount=transaction_amount,
                         transaction_date=transaction_date
                     )
                     for (
-                        transaction_id, 
-                        transaction_type, 
-                        transaction_info, 
-                        transaction_amount, 
-                        transaction_date, 
-                        category_name
+                        transaction_id,
+                        transaction_type,
+                        transaction_info,
+                        transaction_amount,
+                        transaction_date,
+                        budget_name
                     ) in results
                 ]
             )
@@ -107,7 +107,7 @@ class TransactionDatabase(TransactionInterface):
 
             user_id = db_request.user_id
             transaction_id = db_request.transaction_id
-            category_id = db_request.category_id
+            budget_id = db_request.budget_id
             transaction_type = db_request.transaction_type
             transaction_info = db_request.transaction_info
             transaction_amount = db_request.transaction_amount
@@ -116,7 +116,7 @@ class TransactionDatabase(TransactionInterface):
             new_transaction = Transaction(
                 user_id=user_id,
                 transaction_id=transaction_id,
-                category_id=category_id,
+                budget_id=budget_id,
                 transaction_type=transaction_type,
                 transaction_info=transaction_info,
                 transaction_amount=transaction_amount,

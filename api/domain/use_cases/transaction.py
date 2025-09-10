@@ -43,7 +43,7 @@ class TransactionUseCase:
                         transaction_info=transaction.transaction_info,
                         transaction_amount=float(transaction.transaction_amount),
                         transaction_date=transaction.transaction_date,
-                        category_name=transaction.category_name
+                        budget_name=transaction.budget_name
                     ) for transaction in transactions_data.transactions
                 ]
             )
@@ -57,7 +57,7 @@ class TransactionUseCase:
     def create_transaction(self, payload: CreateTransactionPayload):
         try:
             user_id = payload.user_id
-            category_id = payload.category_id
+            budget_id = payload.budget_id
             transaction_type = payload.transaction_type
             transaction_info = payload.transaction_info
             transaction_amount = payload.transaction_amount
@@ -65,7 +65,7 @@ class TransactionUseCase:
 
             transaction_id = generate_transaction_id(
                 user_id=user_id,
-                category_id=category_id,
+                budget_id=budget_id,
                 transaction_type=transaction_type,
                 transaction_date=transaction_date,
                 amount=transaction_amount
@@ -74,7 +74,7 @@ class TransactionUseCase:
             db_request = CreateTransactionDBRequest(
                 user_id=user_id,
                 transaction_id=transaction_id,
-                category_id=category_id,
+                budget_id=budget_id,
                 transaction_type=transaction_type,
                 transaction_info=transaction_info,
                 transaction_amount=transaction_amount,
