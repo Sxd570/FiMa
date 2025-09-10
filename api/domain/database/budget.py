@@ -1,7 +1,3 @@
-from typing import Optional
-from copy import deepcopy
-from typing import Optional
-from copy import deepcopy
 from sqlalchemy import *
 from shared.logger import Logger
 from domain.interfaces.budget_interface import BudgetInterface
@@ -12,14 +8,13 @@ from domain.models.io_models.budget_io_models import (
     BudgetDetail,
     EditBudgetDetailDBRequest,
     DeleteBudgetDetailDBRequest,
-    CreateBudgetDBRequest
+    CreateBudgetDBRequest,
+    UpdateAmountInBudgetDBRequest
 )
 from domain.models.tables.budget import Budget
-from domain.models.tables.category import Category
-from shared.Utility.db_base import get_db_session
-from domain.models.tables.category import Category
 from shared.Utility.db_base import get_db_session
 logger = Logger(__name__)
+
 
 class BudgetDatabase(BudgetInterface):
     def __init__(self):
@@ -161,9 +156,7 @@ class BudgetDatabase(BudgetInterface):
                 Budget.budget_allocated_month,
                 Budget.is_budget_limit_reached,
                 Budget.is_budget_over_limit,
-                Category.category_name
-            ).join(
-                Category, Budget.category_id == Category.category_id
+                Budget.budget_name
             ).filter(
                 *filter_group
             )
@@ -273,28 +266,18 @@ class BudgetDatabase(BudgetInterface):
             self.db_session = get_db_session()
 
             user_id = db_request.user_id
-            category_id = db_request.category_id
-            category_name = db_request.category_name
             budget_id = db_request.budget_id
+            budget_name = db_request.budget_name
             budget_allocated_amount = db_request.budget_allocated_amount
             budget_allocated_month = db_request.budget_allocated_month
-            transaction_type = db_request.transaction_type
-            category_description = db_request.category_description
+            budget_description = db_request.budget_description
 
-            new_category = Category(
-                user_id=user_id,
-                category_id=category_id,
-                category_name=category_name,
-                category_description=category_description,
-                transaction_type=transaction_type
-            )
-            self.db_session.add(new_category)
-            self.db_session.commit()
 
             new_budget = Budget(
                 user_id=user_id,
-                category_id=category_id,
                 budget_id=budget_id,
+                budget_name=budget_name,
+                budget_description=budget_description,
                 budget_allocated_amount=budget_allocated_amount,
                 budget_allocated_month=budget_allocated_month,
                 budget_spent_amount=0,
@@ -310,4 +293,48 @@ class BudgetDatabase(BudgetInterface):
             }
         except Exception as e:
             logger.error(f"Error in create_budget: {e}")
+            raise e
+        
+
+    def update_amount_in_budget(self, db_request: UpdateAmountInBudgetDBRequest):
+        try:
+            user_id = db_request.user_id
+            budget_id = db_request.budget_id
+            amount_to_add = db_request.amount_to_add
+
+            filter_group = [
+                Budget.budget_id == budget_id,
+                Budget.user_id == user_id
+            ]
+
+            budget_detail = self.db_session.query(
+                Budget
+            ).filter(
+                *filter_group
+            ).first()
+
+            if not budget_detail:
+                raise ValueError("Budget not found to update.")
+
+            # Add the new amount to spent amount
+            budget_detail.budget_spent_amount += amount_to_add
+
+            # Check if budget limit is reached or over limit
+            if budget_detail.budget_spent_amount >= budget_detail.budget_allocated_amount:
+                budget_detail.is_budget_limit_reached = True
+
+            if budget_detail.budget_spent_amount > budget_detail.budget_allocated_amount:
+                budget_detail.is_budget_over_limit = True
+            else:
+                budget_detail.is_budget_over_limit = False
+
+            # Commit changes
+            self.db_session.commit()
+
+            return {
+                "message": "Budget amount updated successfully.",
+            }
+
+        except Exception as e:
+            logger.error(f"Error in update amount in budget function: {e}")
             raise e

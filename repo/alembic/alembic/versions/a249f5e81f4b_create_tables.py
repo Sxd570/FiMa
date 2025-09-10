@@ -33,36 +33,19 @@ def drop_user_table():
     op.execute('DROP TABLE IF EXISTS `user`;')
 
 
-def create_category_table():
-    op.execute('''
-    CREATE TABLE `category` (
-        `user_id` VARCHAR(36) NOT NULL,
-        `transaction_type` VARCHAR(36) NOT NULL,
-        `category_id` VARCHAR(36) PRIMARY KEY,
-        `category_name` VARCHAR(255) NOT NULL,
-        `category_description` VARCHAR(255),
-        FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-    ''')
-
-
-def drop_category_table():
-    op.execute('DROP TABLE IF EXISTS `category`;')
-
-
 def create_budget_table():
     op.execute('''
     CREATE TABLE `budget` (
         `user_id` VARCHAR(36) NOT NULL,
-        `category_id` VARCHAR(36) NOT NULL,
-        `budget_id` VARCHAR(36) PRIMARY KEY NOT NULL,
+        `budget_id` VARCHAR(36) PRIMARY KEY,
+        `budget_name` VARCHAR(255) NOT NULL,
+        `budget_description` VARCHAR(255),
         `budget_allocated_amount` INT NOT NULL,
-        `budget_spent_amount` INT NOT NULL,
+        `budget_spent_amount` INT NOT NULL DEFAULT 0,
         `budget_allocated_month` VARCHAR(7) NOT NULL,
         `is_budget_limit_reached` TINYINT(1) NOT NULL DEFAULT 0,
         `is_budget_over_limit` TINYINT(1) NOT NULL DEFAULT 0,
-        FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-        FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`)
+        FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     ''')
 
@@ -95,13 +78,13 @@ def create_transaction_table():
     CREATE TABLE `transaction` (
         `user_id` VARCHAR(36) NOT NULL,
         `transaction_id` VARCHAR(36) PRIMARY KEY NOT NULL,
-        `category_id` VARCHAR(36) NOT NULL,
+        `budget_id` VARCHAR(36) NOT NULL,
         `transaction_type` VARCHAR(36) NOT NULL,
         `transaction_info` VARCHAR(255) NOT NULL,
         `transaction_amount` INT NOT NULL,
         `transaction_date` VARCHAR(50) NOT NULL,
         FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
-        FOREIGN KEY (`category_id`) REFERENCES `category`(`category_id`)
+        FOREIGN KEY (`budget_id`) REFERENCES `budget`(`budget_id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     ''')
 
@@ -113,7 +96,6 @@ def drop_transaction_table():
 def upgrade() -> None:
     """Upgrade schema."""
     create_user_table()
-    create_category_table()
     create_budget_table()
     create_goals_table()
     create_transaction_table()
@@ -124,5 +106,4 @@ def downgrade() -> None:
     drop_transaction_table()
     drop_goals_table()
     drop_budget_table()
-    drop_category_table()
     drop_user_table()
