@@ -40,7 +40,7 @@ def get_transactions(user_id: str, request: GetTransactionRequest):
 @router.post("/transactions/{user_id}")
 def create_transaction(user_id: str, request: CreateTransactionRequest):
     try:
-        category_id = request.category_id
+        budget_id = request.budget_id
         transaction_type = request.transaction_type
         transaction_info = request.transaction_info
         transaction_amount = request.transaction_amount
@@ -48,7 +48,7 @@ def create_transaction(user_id: str, request: CreateTransactionRequest):
 
         payload = CreateTransactionPayload(
             user_id=user_id,
-            category_id=category_id,
+            budget_id=budget_id,
             transaction_type=transaction_type,
             transaction_info=transaction_info,
             transaction_amount=transaction_amount,

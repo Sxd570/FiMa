@@ -61,30 +61,9 @@ def generate_budget_id(
     return str(uuid.uuid5(namespace_uuid, mapping))
 
 
-def generate_category_id(
-    user_id: str,
-    transaction_type: str,
-    category_name: str
-) -> str:
-    """
-    Generate a unique category identifier based on the user ID, transaction type ID, and category name.
-
-    Args:
-        user_id (str): The unique identifier of the user.
-        transaction_type (str): The unique identifier of the transaction type.
-        category_name (str): The name of the category.
-
-    Returns:
-        str: A unique identifier for the category.
-    """
-    sanitized_category_name = category_name.replace(" ", "").lower()
-    mapping = f"{user_id}_{transaction_type}_{sanitized_category_name}"
-    return str(uuid.uuid5(namespace_uuid, mapping))
-
-
 def generate_transaction_id(
     user_id: str,
-    category_id: str,
+    budget_id: str,
     transaction_type: str,
     transaction_date: str,
     amount: float
@@ -94,7 +73,7 @@ def generate_transaction_id(
 
     Args:
         user_id (str): The unique identifier of the user.
-        category_id (str): The unique identifier of the category.
+        budget_id (str): The unique identifier of the budget.
         transaction_date (str): The date of the transaction.
         amount (float): The amount of the transaction.
         transaction_type (str): The unique identifier of the transaction.
@@ -103,5 +82,5 @@ def generate_transaction_id(
         str: A unique identifier for the transaction.
     """
     current_time = datetime.now().isoformat()
-    mapping = f"{user_id}_{category_id}_{transaction_type}_{transaction_date}_{amount}_{current_time}"
+    mapping = f"{user_id}_{budget_id}_{transaction_type}_{transaction_date}_{amount}_{current_time}"
     return str(uuid.uuid5(namespace_uuid, mapping))

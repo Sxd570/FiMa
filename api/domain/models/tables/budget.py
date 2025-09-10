@@ -7,18 +7,20 @@ class Budget(Base):
     __tablename__ = 'budget'
     
     user_id = Column(String(36), nullable=False)
-    category_id = Column(String(36), nullable=False)
     budget_id = Column(String(36), primary_key=True, nullable=False)
+    budget_name = Column(String(255), nullable=False)
+    budget_description = Column(String(255), nullable=True)
     budget_allocated_amount = Column(Integer, nullable=False)
     budget_spent_amount = Column(Integer, nullable=False)
     budget_allocated_month = Column(String(7), nullable=False)
     is_budget_limit_reached = Column(Boolean, nullable=False)
     is_budget_over_limit = Column(Boolean, nullable=False)
 
-    def __init__(self, user_id, category_id, budget_id, budget_allocated_amount, budget_spent_amount, budget_allocated_month, is_budget_limit_reached, is_budget_over_limit):
+    def __init__(self, user_id, budget_id, budget_name, budget_description, budget_allocated_amount, budget_spent_amount, budget_allocated_month, is_budget_limit_reached, is_budget_over_limit):
         self.user_id = user_id
-        self.category_id = category_id
         self.budget_id = budget_id
+        self.budget_name = budget_name
+        self.budget_description = budget_description
         self.budget_allocated_amount = budget_allocated_amount
         self.budget_spent_amount = budget_spent_amount
         self.budget_allocated_month = budget_allocated_month  

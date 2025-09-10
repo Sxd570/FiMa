@@ -1,6 +1,7 @@
 from shared.logger import Logger
 from shared.Utility.generate_id import generate_transaction_id
 from domain.database.transaction import TransactionDatabase
+from domain.database.budget import BudgetDatabase
 from domain.models.io_models.transaction_io_models import (
     GetTransactionPayload,
     GetTransactionDBRequest,
@@ -9,12 +10,15 @@ from domain.models.io_models.transaction_io_models import (
     CreateTransactionPayload,
     CreateTransactionDBRequest
 )
+from domain.models.io_models.budget_io_models import (
+    UpdateAmountInBudgetDBRequest
+)
 
 logger = Logger(__name__)
 
 class TransactionUseCase:
     def __init__(self):
-        self.goal_database = TransactionDatabase()
+        self.transaction_database = TransactionDatabase()
 
     def get_transactions(self, payload: GetTransactionPayload):
         try:
@@ -31,7 +35,7 @@ class TransactionUseCase:
                 offset=offset
             )
 
-            transactions_data = self.goal_database.get_transactions(
+            transactions_data = self.transaction_database.get_transactions(
                 db_request=db_request
             )
 
@@ -43,7 +47,7 @@ class TransactionUseCase:
                         transaction_info=transaction.transaction_info,
                         transaction_amount=float(transaction.transaction_amount),
                         transaction_date=transaction.transaction_date,
-                        category_name=transaction.category_name
+                        budget_name=transaction.budget_name
                     ) for transaction in transactions_data.transactions
                 ]
             )
@@ -57,7 +61,7 @@ class TransactionUseCase:
     def create_transaction(self, payload: CreateTransactionPayload):
         try:
             user_id = payload.user_id
-            category_id = payload.category_id
+            budget_id = payload.budget_id
             transaction_type = payload.transaction_type
             transaction_info = payload.transaction_info
             transaction_amount = payload.transaction_amount
@@ -65,7 +69,7 @@ class TransactionUseCase:
 
             transaction_id = generate_transaction_id(
                 user_id=user_id,
-                category_id=category_id,
+                budget_id=budget_id,
                 transaction_type=transaction_type,
                 transaction_date=transaction_date,
                 amount=transaction_amount
@@ -74,7 +78,7 @@ class TransactionUseCase:
             db_request = CreateTransactionDBRequest(
                 user_id=user_id,
                 transaction_id=transaction_id,
-                category_id=category_id,
+                budget_id=budget_id,
                 transaction_type=transaction_type,
                 transaction_info=transaction_info,
                 transaction_amount=transaction_amount,
@@ -82,7 +86,19 @@ class TransactionUseCase:
             
             )
 
-            create_transaction_response = self.goal_database.create_transaction(
+            create_transaction_response = self.transaction_database.create_transaction(
+                db_request=db_request
+            )
+
+            db_request = UpdateAmountInBudgetDBRequest(
+                user_id=user_id,
+                budget_id=budget_id,
+                amount_to_add=transaction_amount
+            )
+
+            budget_database = BudgetDatabase()
+
+            budget_database.update_amount_in_budget(
                 db_request=db_request
             )
 
