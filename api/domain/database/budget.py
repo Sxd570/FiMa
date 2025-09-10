@@ -1,7 +1,3 @@
-from typing import Optional
-from copy import deepcopy
-from typing import Optional
-from copy import deepcopy
 from sqlalchemy import *
 from shared.logger import Logger
 from domain.interfaces.budget_interface import BudgetInterface
@@ -15,9 +11,6 @@ from domain.models.io_models.budget_io_models import (
     CreateBudgetDBRequest
 )
 from domain.models.tables.budget import Budget
-from domain.models.tables.category import Category
-from shared.Utility.db_base import get_db_session
-from domain.models.tables.category import Category
 from shared.Utility.db_base import get_db_session
 logger = Logger(__name__)
 
@@ -161,9 +154,7 @@ class BudgetDatabase(BudgetInterface):
                 Budget.budget_allocated_month,
                 Budget.is_budget_limit_reached,
                 Budget.is_budget_over_limit,
-                Category.category_name
-            ).join(
-                Category, Budget.category_id == Category.category_id
+                Budget.budget_name
             ).filter(
                 *filter_group
             )
@@ -273,28 +264,17 @@ class BudgetDatabase(BudgetInterface):
             self.db_session = get_db_session()
 
             user_id = db_request.user_id
-            category_id = db_request.category_id
-            category_name = db_request.category_name
             budget_id = db_request.budget_id
+            budget_name = db_request.budget_name
             budget_allocated_amount = db_request.budget_allocated_amount
             budget_allocated_month = db_request.budget_allocated_month
-            transaction_type = db_request.transaction_type
-            category_description = db_request.category_description
+            budget_description = db_request.budget_description
 
-            new_category = Category(
-                user_id=user_id,
-                category_id=category_id,
-                category_name=category_name,
-                category_description=category_description,
-                transaction_type=transaction_type
-            )
-            self.db_session.add(new_category)
-            self.db_session.commit()
 
             new_budget = Budget(
                 user_id=user_id,
-                category_id=category_id,
                 budget_id=budget_id,
+                budget_name=budget_name,
                 budget_allocated_amount=budget_allocated_amount,
                 budget_allocated_month=budget_allocated_month,
                 budget_spent_amount=0,
