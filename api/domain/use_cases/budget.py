@@ -1,7 +1,6 @@
 from shared.logger import Logger
 from shared.Utility.generate_id import (
-    generate_budget_id,
-    generate_category_id,
+    generate_budget_id
 )
 from domain.database.budget import BudgetDatabase
 from domain.models.io_models.budget_io_models import (
@@ -89,7 +88,7 @@ class BudgetUseCase:
                 budget_details=[
                     BudgetDetail(
                         budget_id=detail.budget_id,
-                        category_name=detail.category_name,
+                        budget_name=detail.budget_name,
                         budget_allocated_amount=float(detail.budget_allocated_amount),
                         budget_spent_amount=float(detail.budget_spent_amount),
                         budget_allocated_month=detail.budget_allocated_month,
@@ -159,33 +158,25 @@ class BudgetUseCase:
             self.budget_database = BudgetDatabase()
 
             user_id = payload.user_id
-            category_name = payload.name
+            budget_name = payload.name
             budget_allocated_amount = payload.budget_limit_amount
             budget_allocated_month = payload.month
-            transaction_type = payload.transaction_type
-            category_description = payload.description
+            budget_description = payload.description
 
-            category_id = generate_category_id(
-                user_id=user_id,
-                category_name=category_name,
-                transaction_type=transaction_type
-            )
 
             budget_id = generate_budget_id(
                 user_id=user_id,
-                category_id=category_id,
+                budget_name=budget_name,
                 allocated_month=budget_allocated_month
             )
 
             db_request = CreateBudgetDBRequest(
                 user_id=user_id,
-                category_id=category_id,
-                category_name=category_name,
-                category_description=category_description,
                 budget_id=budget_id,
+                budget_name=budget_name,
+                budget_description=budget_description,
                 budget_allocated_amount=budget_allocated_amount,
                 budget_allocated_month=budget_allocated_month,
-                transaction_type=transaction_type
             )
 
             created_budget_status = self.budget_database.create_budget(

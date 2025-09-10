@@ -275,8 +275,8 @@ class BudgetDatabase(BudgetInterface):
                 user_id=user_id,
                 budget_id=budget_id,
                 budget_name=budget_name,
+                budget_description=budget_description,
                 budget_allocated_amount=budget_allocated_amount,
-                budget_allocated_month=budget_allocated_month,
                 budget_spent_amount=0,
                 is_budget_limit_reached=False,
                 is_budget_over_limit=False
