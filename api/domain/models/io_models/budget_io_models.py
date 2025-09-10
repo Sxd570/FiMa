@@ -130,3 +130,9 @@ class CreateBudgetDBRequest(BaseModel):
     budget_description: Optional[str] = Field(None, description="Optional description for the budget")
     budget_allocated_amount: float = Field(..., description="The budget limit to be set for the specified month")
     budget_allocated_month: str = Field(..., description="The month for which the budget is being created, formatted as 'YYYY-MM'")
+    
+
+class UpdateAmountInBudgetDBRequest(BaseModel):
+    user_id: str = Field(..., description="ID of the user creating the transaction")
+    budget_id: str = Field(..., description="ID of the budget to update")
+    amount_to_add: float = Field(..., description="Amount to add to the budget")
