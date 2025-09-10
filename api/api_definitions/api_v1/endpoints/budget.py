@@ -107,7 +107,6 @@ async def create_budget(user_id: str, request: CreateBudgetRequest):
         budget_limit_amount = request.budget_limit
         name = request.budget_name
         month = request.budget_month
-        transaction_type = request.transaction_type
         description = request.description
         
 
@@ -116,7 +115,6 @@ async def create_budget(user_id: str, request: CreateBudgetRequest):
             month=month,
             budget_limit_amount=budget_limit_amount,
             name=name,
-            transaction_type=transaction_type,
             description=description
         )
 
