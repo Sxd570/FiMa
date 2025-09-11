@@ -59,14 +59,15 @@ class GoalTools:
 
         Returns:
             dict: A dictionary containing the goal details data.
-                - goal_id: Unique identifier for the goal.
-                - goal_name: Name of the goal.
-                - goal_description: Description of the goal.
-                - goal_target_amount: Target amount for the goal.
-                - goal_current_amount: Current amount saved towards the goal.
-                - goal_remaining_amount: Remaining amount to reach the goal.
-                - goal_percentage: Percentage of the goal that has been achieved.
-                - is_goal_completed: Boolean indicating if the goal is completed.
+                - goal_details (list): A list of goal objects, each containing:
+                    - goal_id: Unique identifier for the goal.
+                    - goal_name: Name of the goal.
+                    - goal_description: Description of the goal.
+                    - goal_target_amount: Target amount for the goal.
+                    - goal_current_amount: Current amount saved towards the goal.
+                    - goal_remaining_amount: Remaining amount to reach the goal.
+                    - goal_percentage: Percentage of the goal that has been achieved.
+                    - is_goal_completed: Boolean indicating if the goal is completed.
         Raises:
             Exception: If there is an error during the API request.
 

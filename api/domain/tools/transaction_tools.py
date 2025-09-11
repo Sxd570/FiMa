@@ -25,41 +25,39 @@ class TransactionTools:
             offset (int): The number of transactions to skip before starting to collect the result set. Example: 0
 
         Returns:
-            dict: A dictionary containing the fetched transactions.
-                - transactions (list): A list of transaction objects, each containing:
-                    - transaction_id (str): The unique identifier of the transaction.
-                    - budget_name (str): The name of the budget associated with the transaction.
-                    - transaction_type (str): The type of the transaction (e.g., "expense", "income").
-                    - transaction_info (str): Additional information about the transaction.
-                    - transaction_amount (float): The amount of the transaction.
-                    - transaction_date (str): The date of the transaction. Format: YYYY-MM-DD.
-        
+            dict: A dictionary containing the key `transactions`, which is a list of transaction objects. Each object contains:
+                - transaction_id (str): The unique identifier of the transaction.
+                - budget_name (str): The name of the budget associated with the transaction.
+                - transaction_type (str): The type of the transaction (e.g., "expense", "income").
+                - transaction_info (str): Additional information about the transaction.
+                - transaction_amount (float): The amount of the transaction.
+                - transaction_date (str): The date of the transaction in 'YYYY-MM-DD' format.
+
         Raises:
             Exception: If there is an error during the API request.
 
-        Example:
-            {
-                "transactions": [
-                    {
-                        "transaction_id": "23ac23b6-f222-59e0-943e-e8d1ba9e671b",
-                        "budget_name": "Food",
-                        "transaction_type": "expense",
-                        "transaction_info": "food 1234",
-                        "transaction_amount": 4500.0,
-                        "transaction_date": "2025-01-01"
-                    },
-                    {
-                        "transaction_id": "31fa589a-3adc-5fcb-b35a-1d92403933fd",
-                        "budget_name": "Food",
-                        "transaction_type": "expense",
-                        "transaction_info": "food 1234",
-                        "transaction_amount": 4500.0,
-                        "transaction_date": "2025-01-01"
-                    }
-                ]
-            }
+        Example response:
+        {
+            "transactions": [
+                {
+                    "transaction_id": "23ac23b6-f222-59e0-943e-e8d1ba9e671b",
+                    "budget_name": "Food",
+                    "transaction_type": "expense",
+                    "transaction_info": "food 1234",
+                    "transaction_amount": 4500.0,
+                    "transaction_date": "2025-01-01"
+                },
+                {
+                    "transaction_id": "31fa589a-3adc-5fcb-b35a-1d92403933fd",
+                    "budget_name": "Food",
+                    "transaction_type": "expense",
+                    "transaction_info": "food 1234",
+                    "transaction_amount": 4500.0,
+                    "transaction_date": "2025-01-01"
+                }
+            ]
+        }
         """
-
         def _get_transactions(user_id: str, filters: dict, limit: int, offset: int):
             try:
                 api_request = APIRequest(

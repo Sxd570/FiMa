@@ -68,16 +68,17 @@ class BudgetTools:
             budget_month (str): The month for which to get the budget details in 'YYYY-MM' format.
 
         Returns:
-            dict: Response is a dictionary containing a list of budget details with the following fields for each:
-                - budget_id: Unique identifier for the budget
-                - category_name: Name of the budget category
-                - budget_allocated_amount: Amount allocated for the budget
-                - budget_spent_amount: Amount spent from the budget
-                - budget_allocated_month: The month for which the budget is allocated
-                - budget_remaining_amount: Remaining amount in the budget
-                - is_limit_reached: Whether the budget limit has been reached (boolean)
-                - is_over_limit: Whether the budget has been exceeded (boolean)
-                - budget_percentage_spent: Percentage of the budget that has been spent
+            dict: A dictionary containing a key `budget_details` with a list of budget detail objects. Each object contains:
+                - budget_id (str): Unique identifier for the budget.
+                - category_name (str): Name of the budget category.
+                - budget_allocated_amount (float): Amount allocated for the budget.
+                - budget_spent_amount (float): Amount spent from the budget.
+                - budget_allocated_month (str): The month for which the budget is allocated (format 'YYYY-MM').
+                - budget_remaining_amount (float): Remaining amount in the budget.
+                - is_limit_reached (bool): Whether the budget limit has been reached.
+                - is_over_limit (bool): Whether the budget has been exceeded.
+                - budget_percentage_spent (float): Percentage of the budget that has been spent.
+
         Raises:
             Exception: If there is an error during the API request.
 
@@ -109,6 +110,7 @@ class BudgetTools:
             ]
         }
         """
+
         def _get_budget_details(user_id: str, budget_month: str):
             try:
                 api_request = APIRequest(
