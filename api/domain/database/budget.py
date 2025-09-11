@@ -211,14 +211,21 @@ class BudgetDatabase(BudgetInterface):
 
             budget_detail = self.db_session.query(
                 Budget
-                ).filter(
-                    *filter_group
-                ).first()
+            ).filter(
+                *filter_group
+            ).first()
 
             if not budget_detail:
                 raise ValueError("Budget not found to edit.")
 
             budget_detail.budget_allocated_amount = self.new_budget_limit
+
+            # Update is_budget_limit_reached (90%) and is_budget_over_limit (spent >= limit)
+            spent = budget_detail.budget_spent_amount
+            limit = self.new_budget_limit
+
+            budget_detail.is_budget_limit_reached = spent >= (0.9 * limit)
+            budget_detail.is_budget_over_limit = spent >= limit
 
             self.db_session.commit()
 
