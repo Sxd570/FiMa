@@ -1,7 +1,7 @@
 from shared.Utility.api_request import APIRequest
 from strands import tool
 from shared.logger import Logger
-from constants import APIConstants
+from constants import APIConstants, GoalConstants
 
 logger = Logger(__name__)
 
@@ -141,9 +141,9 @@ class GoalTools:
                     http_method=APIConstants.KEY_POST_METHOD.value,
                     endpoint=f"/goals/{user_id}",
                     payload={
-                        "goal_name": goal_name,
-                        "goal_description": goal_description,
-                        "goal_target_amount": goal_target_amount
+                        GoalConstants.KEY_GOAL_NAME.value: goal_name,
+                        GoalConstants.KEY_GOAL_DESCRIPTION.value: goal_description,
+                        GoalConstants.KEY_GOAL_TARGET_AMOUNT.value: goal_target_amount
                     }
                 )
                 response = api_request.execute()
@@ -184,7 +184,7 @@ class GoalTools:
                     http_method=APIConstants.KEY_DELETE_METHOD.value,
                     endpoint=f"/goals/{user_id}",
                     payload={
-                        "goal_id": goal_id
+                        GoalConstants.KEY_GOAL_ID.value: goal_id
                     }
                 )
                 response = api_request.execute()
@@ -222,15 +222,19 @@ class GoalTools:
         """
         def _edit_goal(user_id: str, goal_id: str, goal_name: str = None, goal_description: str = None, goal_target_amount: float = None, goal_current_amount: float = None):
             try:
-                payload = {"goal_id": goal_id}
+                payload = {
+                    GoalConstants.KEY_GOAL_ID.value: goal_id
+                }
+
                 if goal_name is not None:
-                    payload["goal_name"] = goal_name
+                    payload[GoalConstants.KEY_GOAL_NAME.value] = goal_name
                 if goal_description is not None:
-                    payload["goal_description"] = goal_description
+                    payload[GoalConstants.KEY_GOAL_DESCRIPTION.value] = goal_description
                 if goal_target_amount is not None:
-                    payload["goal_target_amount"] = goal_target_amount
+                    payload[GoalConstants.KEY_GOAL_TARGET_AMOUNT.value] = goal_target_amount
                 if goal_current_amount is not None:
-                    payload["goal_current_amount"] = goal_current_amount
+                    payload[GoalConstants.KEY_GOAL_CURRENT_AMOUNT.value] = goal_current_amount
+
                 api_request = APIRequest(
                     http_method=APIConstants.KEY_PUT_METHOD.value,
                     endpoint=f"/goals/{user_id}",
@@ -273,8 +277,8 @@ class GoalTools:
                     http_method=APIConstants.KEY_PATCH_METHOD.value,
                     endpoint=f"/goals/{user_id}",
                     payload={
-                        "goal_id": goal_id,
-                        "amount_to_add": amount_to_add
+                        GoalConstants.KEY_GOAL_ID.value: goal_id,
+                        GoalConstants.KEY_GOAL_CURRENT_AMOUNT.value: amount_to_add
                     }
                 )
                 response = api_request.execute()
