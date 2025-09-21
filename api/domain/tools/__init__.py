@@ -15,13 +15,16 @@ def extract_tools(obj):
         return tools
 
 
-def insight_tools():
+def insight_bot_tools():
     try:
+        tools = None
+
         tools = (
             extract_tools(BudgetTools) +
             extract_tools(GoalTools) +
             extract_tools(TransactionTools)
         )
+
         return tools
     except Exception as e:
         logger.error("Error while getting insight tools", str(e))

@@ -2,7 +2,7 @@ from strands import Agent
 from services.lm_studio_ai import LMStudioAIService
 from pathlib import Path
 from shared.logger import Logger
-from domain.tools import insight_tools
+from domain.tools import insight_bot_tools
 
 logger = Logger(__name__)
 
@@ -16,7 +16,7 @@ class InsightBot:
         self.lm_studio = LMStudioAIService()
         self.llm_model = self.lm_studio.initialize_llm()
 
-        self.tools = insight_tools()
+        self.tools = insight_bot_tools()
 
 
     def get_system_prompt(self):
