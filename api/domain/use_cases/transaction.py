@@ -90,17 +90,21 @@ class TransactionUseCase:
                 db_request=db_request
             )
 
-            db_request = UpdateAmountInBudgetDBRequest(
-                user_id=user_id,
-                budget_id=budget_id,
-                amount_to_add=transaction_amount
-            )
+            if transaction_type == 'expense':
+                db_request = UpdateAmountInBudgetDBRequest(
+                    user_id=user_id,
+                    budget_id=budget_id,
+                    amount_to_add=transaction_amount
+                )
 
-            budget_database = BudgetDatabase()
+                budget_database = BudgetDatabase()
 
-            budget_database.update_amount_in_budget(
-                db_request=db_request
-            )
+                budget_database.update_amount_in_budget(
+                    db_request=db_request
+                )
+            else:
+                # For Income use case
+                pass
 
             return create_transaction_response
 

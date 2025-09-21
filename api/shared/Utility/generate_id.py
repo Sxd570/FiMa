@@ -43,21 +43,21 @@ def generate_goal_id(
 
 def generate_budget_id(
     user_id: str,
-    category_id: str,
+    budget_name: str,
     allocated_month: str
 ) -> str:
     """
-    Generate a unique budget identifier based on the user ID, category ID, and allocated month.
+    Generate a unique budget identifier based on the user ID, budget name, and allocated month.
 
     Args:
         user_id (str): The unique identifier of the user.
-        category_id (str): The unique identifier of the budget category.
+        budget_name (str): The name of the budget.
         allocated_month (str): The month for which the budget is allocated.
 
     Returns:
         str: A unique identifier for the budget.
     """
-    mapping = f"{user_id}_{category_id}_{allocated_month}"
+    mapping = f"{user_id}_{budget_name}_{allocated_month}"
     return str(uuid.uuid5(namespace_uuid, mapping))
 
 

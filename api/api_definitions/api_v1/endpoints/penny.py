@@ -12,7 +12,7 @@ router = APIRouter()
 @router.get("/health")
 def health_check():
     try:
-        ...
+        return {"status": "AI is up"}
     except Exception as e:
         logger.error(f"Health check failed: {str(e)}")
         raise e

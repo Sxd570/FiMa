@@ -23,7 +23,7 @@ class UISmithBot:
             logger.error("error while getting system prompt", str(e))
             raise e
 
-    def create_agent(self):
+    def agent(self):
         try:
             if self.uismithbot:
                 return self.uismithbot

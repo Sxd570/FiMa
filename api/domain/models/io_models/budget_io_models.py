@@ -76,7 +76,6 @@ class GetBudgetOverviewDBRequest(BaseModel):
 
 
 class EditBudgetDetailRequest(BaseModel):
-    user_id: str = Field(..., description="User ID of the person editing the budget")
     new_budget_limit: float = Field(..., description="New budget limit to be set for the budget")
 
 
@@ -108,10 +107,9 @@ class DeleteBudgetDetailDBRequest(BaseModel):
 
 
 class CreateBudgetRequest(BaseModel):
-    user_id: str = Field(..., description="User ID of the person creating the budget")
-    month: str = Field(..., description="The month for which the budget is being created, formatted as 'YYYY-MM'")
+    budget_month: str = Field(..., description="The month for which the budget is being created, formatted as 'YYYY-MM'")
     budget_limit: float = Field(..., description="The budget limit to be set for the specified month")
-    name: str = Field(..., description="Name of the budget category")
+    budget_name: str = Field(..., description="Name of the budget category")
     description: Optional[str] = Field(None, description="Optional description for the budget")
 
 

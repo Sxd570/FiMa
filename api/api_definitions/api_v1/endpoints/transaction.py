@@ -12,7 +12,7 @@ router = APIRouter()
 logger = Logger(__name__)
 
 
-@router.get("/transactions/{user_id}")
+@router.get("/transactions/{user_id}/details")
 def get_transactions(user_id: str, request: GetTransactionRequest):
     try:
         filters = request.filters if hasattr(request, 'filters') and request.filters is not None else None

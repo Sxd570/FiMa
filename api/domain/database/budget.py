@@ -172,7 +172,7 @@ class BudgetDatabase(BudgetInterface):
                 budget_details=[
                     BudgetDetail(
                         budget_id=budget_id,
-                        category_name=category_name,
+                        budget_name=budget_name,
                         budget_allocated_amount=budget_allocated_amount,
                         budget_spent_amount=budget_spent_amount,
                         budget_allocated_month=budget_allocated_month,
@@ -185,7 +185,7 @@ class BudgetDatabase(BudgetInterface):
                         budget_allocated_month,
                         is_budget_limit_reached,
                         is_budget_over_limit,
-                        category_name
+                        budget_name
                     ) in db_response
                 ]
             )
@@ -211,14 +211,21 @@ class BudgetDatabase(BudgetInterface):
 
             budget_detail = self.db_session.query(
                 Budget
-                ).filter(
-                    *filter_group
-                ).first()
+            ).filter(
+                *filter_group
+            ).first()
 
             if not budget_detail:
                 raise ValueError("Budget not found to edit.")
 
             budget_detail.budget_allocated_amount = self.new_budget_limit
+
+            # Update is_budget_limit_reached (90%) and is_budget_over_limit (spent >= limit)
+            spent = budget_detail.budget_spent_amount
+            limit = self.new_budget_limit
+
+            budget_detail.is_budget_limit_reached = spent >= (0.9 * limit)
+            budget_detail.is_budget_over_limit = spent >= limit
 
             self.db_session.commit()
 
@@ -298,6 +305,8 @@ class BudgetDatabase(BudgetInterface):
 
     def update_amount_in_budget(self, db_request: UpdateAmountInBudgetDBRequest):
         try:
+            self.db_session = get_db_session()
+
             user_id = db_request.user_id
             budget_id = db_request.budget_id
             amount_to_add = db_request.amount_to_add
@@ -319,9 +328,11 @@ class BudgetDatabase(BudgetInterface):
             # Add the new amount to spent amount
             budget_detail.budget_spent_amount += amount_to_add
 
-            # Check if budget limit is reached or over limit
-            if budget_detail.budget_spent_amount >= budget_detail.budget_allocated_amount:
+            # Check if budget limit is reached (>= 90%) or over limit
+            if budget_detail.budget_allocated_amount > 0 and budget_detail.budget_spent_amount >= 0.9 * budget_detail.budget_allocated_amount:
                 budget_detail.is_budget_limit_reached = True
+            else:
+                budget_detail.is_budget_limit_reached = False
 
             if budget_detail.budget_spent_amount > budget_detail.budget_allocated_amount:
                 budget_detail.is_budget_over_limit = True

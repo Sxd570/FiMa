@@ -8,7 +8,7 @@ logger = Logger(__name__)
 
 
 class APIRequest:
-    def __init__(self, http_method, endpoint, payload):
+    def __init__(self, http_method, endpoint, payload=None):
         self.http_method = http_method
         self.endpoint = endpoint
         self.payload = payload
