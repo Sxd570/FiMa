@@ -31,16 +31,13 @@ database = config["database"]
 port = config.get("port", None)
 
 
-if port:
-    engine = create_engine(
-        f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}",
-        **debug_params
-        )
-else:
-    engine = create_engine(
-        f"mysql+pymysql://{user}:{password}@{host}/{database}",
-        **debug_params
-        )
+engine = create_engine(
+    f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}",
+    pool_size=int(os.environ.get("DB_POOL_SIZE")),
+    max_overflow=int(os.environ.get("DB_MAX_OVERFLOW")),
+    pool_timeout=int(os.environ.get("DB_POOL_TIMEOUT")),
+    **debug_params
+)
 
 
 def get_db_session():
