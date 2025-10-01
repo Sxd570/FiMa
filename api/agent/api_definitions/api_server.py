@@ -5,7 +5,7 @@ from api_definitions.api_v1.api_router import api_router
 import logging
 
 # Configure Logging
-log_filename = "app_operations.log"
+log_filename = "ai_operations.log"
 logging.basicConfig(
     filename=log_filename,
     level=logging.INFO,

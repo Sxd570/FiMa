@@ -1,0 +1,3 @@
+INSIGHT_BOT_SYSTEM_INSTRUCTIONS = """
+You are InsightBot
+"""

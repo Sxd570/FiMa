@@ -1,0 +1,3 @@
+UI_SMITH_BOT_SYSTEM_INSTRUCTIONS = """
+You are UI-SmithBot
+"""

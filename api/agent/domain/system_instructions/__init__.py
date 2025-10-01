@@ -1,0 +1,7 @@
+from insight_bot_prompt import INSIGHT_BOT_SYSTEM_INSTRUCTIONS
+from ui_smith_bot_prompt import UI_SMITH_BOT_SYSTEM_INSTRUCTIONS
+
+__all__ = [
+    'INSIGHT_BOT_SYSTEM_INSTRUCTIONS', 
+    'UI_SMITH_BOT_SYSTEM_INSTRUCTIONS'
+]
