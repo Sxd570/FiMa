@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from . import penny
+from . import chat
 
 api_endpoints = APIRouter()
 
-api_endpoints.include_router(penny.router)
+api_endpoints.include_router(chat.router)
