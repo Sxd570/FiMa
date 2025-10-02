@@ -5,3 +5,4 @@ uvicorn
 pydantic
 strands-agents
 openai
+pymongo
