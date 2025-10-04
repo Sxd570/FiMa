@@ -1,7 +1,7 @@
 from api.agent.shared.Utility.api_request import APIRequest
 from strands import tool
 from shared.logger import Logger
-from constants import APIConstants
+from constants import APIConstants, TransactionConstants
 
 logger = Logger(__name__)
 
@@ -64,9 +64,9 @@ class TransactionTools:
                     http_method=APIConstants.KEY_GET_METHOD.value,
                     endpoint=f"/transactions/{user_id}",
                     params={
-                        "filters": filters,
-                        "limit": limit,
-                        "offset": offset
+                        TransactionConstants.KEY_FILTERS: filters,
+                        TransactionConstants.KEY_LIMIT: limit,
+                        TransactionConstants.KEY_OFFSET: offset
                     }
                 )
                 response = api_request.execute()
@@ -111,11 +111,11 @@ class TransactionTools:
                     http_method=APIConstants.KEY_POST_METHOD.value,
                     endpoint=f"/transactions/{user_id}",
                     body={
-                        "budget_id": budget_id,
-                        "transaction_type": transaction_type,
-                        "transaction_info": transaction_info,
-                        "transaction_amount": transaction_amount,
-                        "transaction_date": transaction_date
+                        TransactionConstants.KEY_BUDGET_ID: budget_id,
+                        TransactionConstants.KEY_TRANSACTION_TYPE: transaction_type,
+                        TransactionConstants.KEY_TRANSACTION_INFO: transaction_info,
+                        TransactionConstants.KEY_TRANSACTION_AMOUNT: transaction_amount,
+                        TransactionConstants.KEY_TRANSACTION_DATE: transaction_date
                     }
                 )
                 response = api_request.execute()
