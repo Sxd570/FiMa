@@ -11,7 +11,7 @@ Base = declarative_base()
 load_dotenv()
 
 
-class SQLDatabase:
+class MySQLDatabase:
     def __init__(self):
         try:
             self.config = {
