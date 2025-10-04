@@ -64,9 +64,9 @@ class TransactionTools:
                     http_method=APIConstants.KEY_GET_METHOD.value,
                     endpoint=f"/transactions/{user_id}",
                     params={
-                        TransactionConstants.KEY_FILTERS: filters,
-                        TransactionConstants.KEY_LIMIT: limit,
-                        TransactionConstants.KEY_OFFSET: offset
+                        TransactionConstants.KEY_FILTERS.value: filters,
+                        TransactionConstants.KEY_LIMIT.value: limit,
+                        TransactionConstants.KEY_OFFSET.value: offset
                     }
                 )
                 response = api_request.execute()
@@ -111,11 +111,11 @@ class TransactionTools:
                     http_method=APIConstants.KEY_POST_METHOD.value,
                     endpoint=f"/transactions/{user_id}",
                     body={
-                        TransactionConstants.KEY_BUDGET_ID: budget_id,
-                        TransactionConstants.KEY_TRANSACTION_TYPE: transaction_type,
-                        TransactionConstants.KEY_TRANSACTION_INFO: transaction_info,
-                        TransactionConstants.KEY_TRANSACTION_AMOUNT: transaction_amount,
-                        TransactionConstants.KEY_TRANSACTION_DATE: transaction_date
+                        TransactionConstants.KEY_BUDGET_ID.value: budget_id,
+                        TransactionConstants.KEY_TRANSACTION_TYPE.value: transaction_type,
+                        TransactionConstants.KEY_TRANSACTION_INFO.value: transaction_info,
+                        TransactionConstants.KEY_TRANSACTION_AMOUNT.value: transaction_amount,
+                        TransactionConstants.KEY_TRANSACTION_DATE.value: transaction_date
                     }
                 )
                 response = api_request.execute()
