@@ -1,9 +1,9 @@
 import os
 from pymongo import MongoClient
 from dotenv import load_dotenv
-# from shared.logger import Logger
+from shared.logger import Logger
 
-# logger = Logger(__name__)
+logger = Logger(__name__)
 
 load_dotenv()
 
@@ -25,9 +25,8 @@ class MongoDatabase:
             # Create client
             self.client = MongoClient(uri)
             self.db = self.client[self.config["database"]]
-            # logger.info("MongoDB connection established successfully")
         except Exception as e:
-            # logger.error(f"Failed to connect to MongoDB: {e}")
+            logger.error(f"Failed to connect to MongoDB: {e}")
             raise
 
     def get_db(self):
