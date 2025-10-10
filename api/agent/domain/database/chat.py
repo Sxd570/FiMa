@@ -1,7 +1,12 @@
 from shared.logger import Logger
-from domain.models.tables.chat import Chat
+from domain.models.tables.conversation import Conversations
+from domain.models.io_models.conversations_io_model import (
+    ConversationDBResponse,
+    Conversation
+)
 from shared.Utility.db_base import MySQLDatabase
 from shared.Utility.mongo_db_base import MongoDatabase
+from copy import deepcopy
 
 logger = Logger(__name__)
 
@@ -21,20 +26,52 @@ class ChatDatabase:
             self.user_id = user_id
 
             filter_group = [
-                Chat.user_id == self.user_id
+                Conversations.user_id == self.user_id
             ]
 
             query = self.mysql_db_session.query(
-                Chat
+                Conversations.conversation_id,
+                Conversations.title,
+                Conversations.created_at,
+                Conversations.updated_at,
+                Conversations.last_message_at,
+                Conversations.total_token_used,
+                Conversations.status
             ).filter(
                 *filter_group
             ).order_by(
-                Chat.updated_at.desc()
+                Conversations.updated_at.desc()
             )
+
             db_response = query.all()
             if not db_response:
-                return []
-            return db_response
+                return ConversationDBResponse(
+                    conversations=[]
+                )
+            response = deepcopy(db_response)
+            
+            conversation_details = ConversationDBResponse(
+                conversations = [
+                    Conversation(
+                        conversation_id=conversation_id,
+                        title=title,
+                        created_at=created_at,
+                        updated_at=updated_at,
+                        last_message_at=last_message_at,
+                        total_token_used=total_token_used,
+                        status=status
+                    ) for (
+                        conversation_id,
+                        title,
+                        created_at,
+                        updated_at,
+                        last_message_at,
+                        total_token_used,
+                        status
+                    ) in response
+                ]
+            )
+            return conversation_details
         except Exception as e:
             logger.error(f"Exception in list conversation db {user_id}: {str(e)}")
             raise e
