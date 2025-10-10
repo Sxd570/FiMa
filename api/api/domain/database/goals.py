@@ -22,7 +22,7 @@ class GoalsDatabase(GoalsInterface):
         self.db_session = None
         self.user_id = None
 
-    def get_total_goals_count(self, user_id:str):
+    def get_total_goals_count(self, user_id:str) -> int:
         try:
             self.db_session = get_db_session()
 
@@ -48,7 +48,7 @@ class GoalsDatabase(GoalsInterface):
 
 
 
-    def get_total_goals_completed(self, user_id: str):
+    def get_total_goals_completed(self, user_id: str) -> int:
         try:
             self.db_session = get_db_session()
             self.user_id = user_id
@@ -74,7 +74,7 @@ class GoalsDatabase(GoalsInterface):
 
     
 
-    def get_total_amount_saved(self, user_id: str):
+    def get_total_amount_saved(self, user_id: str) -> int:
         try:
             self.db_session = get_db_session()
             self.user_id = user_id
@@ -99,7 +99,7 @@ class GoalsDatabase(GoalsInterface):
 
 
 
-    def get_total_goals_amount(self, user_id: str):
+    def get_total_goals_amount(self, user_id: str) -> int:
         try:
             self.db_session = get_db_session()
             self.user_id = user_id
@@ -122,7 +122,7 @@ class GoalsDatabase(GoalsInterface):
             logger.error(f"Error in get_total_goals_amount: {e}")
             raise e
 
-    def get_goal_details(self, db_request: GetGoalsDBRequest):
+    def get_goal_details(self, db_request: GetGoalsDBRequest) -> GoalDetailsDBResponse:
         try:
             self.db_session = get_db_session()
 
@@ -171,7 +171,7 @@ class GoalsDatabase(GoalsInterface):
 
 
 
-    def create_goal(self, db_request: AddGoalDetailDBRequest):
+    def create_goal(self, db_request: AddGoalDetailDBRequest) -> dict:
         try:
             self.db_session = get_db_session()
 
@@ -207,7 +207,7 @@ class GoalsDatabase(GoalsInterface):
             logger.error(f"Error in create_goal: {e}")
             raise e
 
-    def edit_goal(self, db_request: EditGoalDetailDBRequest):
+    def edit_goal(self, db_request: EditGoalDetailDBRequest) -> dict:
         try:
             self.db_session = get_db_session()
 
@@ -256,7 +256,7 @@ class GoalsDatabase(GoalsInterface):
             logger.error(f"Error in update_goal: {e}")
             raise e
 
-    def delete_goal(self, db_request: DeleteGoalDetailDBRequest):
+    def delete_goal(self, db_request: DeleteGoalDetailDBRequest) -> dict:
         try:
             self.db_session = get_db_session()
 
@@ -286,7 +286,7 @@ class GoalsDatabase(GoalsInterface):
             logger.error(f"Error in delete_goal: {e}")
             raise e
 
-    def add_amount_to_goal(self, db_request: AddAmountToGoalDetailDBRequest):
+    def add_amount_to_goal(self, db_request: AddAmountToGoalDetailDBRequest) -> dict:
         try:
             self.db_session = get_db_session()
 

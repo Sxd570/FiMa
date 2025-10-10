@@ -36,7 +36,7 @@ class TransactionDatabase(TransactionInterface):
         return formatted_filters
 
 
-    def get_transactions(self, db_request: GetTransactionDBRequest):
+    def get_transactions(self, db_request: GetTransactionDBRequest) -> GetTransactionDBResponse:
         try:
             self.db_session = get_db_session()
 
@@ -99,9 +99,9 @@ class TransactionDatabase(TransactionInterface):
         except Exception as e:
             logger.error(f"Error fetching transactions: {e}")
             raise e
-        
-    
-    def create_transaction(self, db_request: CreateTransactionDBRequest):
+
+
+    def create_transaction(self, db_request: CreateTransactionDBRequest) -> dict:
         try:
             self.db_session = get_db_session()
 

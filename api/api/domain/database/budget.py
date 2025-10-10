@@ -21,7 +21,7 @@ class BudgetDatabase(BudgetInterface):
         self.db_session = None
         self.user_id = None
         
-    def get_total_budget(self, db_request: GetBudgetOverviewDBRequest):
+    def get_total_budget(self, db_request: GetBudgetOverviewDBRequest) -> int:
         try:
             self.db_session = get_db_session()
             self.user_id = db_request.user_id
@@ -50,7 +50,7 @@ class BudgetDatabase(BudgetInterface):
             raise e
 
 
-    def get_total_spent(self, db_request: GetBudgetOverviewDBRequest):
+    def get_total_spent(self, db_request: GetBudgetOverviewDBRequest) -> int:
         try:
             self.db_session = get_db_session()
             self.user_id = db_request.user_id
@@ -78,7 +78,7 @@ class BudgetDatabase(BudgetInterface):
             raise e
         
         
-    def get_near_limit_count(self, db_request: GetBudgetOverviewDBRequest):
+    def get_near_limit_count(self, db_request: GetBudgetOverviewDBRequest) -> int:
         try:
             self.db_session = get_db_session()
 
@@ -108,7 +108,7 @@ class BudgetDatabase(BudgetInterface):
             raise e
         
 
-    def get_over_limit_count(self, db_request: GetBudgetOverviewDBRequest):
+    def get_over_limit_count(self, db_request: GetBudgetOverviewDBRequest) -> int:
         try:
             self.db_session = get_db_session()
 
@@ -137,7 +137,7 @@ class BudgetDatabase(BudgetInterface):
             raise e
         
 
-    def get_budget_details(self, db_request: GetBudgetDetailsDBRequest):
+    def get_budget_details(self, db_request: GetBudgetDetailsDBRequest) -> BudgetDetailsDBResponse:
         try:
             self.db_session = get_db_session()
 
@@ -196,7 +196,7 @@ class BudgetDatabase(BudgetInterface):
             raise e
         
     
-    def edit_budget_limit(self, db_request: EditBudgetDetailDBRequest):
+    def edit_budget_limit(self, db_request: EditBudgetDetailDBRequest) -> dict:
         try:
             self.db_session = get_db_session()
 
@@ -235,9 +235,9 @@ class BudgetDatabase(BudgetInterface):
         except Exception as e:
             logger.error(f"Error in edit_budget_limit: {e}")
             raise e
-        
-    
-    def delete_budget(self, db_request: DeleteBudgetDetailDBRequest):
+
+
+    def delete_budget(self, db_request: DeleteBudgetDetailDBRequest) -> dict:
         try:
             self.db_session = get_db_session()
 
@@ -267,8 +267,8 @@ class BudgetDatabase(BudgetInterface):
         except Exception as e:
             logger.error(f"Error in delete_budget: {e}")
             raise e
-        
-    def create_budget(self, db_request: CreateBudgetDBRequest):
+
+    def create_budget(self, db_request: CreateBudgetDBRequest) -> dict:
         try:
             self.db_session = get_db_session()
 
@@ -303,7 +303,7 @@ class BudgetDatabase(BudgetInterface):
             raise e
         
 
-    def update_amount_in_budget(self, db_request: UpdateAmountInBudgetDBRequest):
+    def update_amount_in_budget(self, db_request: UpdateAmountInBudgetDBRequest) -> dict:
         try:
             self.db_session = get_db_session()
 

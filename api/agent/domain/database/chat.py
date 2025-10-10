@@ -19,11 +19,11 @@ class ChatDatabase:
         self.mysql_db_session = None
         self.mongo_db_session = None
 
-    def list_conversations(self, user_id: str):
+    def list_conversations(self, db_payload: Any) -> ConversationDBResponse:
         try:
             self.mysql_db_session = self.mysql_db.get_session()
 
-            self.user_id = user_id
+            self.user_id = db_payload.user_id
 
             filter_group = [
                 Conversations.user_id == self.user_id
