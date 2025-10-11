@@ -120,3 +120,27 @@ class ChatDatabase:
         except Exception as e:
             logger.error(f"Exception in get conversation db {user_id}, {conversation_id}: {str(e)}")
             raise e
+        
+
+    def create_conversation(self, db_request: Any) -> Any:
+        try:
+            ...
+        except Exception as e:
+            logger.error(f"Exception in create conversation db: {str(e)}")
+            raise e
+
+
+    def delete_conversation(self, db_request: Any) -> Any:
+        try:
+            ...
+        except Exception as e:
+            logger.error(f"Exception in delete conversation db: {str(e)}")
+            raise e
+
+
+    def update_conversation(self, db_request: Any) -> Any:
+        try:
+            ...
+        except Exception as e:
+            logger.error(f"Exception in update conversation db: {str(e)}")
+            raise e
