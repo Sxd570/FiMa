@@ -116,8 +116,6 @@ class ChatDatabase:
                 message_details=messages
             )
 
-            print("message_details:", message_details)
-
             return message_details
         except Exception as e:
             logger.error(f"Exception in get conversation db {user_id}, {conversation_id}: {str(e)}")
