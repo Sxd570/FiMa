@@ -2,11 +2,12 @@ from shared.logger import Logger
 from domain.models.tables.conversation import Conversations
 from domain.models.io_models.conversations_io_model import (
     ConversationDBResponse,
-    Conversation
+    Conversation, ListConversationDBPayload
 )
 from shared.Utility.db_base import MySQLDatabase
 from shared.Utility.mongo_db_base import MongoDatabase
 from copy import deepcopy
+from typing import Any
 
 logger = Logger(__name__)
 
@@ -19,7 +20,7 @@ class ChatDatabase:
         self.mysql_db_session = None
         self.mongo_db_session = None
 
-    def list_conversations(self, db_payload: Any) -> ConversationDBResponse:
+    def list_conversations(self, db_payload: ListConversationDBPayload) -> ConversationDBResponse:
         try:
             self.mysql_db_session = self.mysql_db.get_session()
 

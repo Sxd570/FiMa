@@ -15,3 +15,19 @@ class Conversation(BaseModel):
 
 class ConversationDBResponse(BaseModel):
     conversations: Optional[List[Conversation]] = Field(None, description="List of conversations")
+
+
+class ListConversationDBPayload(BaseModel):
+    user_id: str = Field(..., description="Unique identifier for the user")
+
+
+class ListConversationsPayload(BaseModel):
+    user_id: str = Field(..., description="Unique identifier for the user")
+
+
+class ListConversationsDBRequest(BaseModel):
+    user_id: str = Field(..., description="Unique identifier for the user")
+
+
+class ListConversationResponse(BaseModel):
+    conversations: Optional[List[Conversation]] = Field(None, description="List of conversations")

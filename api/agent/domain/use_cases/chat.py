@@ -1,16 +1,47 @@
 from shared.logger import Logger
 from domain.database.chat import ChatDatabase
+from domain.models.io_models.conversations_io_model import (
+    ListConversationsPayload,
+    ListConversationsDBRequest,
+    ListConversationResponse,
+    Conversation
+)
 
 logger = Logger(__name__)
 
 
 class ChatUseCases:
     def __init__(self):
-        ...
+        self.chat_db = ChatDatabase()
 
-    def list_conversations(self, user_id: str):
+    def list_conversations(self, payload: ListConversationsPayload) -> ListConversationResponse:
         try:
-            ...
+            user_id = payload.user_id
+
+            db_request = ListConversationsDBRequest(
+                user_id=user_id
+            )
+
+            db_response = self.chat_db.list_conversations(
+                db_request=db_request
+            )
+
+            conversations_list = ListConversationResponse(
+                conversations=[
+                    Conversation(
+                        conversation_id=conv.conversation_id,
+                        title=conv.title,
+                        created_at=conv.created_at,
+                        updated_at=conv.updated_at,
+                        last_message_at=conv.last_message_at,
+                        total_token_used=conv.total_token_used,
+                        status=conv.status
+                    )
+                    for conv in db_response.conversations
+                ]
+            )
+
+            return conversations_list
         except Exception as e:
             logger.error(f"Failed to list conversations for user {user_id}: {str(e)}")
             raise e
