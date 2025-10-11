@@ -5,7 +5,8 @@ from domain.use_cases.chat import ChatUseCases
 from domain.models.io_models.conversations_io_model import (
     ListConversationsPayload,
     ListConversationResponse,
-    GetConversationPayload
+    GetConversationPayload,
+    GetConversationResponse
 )
 
 logger = Logger(__name__)
@@ -32,7 +33,7 @@ def list_conversations(user_id: str) -> ListConversationResponse:
 
 
 @router.get("/{user_id}/conversation/{conversation_id}")
-def get_conversation(user_id: str, conversation_id: str):
+def get_conversation(user_id: str, conversation_id: str) -> GetConversationResponse:
     try:
         payload = GetConversationPayload(
             user_id=user_id,

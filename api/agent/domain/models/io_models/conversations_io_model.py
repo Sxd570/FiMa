@@ -57,3 +57,11 @@ class Message(BaseModel):
     content: Any = Field(..., description="Content of the message")
     created_at: datetime = Field(..., description="Timestamp when the message was created")
     metadata: Optional[MessageMetadata] = Field(None, description="Additional metadata for the message")
+
+
+
+class GetConversationDBResponse(BaseModel):
+    message_details: Optional[List[Message]] = Field(None, description="List of messages in the conversation")
+
+class GetConversationResponse(BaseModel):
+    message_details: Optional[List[Message]] = Field(None, description="List of messages in the conversation")

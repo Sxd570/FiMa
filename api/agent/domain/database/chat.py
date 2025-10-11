@@ -4,7 +4,7 @@ from domain.models.io_models.conversations_io_model import (
     ListConversationDBResponse,
     Conversation, ListConversationDBPayload,
     GetConversationDBRequest,
-    Message
+    Message, GetConversationDBResponse
 )
 from shared.Utility.db_base import MySQLDatabase
 from shared.Utility.mongo_db_base import MongoDatabase
@@ -80,7 +80,7 @@ class ChatDatabase:
             raise e
         
 
-    def get_conversation(self, db_request: GetConversationDBRequest):
+    def get_conversation(self, db_request: GetConversationDBRequest) -> GetConversationDBResponse:
         try:
             user_id = db_request.user_id
             conversation_id = db_request.conversation_id
@@ -112,7 +112,13 @@ class ChatDatabase:
                 Message(**message) for message in db_response
             ]
 
-            return messages
+            message_details = GetConversationDBResponse(
+                message_details=messages
+            )
+
+            print("message_details:", message_details)
+
+            return message_details
         except Exception as e:
             logger.error(f"Exception in get conversation db {user_id}, {conversation_id}: {str(e)}")
             raise e
