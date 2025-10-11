@@ -1,7 +1,7 @@
 from shared.logger import Logger
 from domain.models.tables.conversation import Conversations
 from domain.models.io_models.conversations_io_model import (
-    ConversationDBResponse,
+    ListConversationDBResponse,
     Conversation, ListConversationDBPayload
 )
 from shared.Utility.db_base import MySQLDatabase
@@ -20,11 +20,11 @@ class ChatDatabase:
         self.mysql_db_session = None
         self.mongo_db_session = None
 
-    def list_conversations(self, db_payload: ListConversationDBPayload) -> ConversationDBResponse:
+    def list_conversations(self, db_request: ListConversationDBPayload) -> ListConversationDBResponse:
         try:
             self.mysql_db_session = self.mysql_db.get_session()
 
-            self.user_id = db_payload.user_id
+            self.user_id = db_request.user_id
 
             filter_group = [
                 Conversations.user_id == self.user_id
@@ -46,12 +46,12 @@ class ChatDatabase:
 
             db_response = query.all()
             if not db_response:
-                return ConversationDBResponse(
+                return ListConversationDBResponse(
                     conversations=[]
                 )
             response = deepcopy(db_response)
             
-            conversation_details = ConversationDBResponse(
+            conversation_details = ListConversationDBResponse(
                 conversations = [
                     Conversation(
                         conversation_id=conversation_id,
@@ -74,5 +74,5 @@ class ChatDatabase:
             )
             return conversation_details
         except Exception as e:
-            logger.error(f"Exception in list conversation db {user_id}: {str(e)}")
+            logger.error(f"Exception in list conversation db {self.user_id}: {str(e)}")
             raise e
