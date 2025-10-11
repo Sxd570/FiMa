@@ -32,3 +32,28 @@ class ListConversationsDBRequest(BaseModel):
 
 class ListConversationResponse(BaseModel):
     conversations: Optional[List[Conversation]] = Field(None, description="List of conversations")
+
+
+class GetConversationPayload(BaseModel):
+    user_id: str = Field(..., description="Unique identifier for the user")
+    conversation_id: str = Field(..., description="Unique identifier for the conversation")
+
+
+class GetConversationDBRequest(BaseModel):
+    user_id: str = Field(..., description="Unique identifier for the user")
+    conversation_id: str = Field(..., description="Unique identifier for the conversation")
+
+
+class MessageMetadata(BaseModel):
+    token_used: Optional[int] = Field(None, description="Number of tokens used for this message")
+    model: Optional[str] = Field(None, description="Model used to generate the message")
+    temperature: Optional[float] = Field(None, description="Sampling temperature used for the message generation")
+
+class Message(BaseModel):
+    message_id: str = Field(..., description="Unique identifier for the message")
+    conversation_id: str = Field(..., description="Unique identifier for the conversation")
+    sender: str = Field(..., description="Sender of the message (e.g., user, agent)")
+    content_type: str = Field(..., description="Type of content (e.g., html, react)")
+    content: Any = Field(..., description="Content of the message")
+    created_at: datetime = Field(..., description="Timestamp when the message was created")
+    metadata: Optional[MessageMetadata] = Field(None, description="Additional metadata for the message")

@@ -2,7 +2,9 @@ from shared.logger import Logger
 from domain.models.tables.conversation import Conversations
 from domain.models.io_models.conversations_io_model import (
     ListConversationDBResponse,
-    Conversation, ListConversationDBPayload
+    Conversation, ListConversationDBPayload,
+    GetConversationDBRequest,
+    Message
 )
 from shared.Utility.db_base import MySQLDatabase
 from shared.Utility.mongo_db_base import MongoDatabase
@@ -24,10 +26,10 @@ class ChatDatabase:
         try:
             self.mysql_db_session = self.mysql_db.get_session()
 
-            self.user_id = db_request.user_id
+            user_id = db_request.user_id
 
             filter_group = [
-                Conversations.user_id == self.user_id
+                Conversations.user_id == user_id
             ]
 
             query = self.mysql_db_session.query(
@@ -74,5 +76,43 @@ class ChatDatabase:
             )
             return conversation_details
         except Exception as e:
-            logger.error(f"Exception in list conversation db {self.user_id}: {str(e)}")
+            logger.error(f"Exception in list conversation db {user_id}: {str(e)}")
+            raise e
+        
+
+    def get_conversation(self, db_request: GetConversationDBRequest):
+        try:
+            user_id = db_request.user_id
+            conversation_id = db_request.conversation_id
+
+            filter_group = {
+                "user_id": user_id,
+                "conversation_id": conversation_id
+            }
+
+            self.mongo_db_session = self.mongo_db.get_db()
+
+            projection_fields = {
+                "_id": 0,
+                "message_id": 1,
+                "conversation_id": 1,
+                "sender": 1,
+                "content_type": 1,  
+                "content": 1,
+                "created_at": 1,
+                "metadata": 1
+            }
+
+            db_response = self.mongo_db_session["conversations"].find(
+                filter_group,
+                projection_fields
+            ).sort("created_at", -1)
+
+            messages = [
+                Message(**message) for message in db_response
+            ]
+
+            return messages
+        except Exception as e:
+            logger.error(f"Exception in get conversation db {user_id}, {conversation_id}: {str(e)}")
             raise e

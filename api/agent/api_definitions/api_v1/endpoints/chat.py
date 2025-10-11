@@ -4,7 +4,8 @@ from shared.logger import Logger
 from domain.use_cases.chat import ChatUseCases
 from domain.models.io_models.conversations_io_model import (
     ListConversationsPayload,
-    ListConversationResponse
+    ListConversationResponse,
+    GetConversationPayload
 )
 
 logger = Logger(__name__)
@@ -30,14 +31,18 @@ def list_conversations(user_id: str) -> ListConversationResponse:
         raise e
 
 
-@router.post("{user_id}/conversation/{conversation_id}")
+@router.get("/{user_id}/conversation/{conversation_id}")
 def get_conversation(user_id: str, conversation_id: str):
     try:
+        payload = GetConversationPayload(
+            user_id=user_id,
+            conversation_id=conversation_id
+        )
+
         chat_use_cases = ChatUseCases()
 
         conversation = chat_use_cases.get_conversation(
-            user_id=user_id, 
-            conversation_id=conversation_id
+            payload=payload
         )
 
         return conversation

@@ -4,7 +4,9 @@ from domain.models.io_models.conversations_io_model import (
     ListConversationsPayload,
     ListConversationsDBRequest,
     ListConversationResponse,
-    Conversation
+    Conversation,
+    GetConversationPayload,
+    GetConversationDBRequest
 )
 
 logger = Logger(__name__)
@@ -46,9 +48,21 @@ class ChatUseCases:
             logger.error(f"Failed to list conversations for user {user_id}: {str(e)}")
             raise e
 
-    def get_conversation(self, user_id: str, conversation_id: str):
+    def get_conversation(self, payload: GetConversationPayload):
         try:
-            ...
+            user_id = payload.user_id
+            conversation_id = payload.conversation_id
+
+            db_request = GetConversationDBRequest(
+                user_id=user_id,
+                conversation_id=conversation_id
+            )
+
+            conversation = self.chat_db.get_conversation(
+                db_request=db_request
+            )
+
+            return conversation
         except Exception as e:
             logger.error(f"Failed to get conversation {conversation_id} for user {user_id}: {str(e)}")
             raise e
