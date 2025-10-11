@@ -15,7 +15,7 @@ def extract_tools(obj):
         return tools
 
 
-def insight_bot_tools():
+def data_gatherer_bot_tools():
     try:
         tools = None
 

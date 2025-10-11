@@ -50,12 +50,3 @@ def get_conversation(user_id: str, conversation_id: str) -> GetConversationRespo
     except Exception as e:
         logger.error(f"Failed to get conversation {conversation_id} for user {user_id}: {str(e)}")
         raise e
-    
-
-@router.websocket("/ws/{user_id}/chat")
-async def chat(websocket, user_id: str):
-    try:
-        ...
-    except Exception as e:
-        logger.error(f"WebSocket connection error for user {user_id}: {str(e)}")
-        raise e

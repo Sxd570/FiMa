@@ -7,8 +7,7 @@ from domain.models.io_models.conversations_io_model import (
     Conversation,
     GetConversationPayload,
     GetConversationDBRequest,
-    GetConversationResponse,
-    Message
+    GetConversationResponse
 )
 
 logger = Logger(__name__)
