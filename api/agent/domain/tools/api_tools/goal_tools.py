@@ -1,4 +1,4 @@
-from api.agent.shared.Utility.api_request import APIRequest
+from shared.Utility.api_request import APIRequest
 from strands import tool
 from shared.logger import Logger
 from constants import APIConstants, GoalConstants

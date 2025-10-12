@@ -17,17 +17,18 @@ class LMStudioAIConfig(BaseModel):
 
 
 class LMStudioAIService:
-    def __init__(self):
+    def __init__(self, agent_name: str):
+        self.agent_name = agent_name
         self.config = self.get_config()
         self.llm = None
 
 
-    def get_config(self):
+    def get_config(self) -> LMStudioAIConfig:
         return LMStudioAIConfig(
-            model_name = os.getenv("MODEL_NAME"),
+            model_name = os.getenv(f"{self.agent_name}_MODEL_NAME"),
             base_url = os.getenv("LM_STUDIO_BASE_URL"),
             port = int(os.getenv("LM_STUDIO_PORT")),
-            temperature = float(os.getenv("MODEL_TEMPERATURE")),
+            temperature = float(os.getenv(f"{self.agent_name}_MODEL_TEMPERATURE")),
             api_key = os.getenv("API_KEY"),
             version = os.getenv("LM_STUDIO_API_VERSION")
         )

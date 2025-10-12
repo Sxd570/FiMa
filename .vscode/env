@@ -3,4 +3,5 @@ ACTIVE_DOMAIN=/home/salman/Desktop/fima/api/domain
 
 PYTHONPATH="${PLATFORM_ROOT}:${ACTIVE_DOMAIN}"
 
-# export PYTHONPATH=/home/salman/Desktop/fima/api:/home/salman/Desktop/fima/api/domain
+# export PYTHONPATH=/home/salman/Desktop/fima/api/api:/home/salman/Desktop/fima/api/api/domain
+# export PYTHONPATH=/home/salman/Desktop/fima/api/agent:/home/salman/Desktop/fima/api/agent/domain
