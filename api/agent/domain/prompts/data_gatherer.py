@@ -1,3 +1,0 @@
-DATA_GATHERER_SYSTEM_INSTRUCTION = """
-...
-"""
