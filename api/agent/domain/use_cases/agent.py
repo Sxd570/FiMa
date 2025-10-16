@@ -24,18 +24,17 @@ executor = ThreadPoolExecutor()
 
 
 
-def get_agent_api_as_tool():
+def get_agent_api_as_tool(callback_handler=None):
     @tool
     def agent_api_bot(query: str) -> str:
         """
-        #TODO: add tool description
+        This tool allows you to interact with the AGENT_API who is a pirate.
         """
         try:
             agent_api_bot_factory = AgentFactory(
                 agent_name="AGENT_API",
                 system_prompt=AGENT_API_SYSTEM_INSTRUCTIONS,
-                tool_list=agent_api_tools(),
-                callback_handler=None
+                callback_handler=callback_handler
             )
             agent = agent_api_bot_factory.create_agent()
 
@@ -53,7 +52,7 @@ def get_agent_ui_smith_as_tool():
     @tool
     def agent_ui_smith_bot(query: str, format: str = "html") -> str:
         """
-        #TODO: add tool description
+        This tool allows you to interact with the UI_SMITH who is a front-end developer.
         """
         try:
             prompt = (
@@ -112,7 +111,10 @@ class AgentUseCase:
             orchestrator_agent = AgentFactory(
                 agent_name="ORCHESTRATOR",
                 system_prompt=ORCHESTRATOR_SYSTEM_INSTRUCTIONS,
-                callback_handler=self.callback_handler
+                callback_handler=self.callback_handler,
+                tool_list=[
+                    get_agent_api_as_tool(callback_handler=self.callback_handler)
+                ]
             )
             agent = orchestrator_agent.create_agent()
             agents[self.websocket] = agent
