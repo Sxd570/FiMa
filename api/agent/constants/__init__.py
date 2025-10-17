@@ -42,3 +42,14 @@ class GoalConstants(Enum):
     KEY_GOAL_TARGET_AMOUNT = "goal_target_amount"
     KEY_GOAL_CURRENT_AMOUNT = "goal_current_amount"
     KEY_GOAL_COMPLETED = "is_goal_completed"
+
+
+class AgentUISmithFormatEnum(Enum):
+    HTML = "html"
+    MARKDOWN = "markdown"
+
+
+class AgentEnum(Enum):
+    AGENT_API = "AGENT_API"
+    UI_SMITH = "UI_SMITH"
+    ORCHESTRATOR = "ORCHESTRATOR"

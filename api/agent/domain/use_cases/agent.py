@@ -4,6 +4,11 @@ from strands import tool, Agent
 from typing import Dict, List
 from concurrent.futures import ThreadPoolExecutor
 import json
+from pydantic import Field
+from constants import (
+    AgentUISmithFormatEnum,
+    AgentEnum
+)
 
 
 from domain.prompts import (
@@ -28,14 +33,16 @@ def get_agent_api_as_tool(callback_handler=None):
     @tool
     def agent_api_bot(query: str) -> str:
         """
-        This tool allows you to interact with the AGENT_API who is a pirate.
+        #TODO: Update the description
         """
         try:
             agent_api_bot_factory = AgentFactory(
-                agent_name="AGENT_API",
+                agent_name=AgentEnum.AGENT_API.value,
                 system_prompt=AGENT_API_SYSTEM_INSTRUCTIONS,
-                callback_handler=callback_handler
+                callback_handler=callback_handler,
+                tool_list=agent_api_tools()
             )
+
             agent = agent_api_bot_factory.create_agent()
 
             response = agent(query)
@@ -50,9 +57,12 @@ def get_agent_api_as_tool(callback_handler=None):
 
 def get_agent_ui_smith_as_tool():
     @tool
-    def agent_ui_smith_bot(query: str, format: str = "html") -> str:
+    def agent_ui_smith_bot(
+        query: str = Field(..., description="The query to generate the UI artifact"), 
+        format: AgentUISmithFormatEnum = Field(..., description="The format of the UI artifact")
+    ) -> str:
         """
-        This tool allows you to interact with the UI_SMITH who is a front-end developer.
+        #TODO: Update the description
         """
         try:
             prompt = (
@@ -60,12 +70,13 @@ def get_agent_ui_smith_as_tool():
                 f"Generation query:\n{query}"
             )
             agent_ui_smith_factory = AgentFactory(
-                agent_name="UI_SMITH",
+                agent_name=AgentEnum.UI_SMITH.value,
                 system_prompt=UI_SMITH_SYSTEM_INSTRUCTIONS,
                 callback_handler=None
             )
 
             agent = agent_ui_smith_factory.create_agent()
+            
             response = agent(prompt)
 
             return str(response)
@@ -109,15 +120,23 @@ class AgentUseCase:
     def get_orchestrator_agent(self) -> Agent:
         try:
             orchestrator_agent = AgentFactory(
-                agent_name="ORCHESTRATOR",
+                agent_name=AgentEnum.ORCHESTRATOR.value,
                 system_prompt=ORCHESTRATOR_SYSTEM_INSTRUCTIONS,
                 callback_handler=self.callback_handler,
                 tool_list=[
-                    get_agent_api_as_tool(callback_handler=self.callback_handler)
+                    get_agent_api_as_tool(
+                        callback_handler=self.callback_handler
+                    ),
+                    get_agent_ui_smith_as_tool(
+                        callback_handler=self.callback_handler
+                    )
                 ]
             )
+
             agent = orchestrator_agent.create_agent()
+
             agents[self.websocket] = agent
+
             return agent
         except Exception as e:
             logger.error("Error while creating orchestrator agent", str(e))
