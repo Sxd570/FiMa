@@ -5,86 +5,18 @@ from typing import Dict, List
 from concurrent.futures import ThreadPoolExecutor
 import json
 from pydantic import Field
-from constants import (
-    AgentUISmithFormatEnum,
-    AgentEnum
-)
 
-
-from domain.prompts import (
-    AGENT_API_SYSTEM_INSTRUCTIONS,
-    ORCHESTRATOR_SYSTEM_INSTRUCTIONS,
-    UI_SMITH_SYSTEM_INSTRUCTIONS
-)
-
-from domain.tools.api_tools import agent_api_tools
-
-from domain.use_cases.agent_base import AgentFactory
+from constants import AgentEnum
+from domain.agent.base import AgentFactory
+from domain.prompts import ORCHESTRATOR_SYSTEM_INSTRUCTIONS
+from domain.tools.agent_as_tools.agent_api import agent_api_agent_as_tool
+from domain.tools.agent_as_tools.ui_smith import ui_smith_agent_as_tool
 
 from shared.logger import Logger
 logger = Logger(__name__)
 
 agents: Dict[WebSocket, Agent] = {}
 executor = ThreadPoolExecutor()
-
-
-
-def get_agent_api_as_tool(callback_handler=None):
-    @tool
-    def agent_api_bot(query: str) -> str:
-        """
-        #TODO: Update the description
-        """
-        try:
-            agent_api_bot_factory = AgentFactory(
-                agent_name=AgentEnum.AGENT_API.value,
-                system_prompt=AGENT_API_SYSTEM_INSTRUCTIONS,
-                callback_handler=callback_handler,
-                tool_list=agent_api_tools()
-            )
-
-            agent = agent_api_bot_factory.create_agent()
-
-            response = agent(query)
-
-            return str(response)
-        except Exception as e:
-            logger.error("Exception in get_agent_api_as_tools", str(e))
-            raise e
-
-    return agent_api_bot
-
-
-def get_agent_ui_smith_as_tool():
-    @tool
-    def agent_ui_smith_bot(
-        query: str = Field(..., description="The query to generate the UI artifact"), 
-        format: AgentUISmithFormatEnum = Field(..., description="The format of the UI artifact")
-    ) -> str:
-        """
-        #TODO: Update the description
-        """
-        try:
-            prompt = (
-                f"Generate the required {format} artifact as per the query below\n"
-                f"Generation query:\n{query}"
-            )
-            agent_ui_smith_factory = AgentFactory(
-                agent_name=AgentEnum.UI_SMITH.value,
-                system_prompt=UI_SMITH_SYSTEM_INSTRUCTIONS,
-                callback_handler=None
-            )
-
-            agent = agent_ui_smith_factory.create_agent()
-            
-            response = agent(prompt)
-
-            return str(response)
-        except Exception as e:
-            logger.error("Exception in get_agent_ui_smith_as_tools", str(e))
-            raise e
-        
-    return agent_ui_smith_bot
 
 
 class WebSocketCallback:
@@ -119,25 +51,21 @@ class AgentUseCase:
 
     def get_orchestrator_agent(self) -> Agent:
         try:
-            orchestrator_agent = AgentFactory(
+            orchestrator_bot_factory = AgentFactory(
                 agent_name=AgentEnum.ORCHESTRATOR.value,
                 system_prompt=ORCHESTRATOR_SYSTEM_INSTRUCTIONS,
                 callback_handler=self.callback_handler,
                 tool_list=[
-                    get_agent_api_as_tool(
+                    agent_api_agent_as_tool(
                         callback_handler=self.callback_handler
                     ),
-                    get_agent_ui_smith_as_tool(
+                    ui_smith_agent_as_tool(
                         callback_handler=self.callback_handler
                     )
                 ]
             )
-
-            agent = orchestrator_agent.create_agent()
-
-            agents[self.websocket] = agent
-
-            return agent
+            orchestrator_agent = orchestrator_bot_factory.create_agent()
+            return orchestrator_agent
         except Exception as e:
             logger.error("Error while creating orchestrator agent", str(e))
             raise e
