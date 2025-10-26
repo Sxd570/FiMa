@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from shared.logger import Logger
 from shared.Utility.password_crypto import encrypt_password, verify_password
 from shared.Utility.generate_id import (
@@ -29,16 +30,25 @@ class AuthUseCase:
             db_response = auth_database.login(
                 db_payload=db_payload
             )
+            if not db_response:
+                return LoginResponse(
+                    user_id="",
+                    status="user_not_found"
+                )
 
             stored_hashed_password = db_response.user_password
 
             if not verify_password(stored_hashed_password, input_password):
-                raise ValueError("Invalid password")
+                return LoginResponse(
+                    user_id="",
+                    status="wrong_password"
+                )
 
             del db_response.user_password
 
             login_response = LoginResponse(
-                user_id=db_response.user_id
+                user_id=db_response.user_id,
+                status="success"
             )
 
             return login_response
@@ -50,7 +60,7 @@ class AuthUseCase:
 
     def signup(self, payload: SignupPayload):
         try:
-            username = payload.username
+            user_name = payload.user_name
             user_email = payload.user_email
             password = payload.password
 
@@ -62,7 +72,7 @@ class AuthUseCase:
             db_payload = SignupDBRequest(
                 user_id=user_id,
                 user_email=user_email,
-                username=username,
+                user_name=user_name,
                 password=encrypted_password
             )
 

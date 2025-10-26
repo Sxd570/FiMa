@@ -42,12 +42,12 @@ async def signup(request: SignupRequest):
     try:
         user_email = request.user_email
         password = request.password
-        username = request.username
+        user_name = request.user_name
 
         payload = SignupPayload(
             user_email=user_email,
             password=password,
-            username=username
+            user_name=user_name
         )
 
         auth = AuthUseCase()

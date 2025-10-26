@@ -16,7 +16,7 @@ class AuthDatabase(AuthInterface):
         try:
             user_id = db_payload.user_id
             user_email = db_payload.user_email
-            username = db_payload.username
+            user_name = db_payload.user_name
             password = db_payload.password
 
             filter_group = [
@@ -34,12 +34,14 @@ class AuthDatabase(AuthInterface):
             ).first()
 
             if existing_user:
-                logger.error(f"User with ID {user_id} or email {user_email} already exists.")
-                raise ValueError("User already exists")
+                logger.warning(f"User with ID {user_id} or email {user_email} already exists.")
+                return {
+                    "status": "user_exist"
+                }
 
             new_user = User(
                 user_id=user_id,
-                user_name=username,
+                user_name=user_name,
                 user_email=user_email,
                 user_password=password
             )
@@ -47,6 +49,7 @@ class AuthDatabase(AuthInterface):
             self.db_session.commit()
 
             return {
+                "status": "success",
                 "user_id": user_id
             }
 
@@ -72,8 +75,8 @@ class AuthDatabase(AuthInterface):
             ).first()
 
             if not user:
-                logger.error(f"Login failed for email: {user_email}")
-                raise ValueError("Invalid email or password")
+                logger.warning(f"Login failed for email: {user_email}")
+                return None
 
             return LoginDBResponse(
                 user_id=user.user_id,
