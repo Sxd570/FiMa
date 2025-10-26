@@ -22,7 +22,8 @@ def agent_api_agent_as_tool(callback_handler=None):
             agent_api_bot_factory = AgentFactory(
                 agent_name=AgentEnum.AGENT_API.value,
                 system_prompt=AGENT_API_SYSTEM_INSTRUCTIONS,
-                callback_handler=callback_handler
+                callback_handler=callback_handler,
+                tools=agent_api_tools()
             )
 
             agent = agent_api_bot_factory.create_agent()
