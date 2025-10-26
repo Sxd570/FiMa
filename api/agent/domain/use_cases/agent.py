@@ -46,7 +46,7 @@ class AgentUseCase:
         self.user_id = user_id
         self.websocket = websocket
         self.callback_handler = WebSocketCallback(websocket)
-        self.orchestrator_agent = self.get_orchestrator_agent()
+        self.orchestrator_agent = None
 
 
     def get_orchestrator_agent(self) -> Agent:
@@ -74,13 +74,12 @@ class AgentUseCase:
     async def execute(self, query: str):
         try:
             self.query = query
+            self.orchestrator_agent = self.get_orchestrator_agent()
 
-            await self.websocket.send_json(
-                {
-                    "type": "response_start", 
-                    "data": ""
-                }
-            )
+            await self.websocket.send_json({
+                "type": "response_start", 
+                "data": ""
+            })
 
             self.callback_handler.clear()
 
@@ -94,12 +93,10 @@ class AgentUseCase:
 
             await loop.run_in_executor(executor, run_agent)
 
-            await self.websocket.send_json(
-                {
-                    "type": "response_end", 
-                    "data": ""
-                }
-            )
+            await self.websocket.send_json({
+                "type": "response_end", 
+                "data": ""
+            })
             
         except WebSocketDisconnect:
             logger.warning(f"Websocket client disconnected: {self.user_id}")

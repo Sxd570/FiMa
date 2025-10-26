@@ -1,4 +1,4 @@
-from strands import tool, Agents
+from strands import tool
 from pydantic import Field
 from constants import (
     AgentUISmithFormatEnum,
@@ -13,10 +13,7 @@ logger = Logger(__name__)
 
 def ui_smith_agent_as_tool(callback_handler=None):
     @tool
-    def agent_ui_smith_bot(
-        query: str = Field(..., description="The query to generate the UI artifact"), 
-        format: AgentUISmithFormatEnum = Field(..., description="The format of the UI artifact")
-    ) -> str:
+    def agent_ui_smith_bot(query: str) -> str:
         """
         #TODO: Update the description
         """

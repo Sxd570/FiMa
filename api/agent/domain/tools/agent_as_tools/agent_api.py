@@ -14,9 +14,7 @@ logger = Logger(__name__)
 
 def agent_api_agent_as_tool(callback_handler=None):
     @tool
-    def agent_api_bot(
-        query: str = Field(..., description="The query to interact with the API agent")
-    ) -> str:
+    def agent_api_bot(query: str) -> str:
         """
         #TODO: Update the description
         """
@@ -24,8 +22,7 @@ def agent_api_agent_as_tool(callback_handler=None):
             agent_api_bot_factory = AgentFactory(
                 agent_name=AgentEnum.AGENT_API.value,
                 system_prompt=AGENT_API_SYSTEM_INSTRUCTIONS,
-                callback_handler=callback_handler,
-                tool_list=agent_api_tools()
+                callback_handler=callback_handler
             )
 
             agent = agent_api_bot_factory.create_agent()
