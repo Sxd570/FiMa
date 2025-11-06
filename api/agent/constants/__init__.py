@@ -16,7 +16,7 @@ class TransactionConstants(Enum):
 
 
 class BudgetConstants(Enum):
-    KEY_BUDGET_MONTH = "budget_month"
+    KEY_BUDGET_MONTH = "month"
     KEY_USER_ID = "user_id"
     KEY_BUDGET_ID = "budget_id"
     KEY_NEW_BUDGET_LIMIT = "new_budget_limit"

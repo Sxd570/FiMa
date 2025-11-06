@@ -31,12 +31,21 @@ target_metadata = None
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
+# def get_url():
+#     user = os.getenv("DB_USER", "")
+#     password = os.getenv("DB_PASSWORD", "")
+#     host = os.getenv("DB_HOST", "")
+#     port = os.getenv("DB_PORT", "")
+#     db = os.getenv("DB_NAME", "")
+
+#     return f"mysql+pymysql://{user}:{password}@{host}:{port}/{db}"
+
 def get_url():
-    user = os.getenv("DB_USER", "")
-    password = os.getenv("DB_PASSWORD", "")
-    host = os.getenv("DB_HOST", "")
-    port = os.getenv("DB_PORT", "")
-    db = os.getenv("DB_NAME", "")
+    user = "fima"
+    password = "Fima1234!"
+    host = "localhost"
+    port = "3307"
+    db = "fima"
 
     return f"mysql+pymysql://{user}:{password}@{host}:{port}/{db}"
 

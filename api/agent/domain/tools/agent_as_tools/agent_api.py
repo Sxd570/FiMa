@@ -35,15 +35,19 @@ def agent_api_agent_as_tool(callback_handler=None):
 
         Usage Guidelines:
         - Use this tool whenever financial data is required for analysis or visualization.
-        - Do NOT use this tool for data creation, modification, or deletion.
-        - The Orchestrator Agent must ensure that the query includes necessary parameters
-          (e.g., month, year, or data type) before calling this tool.
+        - Do NOT use this tool for data creation, modification, or deletion.s
         - If multiple months or a date range is requested, the API Agent will handle
           sequential retrieval and aggregation automatically.
+        - If a yearly overview is requested, the API Agent will fetch and compile
+          data for each month of the year.
 
         Parameters:
         - query (str): A natural language description of the data to fetch.
-                       Example: "Get the user's budget overview for September 2025."
+            Example: 
+              1. "Get the budget overview for September 2025 for user {USER ID}"
+              2. "Fetch all goals and their progress for user {USER ID}"
+              3. "Retrieve transactions from August 1 to August 15, 2025 for user {USER ID}"
+              4. "List detailed budgets of year 2025 for user {USER ID}"
 
         Returns:
         - str: JSON or structured text response containing the requested financial data.
@@ -62,7 +66,7 @@ def agent_api_agent_as_tool(callback_handler=None):
                 agent_name=AgentEnum.AGENT_API.value,
                 system_prompt=AGENT_API_SYSTEM_INSTRUCTIONS,
                 callback_handler=callback_handler,
-                tools=agent_api_tools()
+                tool_list=agent_api_tools()
             )
 
             agent = agent_api_bot_factory.create_agent()

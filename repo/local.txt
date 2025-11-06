@@ -1,0 +1,9 @@
+docker run -d \
+  --name fima-mysql \
+  -e MYSQL_ROOT_PASSWORD=Fima1234! \
+  -e MYSQL_USER=fima \
+  -e MYSQL_PASSWORD=Fima1234! \
+  -e MYSQL_DATABASE=fima \
+  -p 3307:3306 \
+  -v fima_mysql_data:/var/lib/mysql \
+  mysql:8.0

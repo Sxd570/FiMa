@@ -28,11 +28,30 @@ app.include_router(api_router)
 # Middleware for Logging Requests
 @app.middleware("http")
 async def log_user_requests(request: Request, call_next):
-    # Always get user_id from headers, default to 'anonymous'
     user_id = request.headers.get("user_id", "ai")
-    logging.info(f"User: {user_id} | Method: {request.method} | Path: {request.url.path}")
+
+    # Read and store the request body (can be read only once)
+    try:
+        body_bytes = await request.body()
+        body_str = body_bytes.decode("utf-8") if body_bytes else ""
+    except Exception as e:
+        body_str = f"[Error reading body: {e}]"
+
+    # Log method, path, and payload
+    logging.info(
+        f"User: {user_id} | Method: {request.method} | Path: {request.url.path} | Payload: {body_str}"
+    )
+
+    # Recreate the request stream for downstream handlers
+    async def receive():
+        return {"type": "http.request", "body": body_bytes}
+
+    request = Request(request.scope, receive=receive)
+
+    # Process the request
     response = await call_next(request)
     return response
+
  
 
 # Global Exception Handlers

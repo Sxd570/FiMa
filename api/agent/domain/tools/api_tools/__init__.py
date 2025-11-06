@@ -1,29 +1,22 @@
-from .budget_tools import BudgetTools
-from .goal_tools import GoalTools
-from .transaction_tools import TransactionTools
+from .budget_tools import * 
+from .goal_tools import *
+from .transaction_tools import *
 from shared.logger import Logger
 
 logger = Logger(__name__)
-
-
-def extract_tools(obj):
-        tools = []
-        for attr_name in dir(obj):
-            attr = getattr(obj, attr_name)
-            if hasattr(attr, "_tool_spec"):
-                tools.append(attr)
-        return tools
 
 
 def agent_api_tools():
     try:
         tools = None
 
-        tools = (
-            extract_tools(BudgetTools) +
-            extract_tools(GoalTools) +
-            extract_tools(TransactionTools)
-        )
+        tools = [
+            get_budget_overview,
+            get_budget_details,
+            get_goal_details,
+            get_goal_details,
+            get_transactions
+        ]
 
         return tools
     except Exception as e:
