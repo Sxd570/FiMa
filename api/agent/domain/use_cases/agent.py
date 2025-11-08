@@ -6,7 +6,6 @@ from concurrent.futures import ThreadPoolExecutor
 import json
 from pydantic import Field
 
-from constants import AgentEnum
 from domain.agent.base import AgentFactory
 from domain.prompts import ORCHESTRATOR_SYSTEM_INSTRUCTIONS
 from domain.tools.agent_as_tools.agent_api import agent_api_agent_as_tool
