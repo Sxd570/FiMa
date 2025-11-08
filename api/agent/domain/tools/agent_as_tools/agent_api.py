@@ -1,8 +1,6 @@
 from strands import tool
 from pydantic import Field
-from constants import (
-    AgentEnum
-)
+
 from domain.agent.base import AgentFactory
 from domain.prompts import AGENT_API_SYSTEM_INSTRUCTIONS
 
@@ -63,7 +61,6 @@ def agent_api_agent_as_tool(callback_handler=None):
 
         try:
             agent_api_bot_factory = AgentFactory(
-                agent_name=AgentEnum.AGENT_API.value,
                 system_prompt=AGENT_API_SYSTEM_INSTRUCTIONS,
                 callback_handler=callback_handler,
                 tool_list=agent_api_tools()

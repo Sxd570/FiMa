@@ -1,9 +1,6 @@
 from strands import tool
 from pydantic import Field
-from constants import (
-    AgentUISmithFormatEnum,
-    AgentEnum
-)
+
 from domain.agent.base import AgentFactory
 from domain.prompts import UI_SMITH_SYSTEM_INSTRUCTIONS
 
@@ -47,7 +44,6 @@ def ui_smith_agent_as_tool(callback_handler=None):
 
         try:
             agent_ui_smith_factory = AgentFactory(
-                agent_name=AgentEnum.UI_SMITH.value,
                 system_prompt=UI_SMITH_SYSTEM_INSTRUCTIONS,
                 callback_handler=callback_handler
             )

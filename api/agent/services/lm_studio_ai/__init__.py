@@ -1,38 +1,26 @@
-import os
-from dotenv import load_dotenv
+from pydantic import BaseSettings, Field
 from strands.models.openai import OpenAIModel
-from pydantic import BaseModel, Field
-
-load_dotenv()
 
 
-class LMStudioAIConfig(BaseModel):
-    model_name: str = Field(..., description="Model name or ID")
-    base_url: str = Field(..., description="Base URL of the LM Studio instance")
-    port: int = Field(..., description="Port number of the LM Studio instance")
-    temperature: float = Field(..., description="Temperature for model responses")
-    api_key: str = Field(..., description="API key for authentication")
-    version: str = Field(..., description="API version for LM Studio")
+class LMStudioAIConfig(BaseSettings):
+    model_name: str = Field(..., env="MODEL_NAME", description="Model name or ID")
+    base_url: str = Field(..., env="LM_STUDIO_BASE_URL", description="Base URL of the LM Studio instance")
+    port: int = Field(..., env="LM_STUDIO_PORT", description="Port number of the LM Studio instance")
+    temperature: float = Field(..., env="MODEL_TEMPERATURE", description="Temperature for model responses")
+    api_key: str = Field(..., env="API_KEY", description="API key for authentication")
+    version: str = Field(..., env="LM_STUDIO_API_VERSION", description="API version for LM Studio")
 
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
 
 
 class LMStudioAIService:
-    def __init__(self, agent_name: str):
-        self.agent_name = agent_name
-        self.config = self.get_config()
+    def __init__(self):
+        self.config = LMStudioAIConfig()
         self.llm = None
 
 
-    def get_config(self) -> LMStudioAIConfig:
-        return LMStudioAIConfig(
-            model_name = os.getenv(f"{self.agent_name}_MODEL_NAME"),
-            base_url = os.getenv("LM_STUDIO_BASE_URL"),
-            port = int(os.getenv("LM_STUDIO_PORT")),
-            temperature = float(os.getenv(f"{self.agent_name}_MODEL_TEMPERATURE")),
-            api_key = os.getenv("API_KEY"),
-            version = os.getenv("LM_STUDIO_API_VERSION")
-        )
-    
     def initialize_llm(self):
         try:
             if not self.llm:
@@ -49,8 +37,8 @@ class LMStudioAIService:
             print(f"Error initializing LLM: {e}")
             return None
 
-# if __name__ == '__main__':
-#     lm_studio = LMStudioAIService()
-#     config = lm_studio.get_config()
-#     print("config", config)
 
+# Example usage:
+# if __name__ == "__main__":
+#     service = LMStudioAIService(agent_name="agent_penny")
+#     print(service.config)

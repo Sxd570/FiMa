@@ -59,7 +59,6 @@ class AgentUseCase:
     def get_orchestrator_agent(self) -> Agent:
         try:
             orchestrator_bot_factory = AgentFactory(
-                agent_name=AgentEnum.ORCHESTRATOR.value,
                 system_prompt=ORCHESTRATOR_SYSTEM_INSTRUCTIONS,
                 callback_handler=WebSocketCallback(self.websocket, "orchestrator"),
                 tool_list=[

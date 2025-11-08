@@ -5,16 +5,13 @@ from shared.logger import Logger
 logger = Logger()
 
 class AgentFactory:
-    def __init__(self, agent_name: str, system_prompt: str, tool_list: list = None, callback_handler=None):
+    def __init__(self, system_prompt: str, tool_list: list = None, callback_handler=None):
         self.agentic_ai = None
         self.callback_handler = callback_handler
         self.system_prompt = system_prompt
         self.tool_list = tool_list
-        self.agent_name = agent_name
 
-        self.lm_studio = LMStudioAIService(
-            agent_name=self.agent_name
-        )
+        self.lm_studio = LMStudioAIService()
         self.llm_model = self.lm_studio.initialize_llm()
 
         

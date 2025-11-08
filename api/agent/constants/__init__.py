@@ -47,9 +47,3 @@ class GoalConstants(Enum):
 class AgentUISmithFormatEnum(Enum):
     HTML = "html"
     MARKDOWN = "markdown"
-
-
-class AgentEnum(Enum):
-    AGENT_API = "AGENT_API"
-    UI_SMITH = "UI_SMITH"
-    ORCHESTRATOR = "ORCHESTRATOR"
