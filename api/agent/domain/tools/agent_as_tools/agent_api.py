@@ -41,12 +41,7 @@ def agent_api_agent_as_tool(callback_handler=None):
 
         Parameters:
         - query (str): A natural language description of the data to fetch.
-            Example: 
-              1. "Get the budget overview for September 2025 for user {USER ID}"
-              2. "Fetch all goals and their progress for user {USER ID}"
-              3. "Retrieve transactions from August 1 to August 15, 2025 for user {USER ID}"
-              4. "List detailed budgets of year 2025 for user {USER ID}"
-
+        
         Returns:
         - str: JSON or structured text response containing the requested financial data.
 
