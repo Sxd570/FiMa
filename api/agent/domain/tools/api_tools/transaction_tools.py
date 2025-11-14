@@ -1,125 +1,76 @@
-from shared.Utility.api_request import APIRequest
+from typing import Optional
+from uuid import UUID
+from pydantic import Field
 from strands import tool
-from shared.logger import Logger
+
 from constants import APIConstants, TransactionConstants
+
+from domain.models.io_models.api_tool_models.transaction_model import (
+    TransactionType,
+    GetTransactionsResponse,
+    CreateTransactionResponse,
+    TransactionFilters
+)
+
+from shared.Utility.api_request import APIRequest
+from shared.logger import Logger
 
 logger = Logger(__name__)
 
 
 @tool
-def get_transactions(user_id: str, filters: dict, limit: int, offset: int):
+def get_transactions(
+    user_id: UUID = Field(..., description="The unique ID of the user whose transactions are to be fetched."),
+    filters: Optional[TransactionFilters] = Field(None, description="Optional filters for transactions."),
+    limit: int = Field(15, gt=0, le=100, description="Maximum number of transactions to return (default: 15, max: 100)."),
+    offset: int = Field(0, ge=0, description="Number of transactions to skip before starting to collect the result set.")
+) -> GetTransactionsResponse:
     """
     Fetches transactions for a given user with optional filters, limit, and offset.
-
-    Args:
-        user_id (str): The ID of the user whose transactions are to be fetched.
-
-        filters (dict, optional): Dictionary of filters to apply to the transaction query. Use only if applicable. Following fields are optional:
-            - from_date (str): The start date for filtering transactions. Format: YYYY-MM-DD. Example: "2025-01-01"
-            - to_date (str): The end date for filtering transactions. Format: YYYY-MM-DD. Example: "2025-01-01"
-            - budget_id (str): The ID of the budget to filter transactions. Example: "d5c8bff9-6b25-5aa0-8d6b-28dc687011cc"
-
-        limit (int): The maximum number of transactions to return. Example: 15
-        offset (int): The number of transactions to skip before starting to collect the result set. Example: 0
-
-    Returns:
-        dict: A dictionary containing the key `transactions`, which is a list of transaction objects. Each object contains:
-            - transaction_id (str): The unique identifier of the transaction.
-            - budget_name (str): The name of the budget associated with the transaction.
-            - transaction_type (str): The type of the transaction (e.g., "expense", "income").
-            - transaction_info (str): Additional information about the transaction.
-            - transaction_amount (float): The amount of the transaction.
-            - transaction_date (str): The date of the transaction in 'YYYY-MM-DD' format.
-
-    Raises:
-        Exception: If there is an error during the API request.
-
-    Example response:
-    {
-        "transactions": [
-            {
-                "transaction_id": "23ac23b6-f222-59e0-943e-e8d1ba9e671b",
-                "budget_name": "Food",
-                "transaction_type": "expense",
-                "transaction_info": "food 1234",
-                "transaction_amount": 4500.0,
-                "transaction_date": "2025-01-01"
-            },
-            {
-                "transaction_id": "31fa589a-3adc-5fcb-b35a-1d92403933fd",
-                "budget_name": "Food",
-                "transaction_type": "expense",
-                "transaction_info": "food 1234",
-                "transaction_amount": 4500.0,
-                "transaction_date": "2025-01-01"
-            }
-        ]
-    }
     """
-    def _get_transactions(user_id: str, filters: dict, limit: int, offset: int):
-        try:
-            api_request = APIRequest(
-                http_method=APIConstants.KEY_GET_METHOD.value,
-                endpoint=f"/transactions/{user_id}",
-                params={
-                    TransactionConstants.KEY_FILTERS.value: filters,
-                    TransactionConstants.KEY_LIMIT.value: limit,
-                    TransactionConstants.KEY_OFFSET.value: offset
-                }
-            )
-            response = api_request.execute()
-            return response
-        except Exception as e:
-            logger.error(f"Error in get transactions tool, {str(e)}")
-            raise e
-
-    return _get_transactions(user_id, filters, limit, offset)
+    try:
+        api_request = APIRequest(
+            http_method=APIConstants.KEY_GET_METHOD.value,
+            endpoint=f"/transactions/{user_id}",
+            params={
+                TransactionConstants.KEY_FILTERS.value: filters.dict() if filters else {},
+                TransactionConstants.KEY_LIMIT.value: limit,
+                TransactionConstants.KEY_OFFSET.value: offset
+            }
+        )
+        response = api_request.execute()
+        return GetTransactionsResponse(**response)
+    except Exception as e:
+        logger.error(f"Error in get transactions tool, {str(e)}")
+        raise e
 
 
 @tool
-def create_transaction(user_id: str, budget_id: str, transaction_type: str, transaction_info: str, transaction_amount: float, transaction_date: str):
+def create_transaction(
+    user_id: UUID = Field(..., description="The unique ID of the user creating the transaction."),
+    budget_id: UUID = Field(..., description="The unique ID of the budget associated with the transaction."),
+    transaction_type: TransactionType = Field(..., description="Type of the transaction. Must be 'expense' or 'income'."),
+    transaction_info: str = Field(..., min_length=1, max_length=255, description="Additional information about the transaction."),
+    transaction_amount: float = Field(..., gt=0, description="Amount of the transaction (must be greater than 0)."),
+    transaction_date: str = Field(..., description="Date of the transaction in 'YYYY-MM-DD' format.")
+) -> CreateTransactionResponse:
     """
     Creates a new transaction for a user.
-
-    Args:
-        user_id (str): The ID of the user creating the transaction.
-        budget_id (str): The ID of the budget associated with the transaction.
-        transaction_type (str): The type of the transaction (e.g., "expense", "income").
-        transaction_info (str): Additional information about the transaction.
-        transaction_amount (float): The amount of the transaction.
-        transaction_date (str): The date of the transaction. Format: YYYY-MM-DD.
-
-    Returns:
-        dict: A dictionary containing the created transaction.
-            - transaction_id (str): The unique identifier of the transaction.
-            - message (str): A message indicating the success of the operation.
-
-    Raises:
-        Exception: If there is an error during the API request.
-
-    Example:
-        {
-            "transaction_id": "23ac23b6-f222-59e0-943e-e8d1ba9e671b",
-            "message": "Transaction created successfully"
-        }
     """
-    def _create_transaction(user_id: str, budget_id: str, transaction_type: str, transaction_info: str, transaction_amount: float, transaction_date: str):
-        try:
-            api_request = APIRequest(
-                http_method=APIConstants.KEY_POST_METHOD.value,
-                endpoint=f"/transactions/{user_id}",
-                body={
-                    TransactionConstants.KEY_BUDGET_ID.value: budget_id,
-                    TransactionConstants.KEY_TRANSACTION_TYPE.value: transaction_type,
-                    TransactionConstants.KEY_TRANSACTION_INFO.value: transaction_info,
-                    TransactionConstants.KEY_TRANSACTION_AMOUNT.value: transaction_amount,
-                    TransactionConstants.KEY_TRANSACTION_DATE.value: transaction_date
-                }
-            )
-            response = api_request.execute()
-            return response
-        except Exception as e:
-            logger.error(f"Error in create transaction tool, {str(e)}")
-            raise e
-    
-    return _create_transaction(user_id, budget_id, transaction_type, transaction_info, transaction_amount, transaction_date)
+    try:
+        api_request = APIRequest(
+            http_method=APIConstants.KEY_POST_METHOD.value,
+            endpoint=f"/transactions/{user_id}",
+            body={
+                TransactionConstants.KEY_BUDGET_ID.value: str(budget_id),
+                TransactionConstants.KEY_TRANSACTION_TYPE.value: transaction_type.value,
+                TransactionConstants.KEY_TRANSACTION_INFO.value: transaction_info,
+                TransactionConstants.KEY_TRANSACTION_AMOUNT.value: transaction_amount,
+                TransactionConstants.KEY_TRANSACTION_DATE.value: transaction_date
+            }
+        )
+        response = api_request.execute()
+        return CreateTransactionResponse(**response)
+    except Exception as e:
+        logger.error(f"Error in create transaction tool, {str(e)}")
+        raise e
