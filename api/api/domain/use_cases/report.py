@@ -1,4 +1,9 @@
 from domain.database.transaction import TransactionDatabase
+from constants.transaction_constants import ( 
+    KEY_YEAR, 
+    KEY_MONTH,
+    KEY_WEEK
+)
 from domain.database.budget import BudgetDatabase
 from shared.logger import Logger
 from domain.models.io_models.report_io_models import (
@@ -29,15 +34,15 @@ class ReportUseCase:
                 transaction_type=transaction_type
             )
 
-            if time_period == "year":
+            if time_period == KEY_YEAR:
                 report_chart_data = self.transaction_database.get_yearly_data(
                     db_request=get_report_chart_data_db_request
                 )
-            elif time_period == "month":
+            elif time_period == KEY_MONTH:
                 report_chart_data = self.transaction_database.get_monthly_data(
                     db_request=get_report_chart_data_db_request
                 )
-            elif time_period == "week":
+            elif time_period == KEY_WEEK:
                 report_chart_data = self.transaction_database.get_weekly_data(
                     db_request=get_report_chart_data_db_request
                 )

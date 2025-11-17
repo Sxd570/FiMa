@@ -1,5 +1,9 @@
 from enum import Enum
 
+KEY_YEAR = "year"
+KEY_MONTH = "month"
+KEY_WEEK = "week"
+
 class TransactionConstants(Enum):
     KEY_USER_ID = "user_id"
     KEY_TRANSACTION_ID = "transaction_id"
