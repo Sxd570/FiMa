@@ -1,99 +1,82 @@
-# 🧾 Personal Budget Tracker
 
-A minimalist, manual-entry personal finance tracker built for clarity, control, and financial mindfulness. This is not just another budgeting app — it's a hands-on system that helps you become more aware of your spending habits and savings goals by making you an active participant in your financial journey.
+# 💸 FiMa: Personal Finance Management & Agent System
+
+FiMa is a minimalist, manual-first personal finance tracker and analysis platform, powered by a multi-agent architecture for data retrieval, financial insights, and UI generation. Designed for clarity, control, and financial mindfulness, FiMa helps you actively manage your finances and understand your spending habits.
 
 ---
 
 ## 📌 Purpose
 
-This app is designed *just for me*, with the primary goal of gaining better control and awareness over my finances. By manually entering every income and expense transaction, I can stay disciplined and more mindful about where my money goes.
+FiMa is built for intentional financial management. By requiring manual entry of transactions, it encourages discipline and awareness, making every expense and income meaningful. The agent system provides smart data retrieval, actionable insights, and dynamic UI generation.
 
 ---
 
 ## ✨ Key Features
 
-### ✅ Manual Transactions
-- Input every transaction by hand — income or expense — for better awareness.
-- Define a **starting balance** manually to begin tracking.
-- Each transaction adjusts the balance in real-time.
+- **Manual Transactions:** Enter every income and expense by hand for maximum awareness.
+- **Categorized Spending:** Track spending across predefined categories (Food, Rent, Transport, Shopping, Health, Savings, Income).
+- **Savings Goals:** Set, track, and visualize progress toward multiple savings targets.
+- **Recurring Transactions:** Automate regular entries (rent, salary, subscriptions) on your schedule.
+- **Dashboard & Summaries:** Daily, weekly, and monthly overviews with charts and breakdowns.
+- **Trend & Income Insights:** Visualize spending trends and compare income vs expenses.
+- **Budget Limits:** Set caps for categories and get visual alerts when nearing limits.
+- **Forecasting:** Predict future spending based on historical data.
+- **Receipt Image Storage:** Attach photo receipts to transactions for traceability.
+- **Detailed History Log:** Search, filter, and annotate past transactions.
 
-### 🗂 Categorized Spending
-- Predefined categories:
-  - `Food`
-  - `Rent`
-  - `Transport/Fuel`
-  - `Shopping`
-  - `Health`
-  - `Savings`
-  - `Income`
-- Clear categorization makes spending habits easy to analyze.
+---
 
-### 🎯 Savings Goals
-- Create and manage multiple savings targets.
-- Each goal includes:
-  - Name
-  - Target amount
-  - Current saved amount
-  - Visual progress bar
+## 🤖 Agent Architecture
 
-### 🔁 Recurring Transactions
-- Set up automatic recurring entries (e.g. rent, salary, subscriptions).
-- Recurs based on schedule you define (daily, weekly, monthly, etc.).
+FiMa uses a multi-agent system for intelligent, data-driven financial management:
 
-### 📊 Dashboard & Summaries
-- Daily check-ins for adding new transactions.
-- Weekly reviews to observe spending trends.
-- Monthly summaries:
-  - Total income
-  - Total expenses
-  - Net savings
-  - Category breakdowns via pie/bar charts
+### � Orchestrator Agent
+- Acts as the financial “guru” and coordinator.
+- Determines user intent (data retrieval, analysis, or UI generation).
+- Delegates data fetching to the API Agent and UI generation to the UI Smith Agent.
+- Provides actionable financial insights, spending analysis, and recommendations using real data only.
 
-### 📈 Trend & Income Insights
-- Visualize your **spending trends** over time.
-- Dedicated **income tracker view** to monitor earnings.
-- Compare **income vs expenses** month-to-month.
+### � Agent API (Mini Agent)
+- Specializes in retrieving accurate, relevant data from the Fima platform.
+- Handles requests for budgets, transactions, goals, and more.
+- Never generates, modifies, or interprets data—only fetches and returns factual results.
 
-### 💡 Budget Limits
-- Define budget caps for each category.
-- Get visual alerts (color-coded progress bars) when nearing/exceeding limits.
+### 🟣 UI Smith Agent (Mini Agent)
+- Generates static, responsive HTML components with inline CSS for the Fima frontend.
+- Uses only real data provided by the Orchestrator Agent.
+- Maintains a minimal, modern, and consistent visual style.
 
-### 🔮 Forecasting
-- Based on historical data, get **weekly/monthly spending forecasts**.
-- Helps anticipate future expenses and plan better.
-
-### 🧾 Receipt Image Storage
-- Attach photo receipts to any transaction.
-- Serves as a visual archive (no OCR required).
-- Makes entries verifiable and more traceable.
-
-### 📚 Detailed History Log
-- Search, filter, and review all past transactions.
-- Add optional notes to remember context.
+#### System Prompts (Agent Behaviors)
+- **Orchestrator Agent:** Coordinates all requests, performs financial analysis, and ensures only real data is used for insights and UI.
+- **Agent API:** Fetches platform data, never interprets or fabricates results, and asks for missing context if needed.
+- **UI Smith Agent:** Produces clean HTML/CSS layouts, never analyzes data, and requests more details if data or layout instructions are missing.
 
 ---
 
 ## 🛠 Tech Stack
+
 - **Frontend:** React (Vite, Tailwind CSS)
 - **Backend/API:** Python (FastAPI)
 - **Visualization:** Chart.js or Recharts
 - **Storage:** AWS (S3, DynamoDB, RDS, Cognito, Secret Manager)
 - **Other:** Boto3, Local file storage (for development)
-- **Optional Desktop Version:** Electron (for local-first experience)
+- **Optional Desktop Version:** Electron (local-first experience)
 
 ---
 
-## 🚫 What This App *Won’t* Do (for Now)
+## 🚫 What FiMa *Won’t* Do (for Now)
+
 - No bank integrations
 - No push notifications or reminders
 - No automated data scraping
 - No cloud sync by default
 
-This is a **manual-first, discipline-oriented, and deeply personal** financial tool.
+FiMa is a **manual-first, discipline-oriented, and deeply personal** financial tool.
 
 ---
 
-## 📈 Future Considerations (Post-Core)
+## 📈 Future Considerations
+
 - Reminder system for bills or recurring entries
 - Optional cloud backup or export/import feature
 - Password/PIN protection
@@ -110,5 +93,6 @@ This project is for **personal use**, but feel free to fork, clone, and adapt it
 
 ## 📬 Contact
 
-Built by **[Your Name]** — a finance-conscious coder designing tools for intentional living.
+Built by **Sxd570** — a finance-conscious coder designing tools for intentional living.
+- Optional cloud backup or export/import feature
 
