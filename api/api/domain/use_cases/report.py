@@ -11,7 +11,8 @@ from domain.models.io_models.report_io_models import (
     GetReportChartDBRequest,
     GetReportChartResponse,
     GetReportCategoryPayload,
-    GetReportCategoryDBRequest
+    GetReportCategoryDBRequest,
+    GetReportCategoryResponse
 )
 
 logger = Logger(__name__)
@@ -92,6 +93,7 @@ class ReportUseCase:
                 time_period=time_period,
                 data=report_category_data.data
             )
+            return response
         except Exception as e:
             logger.error(f"Error in get_report_category use case: {str(e)}")
             raise e
