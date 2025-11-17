@@ -13,7 +13,7 @@ from domain.models.io_models.transaction_io_models import (
     CreateTransactionDBRequest,
 )
 from domain.models.io_models.report_io_models import (
-    GetReportChartDataDBRequest,
+    GetReportChartDBRequest,
     GetReportChartYearData,
     GetReportChartDataDBResponse,
     GetReportChartMonthData,
@@ -145,7 +145,7 @@ class TransactionDatabase(TransactionInterface):
             raise e
                 
 
-    def get_yearly_data(self, db_request: GetReportChartDataDBRequest):
+    def get_yearly_data(self, db_request: GetReportChartDBRequest):
         try:
             self.db_session = get_db_session()
             user_id = db_request.user_id
@@ -185,7 +185,7 @@ class TransactionDatabase(TransactionInterface):
             raise e
         
     
-    def get_monthly_data(self, db_request: GetReportChartDataDBRequest):
+    def get_monthly_data(self, db_request: GetReportChartDBRequest):
         try:
             self.db_session = get_db_session()
 
@@ -234,7 +234,7 @@ class TransactionDatabase(TransactionInterface):
             raise e 
         
     
-    def get_weekly_data(self, db_request: GetReportChartDataDBRequest):
+    def get_weekly_data(self, db_request: GetReportChartDBRequest):
         try:
             self.db_session = get_db_session()
 

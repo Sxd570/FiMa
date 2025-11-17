@@ -2,9 +2,9 @@ from domain.database.transaction import TransactionDatabase
 from domain.database.budget import BudgetDatabase
 from shared.logger import Logger
 from domain.models.io_models.report_io_models import (
-    GetReportSummaryPayload,
-    GetReportChartDataDBRequest,
-    GetReportChartDataResponse
+    GetReportChartPayload,
+    GetReportChartDBRequest,
+    GetReportChartResponse
 )
 
 logger = Logger(__name__)
@@ -14,7 +14,7 @@ class ReportUseCase:
         self.transaction_database = None
         self.budget_database = None
 
-    def get_report_summary(self, payload: GetReportSummaryPayload):
+    def get_report_chart(self, payload: GetReportChartPayload):
         try:
             self.transaction_database = TransactionDatabase()
             self.budget_database = BudgetDatabase()
@@ -23,7 +23,7 @@ class ReportUseCase:
             time_period = payload.time_period
             transaction_type = payload.transaction_type
 
-            get_report_chart_data_db_request = GetReportChartDataDBRequest(
+            get_report_chart_data_db_request = GetReportChartDBRequest(
                 user_id=user_id,
                 time_period=time_period,
                 transaction_type=transaction_type
@@ -44,7 +44,7 @@ class ReportUseCase:
             else:
                 raise ValueError("Invalid time period specified.")
 
-            response = GetReportChartDataResponse(
+            response = GetReportChartResponse(
                 time_period=time_period,
                 transaction_type=transaction_type,
                 data=report_chart_data.data
@@ -52,5 +52,5 @@ class ReportUseCase:
 
             return response
         except Exception as e:
-            logger.error(f"Error in get_report_summary use case: {str(e)}")
+            logger.error(f"Error in get_report_chart use case: {str(e)}")
             raise e

@@ -27,7 +27,7 @@ class TransactionInterface(ABC):
         """
         Fetch yearly report chart data based on the provided request.
 
-        :param db_request: An instance of GetReportChartDataDBRequest containing user ID and filters.
+        :param db_request: An instance of GetReportChartDBRequest containing user ID and filters.
         :return: Report chart data matching the request criteria.
         """
         pass
@@ -37,7 +37,7 @@ class TransactionInterface(ABC):
         """
         Fetch monthly report chart data based on the provided request.
 
-        :param db_request: An instance of GetReportChartDataDBRequest containing user ID and filters.
+        :param db_request: An instance of GetReportChartDBRequest containing user ID and filters.
         :return: Report chart data matching the request criteria.
         """
         pass
@@ -47,7 +47,7 @@ class TransactionInterface(ABC):
         """
         Fetch weekly report chart data based on the provided request.
 
-        :param db_request: An instance of GetReportChartDataDBRequest containing user ID and filters.
+        :param db_request: An instance of GetReportChartDBRequest containing user ID and filters.
         :return: Report chart data matching the request criteria.
         """
         pass

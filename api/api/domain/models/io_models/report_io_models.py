@@ -4,17 +4,17 @@ from pydantic import BaseModel, Field
 from typing import Dict, Optional
 
 
-class GetReportSummaryRequest(BaseModel):
+class GetReportChartRequest(BaseModel):
     time_period: str = Field(..., description="Time period for the report summary: 'week', 'month', 'year'")
     transaction_type: str = Field(..., description="Type of transactions to include: 'income', 'expense'")
 
-class GetReportSummaryPayload(BaseModel):
+class GetReportChartPayload(BaseModel):
     user_id: UUID = Field(..., description="ID of the user for whom the report summary is generated")
     time_period: str = Field(..., description="Time period for the report summary: 'week', 'month', 'year'")
     transaction_type: str = Field(..., description="Type of transactions to include: 'income', 'expense'")
 
 
-class GetReportChartDataDBRequest(BaseModel):
+class GetReportChartDBRequest(BaseModel):
     user_id: UUID = Field(..., description="ID of the user for whom to fetch report chart data")
     time_period: str = Field(..., description="Time period for the report chart data: 'week', 'month', 'year'")
     transaction_type: str = Field(..., description="Type of transactions to include: 'income', 'expense'")
@@ -52,7 +52,7 @@ class GetReportChartDataDBResponse(BaseModel):
     data: Optional[list[GetReportChartYearData | GetReportChartMonthData | GetReportChartWeekData]] = Field(..., description="Chart data for the report")
 
 
-class GetReportChartDataResponse(BaseModel):
+class GetReportChartResponse(BaseModel):
     time_period: str = Field(..., description="Time period for the report chart data")
     transaction_type: str = Field(..., description="Type of transactions included in the report")
     data: Optional[list[GetReportChartYearData | GetReportChartMonthData | GetReportChartWeekData]] = Field(..., description="Chart data for the report")
