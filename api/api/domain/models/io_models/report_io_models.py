@@ -56,3 +56,20 @@ class GetReportChartResponse(BaseModel):
     time_period: str = Field(..., description="Time period for the report chart data")
     transaction_type: str = Field(..., description="Type of transactions included in the report")
     data: Optional[list[GetReportChartYearData | GetReportChartMonthData | GetReportChartWeekData]] = Field(..., description="Chart data for the report")
+
+
+class GetReportCategoryRequest(BaseModel):
+    time_period: str = Field(..., description="Time period for the report summary: 'week', 'month', 'year'")
+
+class GetReportCategoryPayload(BaseModel):
+    user_id: UUID = Field(..., description="ID of the user for whom the report summary is generated")
+    time_period: str = Field(..., description="Time period for the report summary: 'week', 'month', 'year'")
+
+
+class GetReportCategoryResponse(BaseModel):
+    time_period: str = Field(..., description="Time period for the report category data")
+    data: Dict[str, float] = Field(..., description="Category-wise transaction data for the period")
+
+
+class GetReportCategoryDBRequest(BaseModel):
+    user_id: UUID = Field(..., description="ID of the user for whom to fetch report category data")

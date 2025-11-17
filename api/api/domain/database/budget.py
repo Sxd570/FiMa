@@ -11,6 +11,9 @@ from domain.models.io_models.budget_io_models import (
     CreateBudgetDBRequest,
     UpdateAmountInBudgetDBRequest
 )
+from domain.models.io_models.report_io_models import (
+    GetReportCategoryDBRequest
+)
 from domain.models.tables.budget import Budget
 from shared.Utility.db_base import get_db_session
 logger = Logger(__name__)
@@ -21,6 +24,7 @@ class BudgetDatabase(BudgetInterface):
         self.db_session = None
         self.user_id = None
         
+
     def get_total_budget(self, db_request: GetBudgetOverviewDBRequest) -> int:
         try:
             self.db_session = get_db_session()
@@ -268,6 +272,7 @@ class BudgetDatabase(BudgetInterface):
             logger.error(f"Error in delete_budget: {e}")
             raise e
 
+
     def create_budget(self, db_request: CreateBudgetDBRequest) -> dict:
         try:
             self.db_session = get_db_session()
@@ -349,3 +354,15 @@ class BudgetDatabase(BudgetInterface):
         except Exception as e:
             logger.error(f"Error in update amount in budget function: {e}")
             raise e
+
+
+    def get_weekly_data(self, db_request: GetReportCategoryDBRequest):
+        pass
+
+
+    def get_monthly_data(self, db_request: GetReportCategoryDBRequest):
+        pass
+
+
+    def get_yearly_data(self, db_request: GetReportCategoryDBRequest):
+        pass

@@ -9,7 +9,9 @@ from shared.logger import Logger
 from domain.models.io_models.report_io_models import (
     GetReportChartPayload,
     GetReportChartDBRequest,
-    GetReportChartResponse
+    GetReportChartResponse,
+    GetReportCategoryPayload,
+    GetReportCategoryDBRequest
 )
 
 logger = Logger(__name__)
@@ -22,7 +24,6 @@ class ReportUseCase:
     def get_report_chart(self, payload: GetReportChartPayload):
         try:
             self.transaction_database = TransactionDatabase()
-            self.budget_database = BudgetDatabase()
 
             user_id = payload.user_id
             time_period = payload.time_period
@@ -58,4 +59,39 @@ class ReportUseCase:
             return response
         except Exception as e:
             logger.error(f"Error in get_report_chart use case: {str(e)}")
+            raise e
+        
+    
+    def get_report_category(self, payload: GetReportCategoryPayload):
+        try:
+            self.budget_database = BudgetDatabase()
+
+            user_id = payload.user_id
+            time_period = payload.time_period
+
+            db_request = GetReportCategoryDBRequest(
+                user_id=user_id
+            )
+
+            if time_period == KEY_YEAR:
+                report_category_data = self.budget_database.get_yearly_data(
+                    db_request=db_request
+                )
+            elif time_period == KEY_MONTH:
+                report_category_data = self.budget_database.get_monthly_data(
+                    db_request=db_request
+                )
+            elif time_period == KEY_WEEK:
+                report_category_data = self.budget_database.get_weekly_data(
+                    db_request=db_request
+                )
+            else:
+                raise ValueError("Invalid time period specified.")
+
+            response = GetReportCategoryResponse(
+                time_period=time_period,
+                data=report_category_data.data
+            )
+        except Exception as e:
+            logger.error(f"Error in get_report_category use case: {str(e)}")
             raise e
