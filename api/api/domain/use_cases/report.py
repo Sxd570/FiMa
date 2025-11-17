@@ -29,9 +29,20 @@ class ReportUseCase:
                 transaction_type=transaction_type
             )
 
-            report_chart_data = self.transaction_database.get_report_chart_data(
-                db_request=get_report_chart_data_db_request
-            )
+            if time_period == "year":
+                report_chart_data = self.transaction_database.get_yearly_data(
+                    db_request=get_report_chart_data_db_request
+                )
+            elif time_period == "month":
+                report_chart_data = self.transaction_database.get_monthly_data(
+                    db_request=get_report_chart_data_db_request
+                )
+            elif time_period == "week":
+                report_chart_data = self.transaction_database.get_weekly_data(
+                    db_request=get_report_chart_data_db_request
+                )
+            else:
+                raise ValueError("Invalid time period specified.")
 
             response = GetReportChartDataResponse(
                 time_period=time_period,

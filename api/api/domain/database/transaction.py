@@ -143,14 +143,12 @@ class TransactionDatabase(TransactionInterface):
             logger.error(f"Error creating transaction: {e}")
             self.db_session.rollback()
             raise e
+                
 
-
-    def get_report_chart_data(self, db_request: GetReportChartDataDBRequest):
+    def get_yearly_data(self, db_request: GetReportChartDataDBRequest):
         try:
             self.db_session = get_db_session()
-
             user_id = db_request.user_id
-            time_period = db_request.time_period
             transaction_type = db_request.transaction_type
 
             filters = [
@@ -158,112 +156,149 @@ class TransactionDatabase(TransactionInterface):
                 Transaction.transaction_type == transaction_type,
             ]
 
-            data = []
-            if time_period == "year":
-                db_response = self.db_session.query(
-                    extract('year', Transaction.transaction_date).label("year"),
-                    func.sum(Transaction.transaction_amount).label("total_amount")
-                ).filter(
-                    *filters
-                ).group_by(
-                    extract('year', Transaction.transaction_date)
-                ).order_by(
-                    extract('year', Transaction.transaction_date)
-                ).all()
+            db_response = self.db_session.query(
+                extract('year', Transaction.transaction_date).label("year"),
+                func.sum(Transaction.transaction_amount).label("total_amount")
+            ).filter(
+                *filters
+            ).group_by(
+                extract('year', Transaction.transaction_date)
+            ).order_by(
+                extract('year', Transaction.transaction_date)
+            ).all()
 
-                data = [
-                    GetReportChartYearData(
-                        year=int(record.year),
-                        total_amount=float(record.total_amount)
-                    )
-                    for record in db_response
-                ]
+            data = [
+                GetReportChartYearData(
+                    year=int(record.year),
+                    total_amount=float(record.total_amount)
+                )
+                for record in db_response
+            ]
 
-            elif time_period == "month":
-                current_year = datetime.now().year
-                previous_year = current_year - 1
+            response = GetReportChartDataDBResponse(
+                data=data
+            )
+            return response
 
-                db_response = self.db_session.query(
-                    extract('year', Transaction.transaction_date).label("year"),
-                    extract('month', Transaction.transaction_date).label("month"),
-                    func.sum(Transaction.transaction_amount).label("total_amount")
-                ).filter(
-                    *filters,
-                    extract('year', Transaction.transaction_date).in_([current_year, previous_year])
-                ).group_by(
-                    extract('year', Transaction.transaction_date),
-                    extract('month', Transaction.transaction_date)
-                ).order_by(
-                    extract('year', Transaction.transaction_date),
-                    extract('month', Transaction.transaction_date)
-                ).all()
+        except Exception as e:
+            logger.error(f"Error in get_yearly_data: {e}")
+            raise e
+        
+    
+    def get_monthly_data(self, db_request: GetReportChartDataDBRequest):
+        try:
+            self.db_session = get_db_session()
 
-                data = [
-                    GetReportChartMonthData(
-                        year=int(record.year),
-                        month=int(record.month),
-                        total_amount=float(record.total_amount)
-                    )
-                    for record in db_response
-                ]
-                
-            else:  # time_period == "week"
-                today = datetime.now()
+            user_id = db_request.user_id
+            transaction_type = db_request.transaction_type
 
-                # Start of this week (Monday)
-                start_of_this_week = today - timedelta(days=today.weekday())
+            filters = [
+                Transaction.user_id == str(user_id),
+                Transaction.transaction_type == transaction_type,
+            ]
 
-                # Previous week range
-                start_of_prev_week = start_of_this_week - timedelta(days=7)
-                end_of_prev_week = start_of_this_week - timedelta(seconds=1)
+            current_year = datetime.now().year
+            previous_year = current_year - 1
 
-                db_response = self.db_session.query(
-                    Transaction.transaction_date.label("date"),
-                    func.sum(Transaction.transaction_amount).label("total_amount"),
-                    case(
-                        (
-                            and_(
-                                Transaction.transaction_date >= start_of_this_week,
-                                Transaction.transaction_date <= today
-                            ),
-                            "current"
+            db_response = self.db_session.query(
+                extract('year', Transaction.transaction_date).label("year"),
+                extract('month', Transaction.transaction_date).label("month"),
+                func.sum(Transaction.transaction_amount).label("total_amount")
+            ).filter(
+                *filters,
+                extract('year', Transaction.transaction_date).in_([current_year, previous_year])
+            ).group_by(
+                extract('year', Transaction.transaction_date),
+                extract('month', Transaction.transaction_date)
+            ).order_by(
+                extract('year', Transaction.transaction_date),
+                extract('month', Transaction.transaction_date)
+            ).all()
+
+            data = [
+                GetReportChartMonthData(
+                    year=int(record.year),
+                    month=int(record.month),
+                    total_amount=float(record.total_amount)
+                )
+                for record in db_response
+            ]
+
+            response = GetReportChartDataDBResponse(
+                data=data
+            )
+            return response
+
+        except Exception as e:
+            logger.error(f"Error in get_monthly_data: {e}")
+            raise e 
+        
+    
+    def get_weekly_data(self, db_request: GetReportChartDataDBRequest):
+        try:
+            self.db_session = get_db_session()
+
+            user_id = db_request.user_id
+            transaction_type = db_request.transaction_type
+
+            filters = [
+                Transaction.user_id == str(user_id),
+                Transaction.transaction_type == transaction_type,
+            ]
+
+            today = datetime.now()
+
+            start_of_this_week = today - timedelta(days=today.weekday())
+
+            start_of_prev_week = start_of_this_week - timedelta(days=7)
+            end_of_prev_week = start_of_this_week - timedelta(seconds=1)
+
+            db_response = self.db_session.query(
+                Transaction.transaction_date.label("date"),
+                func.sum(Transaction.transaction_amount).label("total_amount"),
+                case(
+                    (
+                        and_(
+                            Transaction.transaction_date >= start_of_this_week,
+                            Transaction.transaction_date <= today
                         ),
-                        (
-                            and_(
-                                Transaction.transaction_date >= start_of_prev_week,
-                                Transaction.transaction_date <= end_of_prev_week
-                            ),
-                            "previous"
+                        "current"
+                    ),
+                    (
+                        and_(
+                            Transaction.transaction_date >= start_of_prev_week,
+                            Transaction.transaction_date <= end_of_prev_week
                         ),
-                    ).label("period")
-                ).filter(
-                    *filters,
-                    or_(
-                        and_(Transaction.transaction_date >= start_of_this_week,
-                            Transaction.transaction_date <= today),
-                        and_(Transaction.transaction_date >= start_of_prev_week,
-                            Transaction.transaction_date <= end_of_prev_week)
-                    )
-                ).group_by(
-                    Transaction.transaction_date
-                ).order_by(
-                    Transaction.transaction_date
-                ).all()
+                        "previous"
+                    ),
+                ).label("period")
+            ).filter(
+                *filters,
+                or_(
+                    and_(Transaction.transaction_date >= start_of_this_week,
+                        Transaction.transaction_date <= today),
+                    and_(Transaction.transaction_date >= start_of_prev_week,
+                        Transaction.transaction_date <= end_of_prev_week)
+                )
+            ).group_by(
+                Transaction.transaction_date
+            ).order_by(
+                Transaction.transaction_date
+            ).all()
 
-
-                data = [
-                    GetReportChartWeekData(
-                        date=record.date,
-                        total_amount=float(record.total_amount),
-                        period=record.period
-                    )
-                    for record in db_response
-                ]
+            data = [
+                GetReportChartWeekData(
+                    date=record.date,
+                    total_amount=float(record.total_amount),
+                    period=record.period
+                )
+                for record in db_response
+            ]
 
             response = GetReportChartDataDBResponse(
                 data=data
             )
             return response
         except Exception as e:
-            logger.error(f"Error fetching report chart data: {e}")
+            logger.error(f"Error in get_weekly_data: {e}")
             raise e
