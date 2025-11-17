@@ -78,7 +78,7 @@ def create_transaction_table():
     CREATE TABLE `transaction` (
         `user_id` VARCHAR(36) NOT NULL,
         `transaction_id` VARCHAR(36) PRIMARY KEY NOT NULL,
-        `budget_id` VARCHAR(36) NOT NULL,
+        `budget_id` VARCHAR(36),
         `transaction_type` VARCHAR(36) NOT NULL,
         `transaction_info` VARCHAR(255) NOT NULL,
         `transaction_amount` INT NOT NULL,

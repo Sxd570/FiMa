@@ -21,3 +21,13 @@ class TransactionInterface(ABC):
         :return: The created transaction details.
         """
         pass
+
+    @abstractmethod
+    def get_report_chart_data(self, db_request):
+        """
+        Fetch report chart data based on the provided request.
+        
+        :param db_request: An instance of GetReportChartDataDBRequest containing user ID and filters.
+        :return: Report chart data matching the request criteria.
+        """
+        pass

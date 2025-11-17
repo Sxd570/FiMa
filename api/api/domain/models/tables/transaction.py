@@ -8,7 +8,7 @@ class Transaction(Base):
 
     user_id = Column(String(36), nullable=False)
     transaction_id = Column(String(36), primary_key=True, nullable=False)
-    budget_id = Column(String(36), nullable=False)
+    budget_id = Column(String(36), nullable=True)
     transaction_type = Column(String(36), nullable=False)
     transaction_info = Column(String(255), nullable=False)
     transaction_amount = Column(Integer, nullable=False)
