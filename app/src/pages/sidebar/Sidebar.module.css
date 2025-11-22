@@ -4,7 +4,7 @@
   top: 50px;
   background: #f9fafb;
   border-right: 1px solid #e5e7eb;
-  padding: 16px 12px;
+  padding: 0px 12px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -78,13 +78,11 @@
 
 /* Active item */
 .active {
-  background: #1d4ed8;
-  color: white !important;
+  background: #eef2ff;
+  color: #374151 !important;
+    
 }
 
-.active .icon svg {
-  stroke: white;
-}
 
 /* Logout */
 .logoutSection {

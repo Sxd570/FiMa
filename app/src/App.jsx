@@ -14,7 +14,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/*" element={<Dashboard />} />
         {/* <Route path="/login" element={<Auth />} /> */}
       </Routes>
     </Router>

@@ -1,248 +1,168 @@
 import { useEffect, useState, useRef } from "react";
+import styles from "./Penny.module.css";
 
 export default function Penny() {
   const [input, setInput] = useState("");
-  const [userMessages, setUserMessages] = useState([]);
-  const [agentResponses, setAgentResponses] = useState({
-    orchestrator: [],
-    agent_api: [],
-    ui_smith: [],
-  });
+  const [messages, setMessages] = useState([]);
+
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // Mock conversations list — you can replace with API
+  const [conversations, setConversations] = useState([
+    { id: 1, title: "Conversation 1" },
+    { id: 2, title: "Design Discussion" },
+    { id: 3, title: "Project Plan" },
+  ]);
 
   const wsRef = useRef(null);
   const reconnectTimer = useRef(null);
-  const currentResponses = useRef({
-    orchestrator: "",
-    agent_api: "",
-    ui_smith: "",
-  });
+  const currentAssistantMessage = useRef("");
 
-  // WebSocket setup
+  // Connect WebSocket
   const connectWebSocket = () => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) return;
 
     const ws = new WebSocket("ws://localhost:8001/penny/v1/ws/123/chat");
     wsRef.current = ws;
 
-    ws.onopen = () => console.log("✅ WebSocket connected");
+    ws.onopen = () => console.log("WS connected");
+    ws.onerror = (e) => console.error("WS error:", e);
 
-    ws.onclose = (e) => {
-      console.warn("⚠️ WebSocket closed. Reconnecting in 2s...", e.reason);
+    ws.onclose = () => {
+      console.warn("WS closed. Reconnecting...");
       reconnectTimer.current = setTimeout(connectWebSocket, 2000);
     };
-
-    ws.onerror = (e) => console.error("❌ WebSocket error:", e);
 
     ws.onmessage = (event) => {
       try {
         const msg = JSON.parse(event.data);
-        const agent = msg.agent || "orchestrator";
 
-        // Initialize agent if missing
-        if (!currentResponses.current[agent])
-          currentResponses.current[agent] = "";
-
-        // --- Start of new response ---
         if (msg.type === "response_start") {
-          currentResponses.current[agent] = "";
-          setAgentResponses((prev) => ({
+          currentAssistantMessage.current = "";
+          setMessages((prev) => [
             ...prev,
-            [agent]: [
-              ...prev[agent],
-              { text: "", isStreaming: true },
-            ],
-          }));
-        }
+            { role: "assistant", text: "", isStreaming: true },
+          ]);
+        } else if (msg.type === "chunk") {
+          const chunk = msg.data || "";
+          currentAssistantMessage.current += chunk;
 
-        // --- Streaming chunks ---
-        else if (msg.type === "chunk") {
-          const chunk = msg.data?.replace(/<\/think>/g, "</think>\n") || "";
-          currentResponses.current[agent] += chunk;
-
-          setAgentResponses((prev) => {
-            const updated = { ...prev };
-            const msgs = [...(updated[agent] || [])];
-            if (!msgs.length || !msgs[msgs.length - 1].isStreaming) {
-              msgs.push({ text: chunk, isStreaming: true });
-            } else {
-              msgs[msgs.length - 1].text = currentResponses.current[agent];
-            }
-            updated[agent] = msgs;
+          setMessages((prev) => {
+            const updated = [...prev];
+            const last = updated[updated.length - 1];
+            last.text = currentAssistantMessage.current;
             return updated;
           });
-        }
-
-        // --- End of response ---
-        else if (msg.type === "response_end") {
-          setAgentResponses((prev) => {
-            const updated = { ...prev };
-            const msgs = [...(updated[agent] || [])];
-            const last = msgs[msgs.length - 1];
-            if (last) last.isStreaming = false;
-            updated[agent] = msgs;
+        } else if (msg.type === "response_end") {
+          setMessages((prev) => {
+            const updated = [...prev];
+            const last = updated[updated.length - 1];
+            last.isStreaming = false;
             return updated;
           });
-          currentResponses.current[agent] = "";
         }
       } catch {
-        console.log("Non-JSON message:", event.data);
+        console.log("Non-JSON:", event.data);
       }
     };
   };
 
-  // Mount WebSocket
   useEffect(() => {
     connectWebSocket();
     return () => clearTimeout(reconnectTimer.current);
   }, []);
 
-  // Send message
   const sendMessage = () => {
     if (!input.trim()) return;
 
-    // Add user message to user messages box
-    setUserMessages((prev) => [...prev, input]);
+    setMessages((prev) => [...prev, { role: "user", text: input }]);
 
     if (wsRef.current?.readyState === WebSocket.OPEN) {
       wsRef.current.send(input);
-      setInput("");
-    } else {
-      console.warn("WebSocket not open. Reconnecting...");
-      connectWebSocket();
-      setTimeout(() => wsRef.current?.send(input), 500);
     }
+
+    setInput("");
   };
 
-  const formatResponse = (text) => {
-    if (!text) return "";
-    const thinkMatch = text.match(/<think>([\s\S]*?)<\/think>/);
-    if (thinkMatch) {
-      const thinkContent = thinkMatch[1].trim();
-      const visibleContent = text.split("</think>").pop().trim();
-      return (
-        <div>
-          <div className="text-gray-500 text-sm italic border-l-2 border-gray-300 pl-2 mb-1 whitespace-pre-wrap">
-            🤔 {thinkContent}
-          </div>
-          <div className="whitespace-pre-wrap">{visibleContent}</div>
-        </div>
-      );
-    }
-    return <div className="whitespace-pre-wrap">{text}</div>;
-  };
-
-  const UserMessageBox = () => {
-    const containerRef = useRef(null);
-    useEffect(() => {
-      if (containerRef.current)
-        containerRef.current.scrollTop = containerRef.current.scrollHeight;
-    }, [userMessages]);
-
-    return (
-      <div className="flex flex-col w-1/4 border rounded-lg p-3 bg-white shadow-sm border-gray-300">
-        <h2 className="text-lg font-semibold mb-2 text-center text-gray-700">
-          Your Messages
-        </h2>
-        <div
-          ref={containerRef}
-          className="flex-1 overflow-y-auto space-y-2 mb-2 border rounded-lg p-2 bg-gray-50"
-        >
-          {userMessages.length === 0 ? (
-            <div className="text-gray-400 text-sm text-center">
-              No messages yet
-            </div>
-          ) : (
-            userMessages.map((msg, i) => (
-              <div
-                key={i}
-                className="p-2 rounded-lg bg-blue-100 text-left"
-              >
-                <div className="whitespace-pre-wrap">{msg}</div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const AgentResponseBox = ({ agentName, responses, color }) => {
-    const containerRef = useRef(null);
-    useEffect(() => {
-      if (containerRef.current)
-        containerRef.current.scrollTop = containerRef.current.scrollHeight;
-    }, [responses]);
-
+  const ChatBubble = ({ role, text }) => {
+    const isUser = role === "user";
     return (
       <div
-        className={`flex flex-col w-1/4 border rounded-lg p-3 bg-white shadow-sm border-${color}-300`}
+        className={`${styles.messageRow} ${isUser ? styles.right : styles.left}`}
       >
-        <h2
-          className={`text-lg font-semibold mb-2 text-center capitalize text-${color}-700`}
-        >
-          {agentName.replace("_", " ")}
-        </h2>
         <div
-          ref={containerRef}
-          className="flex-1 overflow-y-auto space-y-2 mb-2 border rounded-lg p-2 bg-gray-50"
+          className={`${styles.bubble} ${
+            isUser ? styles.userBubble : styles.assistantBubble
+          }`}
         >
-          {responses.length === 0 ? (
-            <div className="text-gray-400 text-sm text-center">
-              No responses yet
-            </div>
-          ) : (
-            responses.map((response, i) => (
-              <div
-                key={i}
-                className={`p-2 rounded-lg bg-${color}-50 text-left`}
-              >
-                {formatResponse(response.text || "")}
-              </div>
-            ))
-          )}
+          {text}
         </div>
       </div>
     );
   };
 
+  const containerRef = useRef(null);
+  useEffect(() => {
+    if (containerRef.current)
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+  }, [messages]);
+
   return (
-    <div className="h-screen flex flex-col">
-      {/* 4 Boxes: User Messages + 3 Agent Response Boxes */}
-      <div className="flex flex-1 gap-3 p-4 bg-gray-100">
-        <UserMessageBox />
-        <AgentResponseBox
-          agentName="orchestrator"
-          color="blue"
-          responses={agentResponses.orchestrator}
-        />
-        <AgentResponseBox
-          agentName="agent_api"
-          color="green"
-          responses={agentResponses.agent_api}
-        />
-        <AgentResponseBox
-          agentName="ui_smith"
-          color="purple"
-          responses={agentResponses.ui_smith}
-        />
+    <div className={styles.wrapper}>
+      {/* SIDEBAR */}
+      <div
+        className={`${styles.sidebar} ${
+          sidebarOpen ? styles.sidebarOpen : styles.sidebarClosed
+        }`}
+      >
+        <div className={styles.sidebarHeader}>
+          <span>Conversations</span>
+          <div className={styles.toggleWrapper}>
+  <button
+    className={styles.toggleBtn}
+    onClick={() => setSidebarOpen((p) => !p)}
+  >
+    {sidebarOpen ? "←" : "→"}
+  </button>
+</div>
+        </div>
+
+        {sidebarOpen && (
+          <div className={styles.convoList}>
+            {conversations.map((c) => (
+              <div key={c.id} className={styles.convoItem}>
+                {c.title}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Input */}
-      <div className="flex p-4 border-t gap-2 bg-white">
-        <input
-          type="text"
-          className="flex-1 border rounded-lg p-2"
-          placeholder="Type your message..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-        />
-        <button
-          onClick={sendMessage}
-          className="bg-blue-500 text-white px-4 rounded-lg hover:bg-blue-600"
-        >
-          Send
-        </button>
+      {/* MAIN CHAT AREA */}
+      <div className={styles.container}>
+        <div ref={containerRef} className={styles.chatArea}>
+          {messages.length === 0 ? (
+            <div className={styles.placeholder}>Start chatting with your agent...</div>
+          ) : (
+            messages.map((m, i) => (
+              <ChatBubble key={i} role={m.role} text={m.text} />
+            ))
+          )}
+        </div>
+
+        <div className={styles.inputArea}>
+          <input
+            type="text"
+            className={styles.input}
+            placeholder="Type a message..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+          />
+          <button className={styles.sendBtn} onClick={sendMessage}>
+            Send
+          </button>
+        </div>
       </div>
     </div>
   );

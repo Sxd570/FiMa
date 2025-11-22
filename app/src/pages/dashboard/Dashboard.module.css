@@ -12,6 +12,6 @@
 /* Main content adjusts automatically */
 .mainContent {
   flex: 1;
-  padding: 20px;
-  overflow-y: auto;
+  margin-top: 50px;    /* 👈 Push content below navbar */
+  overflow-y: auto;    /* Prevent overflow issues */
 }
