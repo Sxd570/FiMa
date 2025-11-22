@@ -1,0 +1,17 @@
+.dashboard {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Sidebar always takes its width */
+.sidebar {
+  flex-shrink: 0;
+}
+
+/* Main content adjusts automatically */
+.mainContent {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}

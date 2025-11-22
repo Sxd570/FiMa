@@ -5,22 +5,17 @@ import {
   Navigate
 } from "react-router-dom";
 
+import styles from './App.module.css';
+
 import Auth from "./pages/auth/Auth"
-import Homepage from "./pages/homepage/Homepage";
-import Penny from "./pages/penny/Penny"
+import Dashboard from "./pages/dashboard/Dashboard";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/homepage" element={<Homepage />} /> */}
+        <Route path="/dashboard" element={<Dashboard />} />
         {/* <Route path="/login" element={<Auth />} /> */}
-        {/* <Route path="/goals" element={} />*/}
-        {/* <Route path="/transactions" element={} />*/}
-        {/* <Route path="/budget" element={} />*/}
-        {/* <Route path="/penny" element={} /> */}
-        {/* <Route path="/" element={<Navigate to="/login" />} /> */}
-        <Route path="/penny" element={<Penny />} />
       </Routes>
     </Router>
   );
