@@ -19,13 +19,11 @@ router = APIRouter()
 
 
 @router.get("/budget/{user_id}/overview")
-async def get_budget_overview(user_id: str, request: GetBudgetOverviewRequest):
+async def get_budget_overview(user_id: str, month: str):
     try:
-        date = request.month
-
         payload = GetBudgetOverviewPayload(
             user_id=user_id,
-            date=date
+            date=month
         )
 
         budget = BudgetUseCase()
@@ -39,15 +37,13 @@ async def get_budget_overview(user_id: str, request: GetBudgetOverviewRequest):
     
 
 @router.get("/budget/{user_id}/details")
-async def get_budget_details(user_id: str, request: GetBudgetDetailsRequest):
+async def get_budget_details(user_id: str, month: str):
     try:
-        date = request.month
-
         budget = BudgetUseCase()
 
         payload = GetBudgetDetailsPayload(
             user_id=user_id,
-            date=date
+            date=month
         )
 
         budget_details = budget.get_budget_details(

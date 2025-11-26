@@ -6,6 +6,10 @@ import Sidebar from "../sidebar/Sidebar";
 import Navbar from "../navbar/Navbar";
 import Homepage from "../homepage/Homepage";
 import Penny from "../penny/Penny";
+import Transaction from "../transaction/Transaction";
+import Budget from "../budget/Budget";
+import Goal from "../goal/Goal";
+import Report from "../report/Report";
 
 export default function Dashboard() {
   const location = useLocation();
@@ -15,13 +19,13 @@ export default function Dashboard() {
       case "/home":
         return <Homepage />;
       case "/transactions":
-        return <div>Transactions Page</div>;
+        return <Transaction />;
       case "/goals":
-        return <div>Goals Page</div>;
+        return <Goal />;
       case "/reports":
-        return <div>Reports Page</div>;
+        return <Report />;
       case "/budget":
-        return <div>Budget Page</div>;
+        return <Budget />;
       case "/penny":
         return <Penny />;
       case "/":

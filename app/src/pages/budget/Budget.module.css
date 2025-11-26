@@ -1,0 +1,298 @@
+/* MAIN */
+.container {
+  padding: 20px 20px 0px 20px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.title {
+  margin: 0;
+}
+
+.headerControls {
+  display: flex;
+  gap: 12px;
+}
+
+.monthPicker {
+  padding: 8px 12px;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+}
+
+.addBtn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #222;
+  color: white;
+  cursor: pointer;
+}
+
+/* METRICS ROW (Crypto Portfolio Style) */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.metricCard {
+  padding: 18px;
+  border: 1px solid #dedede;
+  border-radius: 12px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+.metricLabel {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.metricValue {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* ------------------- MODAL ------------------- */
+
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+}
+
+.modalBox {
+  width: 420px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  animation: fadeIn 0.25s ease;
+}
+
+.modalHeader {
+  padding: 18px 20px;
+  border-bottom: 1px solid #eaeaea;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.modalClose {
+  font-size: 26px;
+  cursor: pointer;
+  padding: 4px;
+  transition: 0.2s;
+}
+
+.modalClose:hover {
+  color: #d00;
+}
+
+.modalBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.inputLabel {
+  font-size: 14px;
+  color: #555;
+}
+
+.inputField {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.modalFooter {
+  padding: 16px 20px;
+  border-top: 1px solid #eaeaea;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.createBtn {
+  padding: 10px 18px;
+  font-size: 15px;
+  background: #222;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.createBtn:hover {
+  opacity: 0.85;
+}
+
+/* fade animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* error border */
+.inputError {
+  border: 1px solid #d9534f !important;
+  background: #fff5f5;
+  animation: shake 0.25s ease;
+}
+
+/* subtle shake */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  50% { transform: translateX(3px); }
+  75% { transform: translateX(-3px); }
+  100% { transform: translateX(0); }
+}
+.modalSubtitle {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: #777;
+}
+
+
+/* TWO CARDS PER ROW */
+/* allows only budgets to scroll, overview stays fixed */
+.budgetWrapper {
+  max-height: calc(95vh - 310px); /* space for header + overview */
+  overflow-y: auto;
+  padding-right: 4px; /* ensure scrollbar doesn't overlap content */
+}
+
+/* card grid always fits the screen, never grows wider */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+/* CARD DESIGN */
+.assetCard {
+  width: 100%;
+  padding: 26px 28px;
+  background: #fff;
+  border: 1px solid #dedede;
+  border-radius: 14px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  min-height: 130px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* TOP SECTION */
+.cardTop {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cardTitleSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.assetName {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.assetAmount {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* PROGRESS BAR */
+.progressBar {
+  width: 100%;
+  height: 14px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.green {
+  background: #27ae60;
+}
+.yellow {
+  background: #f1c40f;
+}
+.red {
+  background: #c0392b;
+}
+
+/* BOTTOM SECTION */
+.cardBottom {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 15px;
+  border-top: 1px solid #e6e6e6;
+}
+
+.bottomItem {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.bottomLabel {
+  font-size: 13px;
+  color: #666;
+}
+
+.bottomValue {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.remainingValue {
+  font-size: 18px;
+  font-weight: 700;
+}
+
