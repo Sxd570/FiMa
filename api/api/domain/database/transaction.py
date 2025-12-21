@@ -70,6 +70,8 @@ class TransactionDatabase(TransactionInterface):
                 Budget, Transaction.budget_id == Budget.budget_id
             ).filter(
                 *filter_group
+            ).order_by(
+                Transaction.transaction_date.desc()
             )
 
             if db_request.limit:
