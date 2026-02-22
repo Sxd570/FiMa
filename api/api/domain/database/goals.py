@@ -9,9 +9,15 @@ from domain.models.io_models.goals_io_models import (
     EditGoalDetailDBRequest,
     AddGoalDetailDBRequest,
     DeleteGoalDetailDBRequest,
+    DeleteGoalDetailDBRequest,
     AddAmountToGoalDetailDBRequest,
     GetGoalsDBRequest,
+    CreateGoalResponse,
+    EditGoalResponse,
+    DeleteGoalResponse,
+    AddAmountToGoalResponse
 )
+from domain.exceptions import GoalNotFoundException
 from domain.interfaces.goals_interface import GoalsInterface
 from typing import Optional
 
@@ -171,7 +177,7 @@ class GoalsDatabase(GoalsInterface):
 
 
 
-    def create_goal(self, db_request: AddGoalDetailDBRequest) -> dict:
+    def create_goal(self, db_request: AddGoalDetailDBRequest) -> CreateGoalResponse:
         try:
             self.db_session = get_db_session()
 
@@ -183,9 +189,9 @@ class GoalsDatabase(GoalsInterface):
             
             if existing_goal:
                 logger.error(f"Goal with goal_id {db_request.goal_id} already exists. Goal not created.")
-                return {
-                    "message": "Goal already exists",
-                }
+                return CreateGoalResponse(
+                    status="Goal already exists",
+                )
 
             new_goal = Goal(
                 user_id=db_request.user_id,
@@ -200,14 +206,14 @@ class GoalsDatabase(GoalsInterface):
             self.db_session.add(new_goal)
             self.db_session.commit()
 
-            return {
-                "status": "success"
-            }
+            return CreateGoalResponse(
+                status="success"
+            )
         except Exception as e:
             logger.error(f"Error in create_goal: {e}")
             raise e
 
-    def edit_goal(self, db_request: EditGoalDetailDBRequest) -> dict:
+    def edit_goal(self, db_request: EditGoalDetailDBRequest) -> EditGoalResponse:
         try:
             self.db_session = get_db_session()
 
@@ -229,9 +235,7 @@ class GoalsDatabase(GoalsInterface):
                 logger.error(
                     f"Goal with goal_id {self.goal_id} does not exist. Goal not updated."
                 )
-                return {
-                    "message": "Goal does not exist",
-                }
+                raise GoalNotFoundException(detail="Goal does not exist")
 
             if self.goal_name:
                 existing_goal.goal_name = self.goal_name
@@ -249,14 +253,16 @@ class GoalsDatabase(GoalsInterface):
 
             self.db_session.commit()
 
-            return {
-                "status": "success",
-            }
+            return EditGoalResponse(
+                status="success",
+            )
+        except GoalNotFoundException as e:
+            raise e
         except Exception as e:
             logger.error(f"Error in update_goal: {e}")
             raise e
 
-    def delete_goal(self, db_request: DeleteGoalDetailDBRequest) -> dict:
+    def delete_goal(self, db_request: DeleteGoalDetailDBRequest) -> DeleteGoalResponse:
         try:
             self.db_session = get_db_session()
 
@@ -272,21 +278,21 @@ class GoalsDatabase(GoalsInterface):
                 ).first()
             if not goal:
                 logger.error(f"Goal with goal_id {goal_id} does not exist. Goal not deleted.")
-                return {
-                    "message": "Goal does not exist"
-                }
+                raise GoalNotFoundException(detail="Goal does not exist")
             
             self.db_session.delete(goal)
             self.db_session.commit()
-            return {
-                "status": "success",
-                "goal_id": goal_id
-            }
+            return DeleteGoalResponse(
+                status="success",
+                goal_id=goal_id
+            )
+        except GoalNotFoundException as e:
+            raise e
         except Exception as e:
             logger.error(f"Error in delete_goal: {e}")
             raise e
 
-    def add_amount_to_goal(self, db_request: AddAmountToGoalDetailDBRequest) -> dict:
+    def add_amount_to_goal(self, db_request: AddAmountToGoalDetailDBRequest) -> AddAmountToGoalResponse:
         try:
             self.db_session = get_db_session()
 
@@ -306,9 +312,7 @@ class GoalsDatabase(GoalsInterface):
                 ).first()
             if not goal:
                 logger.error(f"Goal with goal_id {goal_id} does not exist. Amount not added.")
-                return {
-                    "message": "Goal does not exist"
-                }
+                raise GoalNotFoundException(detail="Goal does not exist")
 
             goal.goal_current_amount += amount_to_add
 
@@ -319,7 +323,9 @@ class GoalsDatabase(GoalsInterface):
 
             self.db_session.commit()
 
-            return {"status": "success"}
+            return AddAmountToGoalResponse(status="success")
+        except GoalNotFoundException as e:
+            raise e
         except Exception as e:
             logger.error(f"Error in add_amount_to_goal: {e}")
             raise e

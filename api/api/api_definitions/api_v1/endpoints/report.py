@@ -6,14 +6,17 @@ from domain.models.io_models.report_io_models import (
     GetReportChartPayload,
     GetReportChartRequest,
     GetReportCategoryRequest,
-    GetReportCategoryPayload
+    GetReportCategoryPayload,
+    GetReportChartResponse,
+    GetReportCategoryResponse
 )
+from domain.exceptions import InvalidTimePeriodException
 
 logger = Logger(__name__)
 router = APIRouter()
 
 
-@router.post("/report/{user_id}/transaction/chart")
+@router.post("/report/{user_id}/transaction/chart", response_model=GetReportChartResponse)
 async def get_report_transaction_chart(user_id: str, request: GetReportChartRequest):
     try:
         time_period = request.time_period
@@ -30,12 +33,14 @@ async def get_report_transaction_chart(user_id: str, request: GetReportChartRequ
             payload=payload
         )
         return response
+    except InvalidTimePeriodException as e:
+        raise e
     except Exception as e:
         logger.error(f"Error in get_report_chart: {e}")
         raise e
     
 
-@router.post("/report/{user_id}/category/chart")
+@router.post("/report/{user_id}/category/chart", response_model=GetReportCategoryResponse)
 async def get_report_category_chart(user_id: str, request: GetReportCategoryRequest):
     try:
         time_period = request.time_period
@@ -50,6 +55,8 @@ async def get_report_category_chart(user_id: str, request: GetReportCategoryRequ
             payload=payload
         )
         return response
+    except InvalidTimePeriodException as e:
+        raise e
     except Exception as e:
         logger.error(f"Error in get_report_category_chart: {e}")
         raise e

@@ -11,13 +11,20 @@ from domain.models.io_models.goals_io_models import (
     AddAmountToGoalDetailPayload,
     AddAmountToGoalDetailRequest,
     GetGoalsDashboardRequest,
-    GetGoalsDashboardPayload
+    GetGoalsDashboardPayload,
+    GoalsOverviewResponse,
+    GoalsDetailsResponse,
+    CreateGoalResponse,
+    EditGoalResponse,
+    DeleteGoalResponse,
+    AddAmountToGoalResponse
 )
+from domain.exceptions import GoalNotFoundException
 
 logger = Logger(__name__)
 router = APIRouter()
 
-@router.get("/goals/overview/{user_id}")
+@router.get("/goals/overview/{user_id}", response_model=GoalsOverviewResponse)
 async def get_goals_overview(user_id: str):
     try:      
         goals = GoalsUseCase()
@@ -28,7 +35,7 @@ async def get_goals_overview(user_id: str):
         raise e
     
 
-@router.get("/goals/{user_id}")
+@router.get("/goals/{user_id}", response_model=GoalsDetailsResponse)
 async def get_goal_details(user_id: str):
     try:
         goals = GoalsUseCase()
@@ -39,7 +46,7 @@ async def get_goal_details(user_id: str):
         raise e
     
 
-@router.post("/goals/{user_id}")
+@router.post("/goals/{user_id}", response_model=CreateGoalResponse)
 async def create_goal(user_id: str, request: CreateGoalDetailRequest):
     try:
         payload = CreateGoalDetailPayload(
@@ -60,7 +67,7 @@ async def create_goal(user_id: str, request: CreateGoalDetailRequest):
         raise e
     
 
-@router.put("/goals/{user_id}")
+@router.put("/goals/{user_id}", response_model=EditGoalResponse)
 async def edit_goal(user_id: str, request: UpdateGoalDetailRequest):
     try:
         payload = UpdateGoalDetailPayload(
@@ -77,12 +84,14 @@ async def edit_goal(user_id: str, request: UpdateGoalDetailRequest):
             payload=payload
         )
         return status
+    except GoalNotFoundException as e:
+        raise e
     except Exception as e:
         logger.error(f"Error in edit_goal: {e}")
         raise e
     
 
-@router.delete("/goals/{user_id}")
+@router.delete("/goals/{user_id}", response_model=DeleteGoalResponse)
 async def delete_goal(user_id: str, request: DeleteGoalDetailRequest):
     try:
         payload = DeleteGoalDetailPayload(
@@ -97,12 +106,14 @@ async def delete_goal(user_id: str, request: DeleteGoalDetailRequest):
         )
 
         return status
+    except GoalNotFoundException as e:
+        raise e
     except Exception as e:
         logger.error(f"Error in delete_goal: {e}")
         raise e
     
 
-@router.patch("/goals/{user_id}")
+@router.patch("/goals/{user_id}", response_model=AddAmountToGoalResponse)
 async def add_amount_to_goal(user_id: str, request: AddAmountToGoalDetailRequest):
     try:
         payload = AddAmountToGoalDetailPayload(
@@ -118,12 +129,14 @@ async def add_amount_to_goal(user_id: str, request: AddAmountToGoalDetailRequest
         )
 
         return status
+    except GoalNotFoundException as e:
+        raise e
     except Exception as e:
         logger.error(f"Error in add_amount_to_goal: {e}")
         raise e
     
 
-@router.get("/goals/dashboard/{user_id}")
+@router.get("/goals/dashboard/{user_id}", response_model=GoalsDetailsResponse)
 async def get_goals_dashboard(user_id: str, request: GetGoalsDashboardRequest):
     try:
         payload = GetGoalsDashboardPayload(

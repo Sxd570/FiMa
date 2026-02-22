@@ -62,3 +62,8 @@ class CreateTransactionDBRequest(BaseModel):
     transaction_info: str = Field(..., description="Information about the transaction")
     transaction_amount: float = Field(..., description="Amount of the transaction")
     transaction_date: str = Field(..., description="Date of the transaction")
+
+
+class CreateTransactionResponse(BaseModel):
+    message: str = Field(..., description="Status of the creation operation")
+    transaction_id: str = Field(..., description="Unique identifier of the created transaction")

@@ -5,14 +5,17 @@ from domain.models.io_models.transaction_io_models import (
     GetTransactionRequest,
     GetTransactionPayload,
     CreateTransactionRequest,
-    CreateTransactionPayload
+    CreateTransactionPayload,
+    GetTransactionResponse,
+    CreateTransactionResponse
 )
+from domain.exceptions import TransactionNotFoundException
 
 router = APIRouter()
 logger = Logger(__name__)
 
 
-@router.post("/transactions/{user_id}/details")
+@router.post("/transactions/{user_id}/details", response_model=GetTransactionResponse)
 def get_transactions(user_id: str, request: GetTransactionRequest):
     try:
         filters = request.filters if hasattr(request, 'filters') and request.filters is not None else None
@@ -32,12 +35,14 @@ def get_transactions(user_id: str, request: GetTransactionRequest):
             payload=payload
         )
         return transactions_data
+    except TransactionNotFoundException as e:
+        raise e
     except Exception as e:
         logger.error(f"Error fetching transactions for user {user_id}: {e}")
         raise e
     
 
-@router.post("/transactions/{user_id}")
+@router.post("/transactions/{user_id}", response_model=CreateTransactionResponse)
 def create_transaction(user_id: str, request: CreateTransactionRequest):
     try:
         budget_id = request.budget_id
@@ -63,6 +68,8 @@ def create_transaction(user_id: str, request: CreateTransactionRequest):
 
         return response
 
+    except TransactionNotFoundException as e:
+        raise e
     except Exception as e:
         logger.error(f"Error creating transaction for user {user_id}: {e}")
         raise e

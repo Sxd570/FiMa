@@ -11,7 +11,9 @@ from domain.models.io_models.transaction_io_models import (
     GetTransactionDBRequest,
     GetTransactionDBResponse,
     CreateTransactionDBRequest,
+    CreateTransactionResponse
 )
+from domain.exceptions import TransactionNotFoundException
 from domain.models.io_models.report_io_models import (
     GetReportChartDBRequest,
     GetReportChartYearData,
@@ -112,7 +114,7 @@ class TransactionDatabase(TransactionInterface):
             raise e
 
 
-    def create_transaction(self, db_request: CreateTransactionDBRequest) -> dict:
+    def create_transaction(self, db_request: CreateTransactionDBRequest) -> CreateTransactionResponse:
         try:
             self.db_session = get_db_session()
 
@@ -137,10 +139,12 @@ class TransactionDatabase(TransactionInterface):
             self.db_session.add(new_transaction)
             self.db_session.commit()
 
-            return {
-                "message": "Transaction created successfully",
-                "transaction_id": transaction_id
-            }
+            return CreateTransactionResponse(
+                message="Transaction created successfully",
+                transaction_id=transaction_id
+            )
+        except TransactionNotFoundException as e:
+            raise e
         except Exception as e:
             logger.error(f"Error creating transaction: {e}")
             self.db_session.rollback()

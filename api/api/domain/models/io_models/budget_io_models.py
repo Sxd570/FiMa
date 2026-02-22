@@ -134,3 +134,16 @@ class UpdateAmountInBudgetDBRequest(BaseModel):
     user_id: str = Field(..., description="ID of the user creating the transaction")
     budget_id: str = Field(..., description="ID of the budget to update")
     amount_to_add: float = Field(..., description="Amount to add to the budget")
+
+
+class EditBudgetResponse(BaseModel):
+    message: str = Field(..., description="Status message of the edit operation")
+
+
+class DeleteBudgetResponse(BaseModel):
+    message: str = Field(..., description="Status message of the delete operation")
+
+
+class CreateBudgetResponse(BaseModel):
+    message: str = Field(..., description="Status message of the creation operation")
+    budget_id: str = Field(..., description="Unique identifier of the created budget")

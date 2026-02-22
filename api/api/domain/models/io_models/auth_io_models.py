@@ -22,8 +22,7 @@ class LoginDBResponse(BaseModel):
 
 
 class LoginResponse(BaseModel):
-    user_id: Optional[str] = Field(..., description="Unique identifier for the user")
-    status: str = Field(..., description="Authentication status")
+    user_id: str = Field(..., description="Unique identifier for the user")
 
 
 class SignupRequest(BaseModel):
@@ -43,3 +42,6 @@ class SignupDBRequest(BaseModel):
     user_email: str = Field(..., description="Email of the user")
     user_name: str = Field(..., description="Username of the user")
     password: str = Field(..., description="Password of the user")
+
+class SignupResponse(BaseModel):
+    user_id: str = Field(..., description="Unique identifier for the newly created user")

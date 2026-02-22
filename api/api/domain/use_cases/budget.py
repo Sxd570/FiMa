@@ -16,8 +16,12 @@ from domain.models.io_models.budget_io_models import (
     DeleteBudgetDetailPayload,
     DeleteBudgetDetailDBRequest,
     CreateBudgetPayload,
-    CreateBudgetDBRequest
+    CreateBudgetDBRequest,
+    EditBudgetResponse,
+    DeleteBudgetResponse,
+    CreateBudgetResponse
 )
+from domain.exceptions import BudgetNotFoundException
 
 logger = Logger(__name__)
 
@@ -33,7 +37,7 @@ class BudgetUseCase:
         self.budget_near_limit_count = 0
         self.budget_over_limit_count = 0
 
-    def get_budget_overview(self, payload: GetBudgetOverviewPayload):
+    def get_budget_overview(self, payload: GetBudgetOverviewPayload) -> GetBudgetOverviewResponse:
         try:
             self.budget_database = BudgetDatabase()
             self.user_id = payload.user_id
@@ -71,7 +75,7 @@ class BudgetUseCase:
             logger.error(f"Error in get_budget_overview use case: {e}")
             raise e
 
-    def get_budget_details(self, payload: GetBudgetDetailsPayload):
+    def get_budget_details(self, payload: GetBudgetDetailsPayload) -> GetBudgetDetailsResponse:
         try:
             self.budget_database = BudgetDatabase()
             self.user_id = payload.user_id
@@ -112,7 +116,7 @@ class BudgetUseCase:
             raise e
         
 
-    def edit_budget_limit(self, payload: EditBudgetDetailPayload):
+    def edit_budget_limit(self, payload: EditBudgetDetailPayload) -> EditBudgetResponse:
         try:
             self.budget_database = BudgetDatabase()
 
@@ -128,12 +132,14 @@ class BudgetUseCase:
 
             return updated_budget_status
 
+        except BudgetNotFoundException as e:
+            raise e
         except Exception as e:
             logger.error(f"Error in edit_budget_limit use case: {e}")
             raise e
         
     
-    def delete_budget(self, payload: DeleteBudgetDetailPayload):
+    def delete_budget(self, payload: DeleteBudgetDetailPayload) -> DeleteBudgetResponse:
         try:
             self.budget_database = BudgetDatabase()
 
@@ -148,12 +154,14 @@ class BudgetUseCase:
 
             return deleted_budget_status
 
+        except BudgetNotFoundException as e:
+            raise e
         except Exception as e:
             logger.error(f"Error in delete_budget use case: {e}")
             raise e
         
     
-    def create_budget(self, payload: CreateBudgetPayload):
+    def create_budget(self, payload: CreateBudgetPayload) -> CreateBudgetResponse:
         try:
             self.budget_database = BudgetDatabase()
 

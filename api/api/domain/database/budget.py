@@ -9,12 +9,16 @@ from domain.models.io_models.budget_io_models import (
     EditBudgetDetailDBRequest,
     DeleteBudgetDetailDBRequest,
     CreateBudgetDBRequest,
-    UpdateAmountInBudgetDBRequest
+    UpdateAmountInBudgetDBRequest,
+    EditBudgetResponse,
+    DeleteBudgetResponse,
+    CreateBudgetResponse
 )
 from domain.models.io_models.report_io_models import (
     GetReportCategoryDBRequest
 )
 from domain.models.tables.budget import Budget
+from domain.exceptions import BudgetNotFoundException
 from shared.Utility.db_base import get_db_session
 logger = Logger(__name__)
 
@@ -200,7 +204,7 @@ class BudgetDatabase(BudgetInterface):
             raise e
         
     
-    def edit_budget_limit(self, db_request: EditBudgetDetailDBRequest) -> dict:
+    def edit_budget_limit(self, db_request: EditBudgetDetailDBRequest) -> EditBudgetResponse:
         try:
             self.db_session = get_db_session()
 
@@ -220,7 +224,7 @@ class BudgetDatabase(BudgetInterface):
             ).first()
 
             if not budget_detail:
-                raise ValueError("Budget not found to edit.")
+                raise BudgetNotFoundException(detail="Budget not found to edit.")
 
             budget_detail.budget_allocated_amount = self.new_budget_limit
 
@@ -233,15 +237,15 @@ class BudgetDatabase(BudgetInterface):
 
             self.db_session.commit()
 
-            return {
-                "message": "Budget limit updated successfully.",
-            }
+            return EditBudgetResponse(
+                message="Budget limit updated successfully.",
+            )
         except Exception as e:
             logger.error(f"Error in edit_budget_limit: {e}")
             raise e
 
 
-    def delete_budget(self, db_request: DeleteBudgetDetailDBRequest) -> dict:
+    def delete_budget(self, db_request: DeleteBudgetDetailDBRequest) -> DeleteBudgetResponse:
         try:
             self.db_session = get_db_session()
 
@@ -260,20 +264,20 @@ class BudgetDatabase(BudgetInterface):
                 ).first()
 
             if not budget_detail:
-                raise ValueError("Budget not found to delete.")
+                raise BudgetNotFoundException(detail="Budget not found to delete.")
 
             self.db_session.delete(budget_detail)
             self.db_session.commit()
 
-            return {
-                "message": "Budget deleted successfully.",
-            }
+            return DeleteBudgetResponse(
+                message="Budget deleted successfully.",
+            )
         except Exception as e:
             logger.error(f"Error in delete_budget: {e}")
             raise e
 
 
-    def create_budget(self, db_request: CreateBudgetDBRequest) -> dict:
+    def create_budget(self, db_request: CreateBudgetDBRequest) -> CreateBudgetResponse:
         try:
             self.db_session = get_db_session()
 
@@ -299,10 +303,10 @@ class BudgetDatabase(BudgetInterface):
             self.db_session.add(new_budget)
             self.db_session.commit()
 
-            return {
-                "message": "Budget created successfully.",
-                "budget_id": budget_id
-            }
+            return CreateBudgetResponse(
+                message="Budget created successfully.",
+                budget_id=budget_id
+            )
         except Exception as e:
             logger.error(f"Error in create_budget: {e}")
             raise e
@@ -328,7 +332,7 @@ class BudgetDatabase(BudgetInterface):
             ).first()
 
             if not budget_detail:
-                raise ValueError("Budget not found to update.")
+                raise BudgetNotFoundException(detail="Budget not found to update.")
 
             # Add the new amount to spent amount
             budget_detail.budget_spent_amount += amount_to_add

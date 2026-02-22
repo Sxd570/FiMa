@@ -14,6 +14,7 @@ from domain.models.io_models.report_io_models import (
     GetReportCategoryDBRequest,
     GetReportCategoryResponse
 )
+from domain.exceptions import InvalidTimePeriodException
 
 logger = Logger(__name__)
 
@@ -22,7 +23,7 @@ class ReportUseCase:
         self.transaction_database = None
         self.budget_database = None
 
-    def get_report_chart(self, payload: GetReportChartPayload):
+    def get_report_chart(self, payload: GetReportChartPayload) -> GetReportChartResponse:
         try:
             self.transaction_database = TransactionDatabase()
 
@@ -49,7 +50,7 @@ class ReportUseCase:
                     db_request=get_report_chart_data_db_request
                 )
             else:
-                raise ValueError("Invalid time period specified.")
+                raise InvalidTimePeriodException(detail="Invalid time period specified.")
 
             response = GetReportChartResponse(
                 time_period=time_period,
@@ -58,12 +59,14 @@ class ReportUseCase:
             )
 
             return response
+        except InvalidTimePeriodException as e:
+            raise e
         except Exception as e:
             logger.error(f"Error in get_report_chart use case: {str(e)}")
             raise e
         
-    
-    def get_report_category(self, payload: GetReportCategoryPayload):
+
+    def get_report_category(self, payload: GetReportCategoryPayload) -> GetReportCategoryResponse:
         try:
             self.budget_database = BudgetDatabase()
 
@@ -87,13 +90,15 @@ class ReportUseCase:
                     db_request=db_request
                 )
             else:
-                raise ValueError("Invalid time period specified.")
+                raise InvalidTimePeriodException(detail="Invalid time period specified.")
 
             response = GetReportCategoryResponse(
                 time_period=time_period,
                 data=report_category_data.data
             )
             return response
+        except InvalidTimePeriodException as e:
+            raise e
         except Exception as e:
             logger.error(f"Error in get_report_category use case: {str(e)}")
             raise e
