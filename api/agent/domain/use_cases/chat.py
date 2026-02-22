@@ -9,6 +9,7 @@ from domain.models.io_models.conversations_io_model import (
     GetConversationDBRequest,
     GetConversationResponse
 )
+from domain.exceptions import ConversationNotFoundException
 
 logger = Logger(__name__)
 
@@ -66,6 +67,8 @@ class ChatUseCases:
             return GetConversationResponse(
                 message_details=db_response.message_details
             )
+        except ConversationNotFoundException as e:
+            raise e
         except Exception as e:
             logger.error(f"Failed to get conversation {conversation_id} for user {user_id}: {str(e)}")
             raise e

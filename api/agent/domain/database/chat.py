@@ -10,6 +10,7 @@ from shared.Utility.db_base import MySQLDatabase
 from shared.Utility.mongo_db_base import MongoDatabase
 from copy import deepcopy
 from typing import Any
+from domain.exceptions import ConversationNotFoundException
 
 logger = Logger(__name__)
 
@@ -112,11 +113,17 @@ class ChatDatabase:
                 Message(**message) for message in db_response
             ]
 
+            if not messages:
+                logger.warning(f"Conversation not found: {conversation_id}")
+                raise ConversationNotFoundException(detail="Conversation not found")
+
             message_details = GetConversationDBResponse(
                 message_details=messages
             )
 
             return message_details
+        except ConversationNotFoundException as e:
+            raise e
         except Exception as e:
             logger.error(f"Exception in get conversation db {user_id}, {conversation_id}: {str(e)}")
             raise e
