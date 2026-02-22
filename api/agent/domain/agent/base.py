@@ -5,7 +5,7 @@ from shared.logger import Logger
 logger = Logger()
 
 class AgentFactory:
-    def __init__(self, system_prompt: str, tool_list: list = None, callback_handler=None):
+    def __init__(self, system_prompt: str, tool_list: list = [], callback_handler=None):
         self.agentic_ai = None
         self.callback_handler = callback_handler
         self.system_prompt = system_prompt
