@@ -1,5 +1,4 @@
 from strands import tool
-from pydantic import Field
 
 from domain.agent.base import AgentFactory
 from domain.prompts import AGENT_API_SYSTEM_INSTRUCTIONS
@@ -43,7 +42,7 @@ def agent_api_agent_as_tool(callback_handler=None):
 
             response = agent(query)
 
-            return str(response)
+            return str(response.message)
         except Exception as e:
             logger.error("Exception in get_agent_api_as_tools", str(e))
             raise e

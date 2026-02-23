@@ -1,5 +1,4 @@
 from strands import tool
-from pydantic import Field
 
 from domain.agent.base import AgentFactory
 from domain.prompts import UI_SMITH_SYSTEM_INSTRUCTIONS
@@ -52,7 +51,7 @@ def ui_smith_agent_as_tool(callback_handler=None):
 
             response = agent(prompt)
 
-            return str(response)
+            return str(response.message)
         except Exception as e:
             logger.error("Exception in get_agent_ui_smith_as_tools", str(e))
             raise e

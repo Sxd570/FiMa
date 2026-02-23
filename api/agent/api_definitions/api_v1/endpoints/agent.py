@@ -43,3 +43,6 @@ async def chat(
     except Exception as e:
         logger.error(f"WebSocket connection error for user {user_id}: {str(e)}")
         raise e
+    finally:
+        if websocket in active_connections:
+            active_connections.remove(websocket)

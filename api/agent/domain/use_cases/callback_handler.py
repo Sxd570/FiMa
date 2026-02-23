@@ -9,7 +9,7 @@ class WebSocketCallback:
         self.websocket = websocket
         self.agent_name = agent_name
         self.response = ""
-        self._loop = asyncio.get_event_loop()
+        self._loop = asyncio.get_running_loop()
 
     def __call__(self, **kwargs):
         if "data" in kwargs:
