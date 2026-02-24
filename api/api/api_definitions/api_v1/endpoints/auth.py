@@ -34,7 +34,6 @@ async def login(request: LoginRequest):
         )
 
         return response
-        return response
 
     except (UserNotFoundException, InvalidCredentialsException) as e:
         raise e
