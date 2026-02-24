@@ -1,0 +1,327 @@
+/* ====== PAGE / CONTAINER ====== */
+.container {
+  padding: 24px;
+  background-color: #fafafa;
+  min-height: 100vh;
+  box-sizing: border-box;
+  color: #111827;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial;
+}
+
+/* ====== HEADER ====== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.btnAdd {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #0f172a;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.icon {
+  font-size: 16px;
+}
+
+/* ====== FILTERS SECTION ====== */
+.filtersSection {
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  box-shadow: 0 1px 2px rgba(10, 10, 10, 0.02);
+}
+
+/* main row with all filters inline */
+.filterRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+}
+
+/* SEARCH */
+.searchBox {
+  position: relative;
+  width: 450px;
+  min-width: 160px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 36px 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  font-size: 14px;
+  outline: none;
+  background: #fff;
+}
+
+.searchInput:focus {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.06);
+  border-color: #c7c7ff;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #6b7280;
+  pointer-events: none;
+}
+
+/* SELECTS */
+.select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  background: #fff;
+  font-size: 14px;
+  width: 160px;
+}
+
+/* CATEGORY GROUP */
+.categoryGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 160px;
+}
+
+.addCategoryBtn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* DATES */
+.dateRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dateInput {
+  width: 160px;
+  min-width: 120px;
+}
+
+.dateField {
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  font-size: 14px;
+}
+
+/* CLEAR DATES */
+.btnClear {
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #f3f4f6;
+  color: #111827;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* ====== TABLE SECTION ====== */
+.tableSection {
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  padding: 18px;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(10, 10, 10, 0.02);
+}
+
+/* header above table */
+.tableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.entriesControl {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.entriesSelect {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #dcdcdc;
+  background: #fff;
+}
+
+/* TABLE */
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.table thead {
+  background: #fbfbfb;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.table th {
+  padding: 12px 14px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 13px;
+  color: #6b7280;
+  text-transform: none;
+}
+
+.table tbody td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #f2f2f2;
+  font-size: 14px;
+  color: #111827;
+  vertical-align: middle;
+}
+
+/* Category cell layout */
+.tdCategory {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.categoryIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #f3f4f6;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #374151;
+  flex-shrink: 0;
+}
+
+.categoryName {
+  white-space: nowrap;
+}
+
+/* Description, date, type */
+.tdDescription {
+  color: #4b5563;
+}
+
+.tdDate {
+  color: #6b7280;
+}
+
+/* Type badge */
+.typeBadge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #f3f4f6;
+  color: #374151;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* Amounts */
+.amount {
+  font-weight: 700;
+  text-align: left;
+}
+
+.positive {
+  color: #059669; /* green */
+}
+
+.negative {
+  color: #b91c1c; /* red */
+}
+
+/* Actions */
+.tdActions {
+  text-align: center;
+  width: 110px;
+}
+
+.actionBtn {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #e6e6e6;
+  background: #fff;
+  cursor: pointer;
+  margin: 0 4px;
+}
+
+/* Hover row */
+.table tbody tr:hover {
+  background: #fbfbfb;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 980px) {
+  .searchBox {
+    width: 220px;
+  }
+
+  .dateInput {
+    width: 140px;
+  }
+}
+
+@media (max-width: 768px) {
+  .filterRow {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .searchBox,
+  .dateInput {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .table {
+    min-width: 600px;
+  }
+}

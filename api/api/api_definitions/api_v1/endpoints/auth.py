@@ -5,15 +5,18 @@ from domain.models.io_models.auth_io_models import (
     LoginRequest,
     LoginPayload,
     SignupRequest,
-    SignupPayload
+    SignupPayload,
+    LoginResponse,
+    SignupResponse
 )
+from domain.exceptions import UserAlreadyExistsException, UserNotFoundException, InvalidCredentialsException
 
 
 logger = Logger(__name__)
 
 router = APIRouter()
 
-@router.post("/login")
+@router.post("/login", response_model=LoginResponse)
 async def login(request: LoginRequest):
     try:
         user_email = request.user_email
@@ -32,12 +35,14 @@ async def login(request: LoginRequest):
 
         return response
 
+    except (UserNotFoundException, InvalidCredentialsException) as e:
+        raise e
     except Exception as e:
         logger.error(f"Login failed: {str(e)}")
         raise e    
 
 
-@router.post("/signup")
+@router.post("/signup", response_model=SignupResponse)
 async def signup(request: SignupRequest):
     try:
         user_email = request.user_email
@@ -57,6 +62,8 @@ async def signup(request: SignupRequest):
         )
 
         return response
+    except UserAlreadyExistsException as e:
+        raise e
     except Exception as e:
         logger.error(f"Signup failed: {str(e)}")
         raise e

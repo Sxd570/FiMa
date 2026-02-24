@@ -3,6 +3,7 @@ from shared.logger import Logger
 from sqlalchemy import *
 from domain.interfaces.auth_interface import AuthInterface
 from domain.models.io_models.auth_io_models import *
+from domain.exceptions import UserAlreadyExistsException, UserNotFoundException
 from domain.models.tables.user import User
 from shared.Utility.db_base import get_db_session
 
@@ -12,7 +13,7 @@ class AuthDatabase(AuthInterface):
     def __init__(self):
         self.db_session = None
 
-    def create_user(self, db_payload: SignupDBRequest):
+    def create_user(self, db_payload: SignupDBRequest) -> SignupResponse:
         try:
             user_id = db_payload.user_id
             user_email = db_payload.user_email
@@ -35,9 +36,7 @@ class AuthDatabase(AuthInterface):
 
             if existing_user:
                 logger.warning(f"User with ID {user_id} or email {user_email} already exists.")
-                return {
-                    "status": "user_exist"
-                }
+                raise UserAlreadyExistsException(detail="User already exists")
 
             new_user = User(
                 user_id=user_id,
@@ -48,10 +47,12 @@ class AuthDatabase(AuthInterface):
             self.db_session.add(new_user)
             self.db_session.commit()
 
-            return {
-                "status": "success",
-                "user_id": user_id
-            }
+            return SignupResponse(
+                user_id=user_id
+            )
+
+        except UserAlreadyExistsException as e:
+            raise e
 
         except Exception as e:
             logger.error(f"Error creating user: {str(e)}")
@@ -76,12 +77,14 @@ class AuthDatabase(AuthInterface):
 
             if not user:
                 logger.warning(f"Login failed for email: {user_email}")
-                return None
+                raise UserNotFoundException(detail="User not found")
 
             return LoginDBResponse(
                 user_id=user.user_id,
                 user_password=user.user_password
             )
+        except UserNotFoundException as e:
+            raise e
 
         except Exception as e:
             logger.error(f"Error during login: {str(e)}")

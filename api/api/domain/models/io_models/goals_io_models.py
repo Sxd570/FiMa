@@ -149,3 +149,20 @@ class GoalsOverviewResponse(BaseModel):
 
 class GoalsDetailsResponse(BaseModel):
     goal_details: Optional[List[GoalDetail]] = None
+
+
+class CreateGoalResponse(BaseModel):
+    status: str = Field(..., description="Status of the creation operation")
+
+
+class EditGoalResponse(BaseModel):
+    status: str = Field(..., description="Status of the edit operation")
+
+
+class DeleteGoalResponse(BaseModel):
+    status: str = Field(..., description="Status of the delete operation")
+    goal_id: str = Field(..., description="Unique identifier of the deleted goal")
+
+
+class AddAmountToGoalResponse(BaseModel):
+    status: str = Field(..., description="Status of the add amount operation")

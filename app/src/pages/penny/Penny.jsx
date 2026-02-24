@@ -67,10 +67,10 @@ export default function Penny() {
     };
   };
 
-  useEffect(() => {
-    connectWebSocket();
-    return () => clearTimeout(reconnectTimer.current);
-  }, []);
+  // useEffect(() => {
+  //   connectWebSocket();
+  //   return () => clearTimeout(reconnectTimer.current);
+  // }, []);
 
   const sendMessage = () => {
     if (!input.trim()) return;
@@ -118,12 +118,7 @@ export default function Penny() {
         <div className={styles.sidebarHeader}>
           <span>Conversations</span>
           <div className={styles.toggleWrapper}>
-  <button
-    className={styles.toggleBtn}
-    onClick={() => setSidebarOpen((p) => !p)}
-  >
-    {sidebarOpen ? "←" : "→"}
-  </button>
+  
 </div>
         </div>
 

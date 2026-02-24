@@ -26,7 +26,12 @@ from domain.models.io_models.goals_io_models import (
     GetGoalsDashboardPayload,
     GetGoalsDashboardDBRequest,
     GetGoalsDBRequest,
+    CreateGoalResponse,
+    EditGoalResponse,
+    DeleteGoalResponse,
+    AddAmountToGoalResponse
 )
+from domain.exceptions import GoalNotFoundException
 
 logger = Logger(__name__)
 
@@ -37,7 +42,7 @@ class GoalsUseCase:
         self.user_id = None
         self.goal_id = None
 
-    def get_goals_overview(self, user_id: str):
+    def get_goals_overview(self, user_id: str) -> GoalsOverviewResponse:
         try:
             self.user_id = user_id
             self.total_goals_count = self.goal_database.get_total_goals_count(self.user_id)
@@ -55,7 +60,7 @@ class GoalsUseCase:
             raise e
 
 
-    def get_goal_details(self, user_id: str):
+    def get_goal_details(self, user_id: str) -> GoalsDetailsResponse:
         try:
             self.user_id = user_id
             db_request = GetGoalsDBRequest(user_id=self.user_id)
@@ -83,7 +88,7 @@ class GoalsUseCase:
             raise e
 
 
-    def create_goal(self, payload: CreateGoalDetailPayload):
+    def create_goal(self, payload: CreateGoalDetailPayload) -> CreateGoalResponse:
         try:
             self.user_id = payload.user_id
             self.goal_name = payload.goal_name
@@ -114,7 +119,7 @@ class GoalsUseCase:
             logger.error(f"Error in create_goal use case: {e}")
             raise e
 
-    def edit_goal(self, payload: UpdateGoalDetailPayload):
+    def edit_goal(self, payload: UpdateGoalDetailPayload) -> EditGoalResponse:
         try:
             self.user_id = payload.user_id
             self.goal_id = payload.goal_id
@@ -136,7 +141,7 @@ class GoalsUseCase:
             logger.error(f"Error in edit_goal use case: {e}")
             raise e
 
-    def delete_goal(self, payload: DeleteGoalDetailPayload):
+    def delete_goal(self, payload: DeleteGoalDetailPayload) -> DeleteGoalResponse:
         try:
             self.user_id = payload.user_id
             self.goal_id = payload.goal_id
@@ -149,7 +154,7 @@ class GoalsUseCase:
             logger.error(f"Error in delete_goal use case: {e}")
             raise e
 
-    def add_amount_to_goal(self, payload: AddAmountToGoalDetailPayload):
+    def add_amount_to_goal(self, payload: AddAmountToGoalDetailPayload) -> AddAmountToGoalResponse:
         try:
             self.user_id = payload.user_id
             self.goal_id = payload.goal_id
@@ -165,7 +170,7 @@ class GoalsUseCase:
             logger.error(f"Error in add_amount_to_goal use case: {e}")
             raise e
 
-    def get_goals_dashboard(self, payload: GetGoalsDashboardPayload):
+    def get_goals_dashboard(self, payload: GetGoalsDashboardPayload) -> GoalsDetailsResponse:
         try:
             self.user_id = payload.user_id
             self.limit = payload.limit

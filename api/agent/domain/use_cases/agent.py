@@ -1,10 +1,7 @@
 import asyncio
 from fastapi import WebSocket, WebSocketDisconnect
-from strands import tool, Agent
-from typing import Dict, List
+from strands import Agent
 from concurrent.futures import ThreadPoolExecutor
-import json
-from pydantic import Field
 
 from domain.agent.base import AgentFactory
 from domain.prompts import ORCHESTRATOR_SYSTEM_INSTRUCTIONS
@@ -15,18 +12,17 @@ from domain.use_cases.callback_handler import WebSocketCallback
 from shared.logger import Logger
 logger = Logger(__name__)
 
-agents: Dict[WebSocket, Agent] = {}
-executor = ThreadPoolExecutor()
+executor = ThreadPoolExecutor(max_workers=4)
 
 
 class AgentUseCase:
     def __init__(self, user_id: str, websocket: WebSocket):
         self.user_id = user_id
         self.websocket = websocket
-        self.orchestrator_agent = None
+        self.orchestrator_agent = self._create_orchestrator_agent()
 
 
-    def get_orchestrator_agent(self) -> Agent:
+    def _create_orchestrator_agent(self) -> Agent:
         try:
             orchestrator_bot_factory = AgentFactory(
                 system_prompt=ORCHESTRATOR_SYSTEM_INSTRUCTIONS,
@@ -40,8 +36,7 @@ class AgentUseCase:
                     )
                 ]
             )
-            orchestrator_agent = orchestrator_bot_factory.create_agent()
-            return orchestrator_agent
+            return orchestrator_bot_factory.create_agent()
         except Exception as e:
             logger.error("Error while creating orchestrator agent", str(e))
             raise e
@@ -49,24 +44,30 @@ class AgentUseCase:
 
     async def execute(self, query: str):
         try:
-            self.query = query
-            self.orchestrator_agent = self.get_orchestrator_agent()
-
             await self.websocket.send_json({
                 "type": "response_start", 
                 "data": ""
             })
 
-            loop = asyncio.get_event_loop()
+            loop = asyncio.get_running_loop()
+            agent_error = None
 
             def run_agent():
+                nonlocal agent_error
                 try:
-                    self.orchestrator_agent(self.query)
+                    self.orchestrator_agent(query)
                 except Exception as e:
+                    agent_error = e
                     logger.error(f"Agent error: {e}")
 
             await loop.run_in_executor(executor, run_agent)
 
+            if agent_error:
+                await self.websocket.send_json({
+                    "type": "response_error",
+                    "data": str(agent_error)
+                })
+            
             await self.websocket.send_json({
                 "type": "response_end", 
                 "data": ""

@@ -11,21 +11,25 @@ from domain.models.io_models.budget_io_models import (
     EditBudgetDetailPayload,
     DeleteBudgetDetailPayload,
     CreateBudgetRequest,
-    CreateBudgetPayload
+    CreateBudgetPayload,
+    GetBudgetOverviewResponse,
+    GetBudgetDetailsResponse,
+    EditBudgetResponse,
+    DeleteBudgetResponse,
+    CreateBudgetResponse
 )
+from domain.exceptions import BudgetNotFoundException
 
 logger = Logger(__name__)
 router = APIRouter()
 
 
-@router.get("/budget/{user_id}/overview")
-async def get_budget_overview(user_id: str, request: GetBudgetOverviewRequest):
+@router.get("/budget/{user_id}/overview", response_model=GetBudgetOverviewResponse)
+async def get_budget_overview(user_id: str, month: str):
     try:
-        date = request.month
-
         payload = GetBudgetOverviewPayload(
             user_id=user_id,
-            date=date
+            date=month
         )
 
         budget = BudgetUseCase()
@@ -38,16 +42,14 @@ async def get_budget_overview(user_id: str, request: GetBudgetOverviewRequest):
         raise e
     
 
-@router.get("/budget/{user_id}/details")
-async def get_budget_details(user_id: str, request: GetBudgetDetailsRequest):
+@router.get("/budget/{user_id}/details", response_model=GetBudgetDetailsResponse)
+async def get_budget_details(user_id: str, month: str):
     try:
-        date = request.month
-
         budget = BudgetUseCase()
 
         payload = GetBudgetDetailsPayload(
             user_id=user_id,
-            date=date
+            date=month
         )
 
         budget_details = budget.get_budget_details(
@@ -60,7 +62,7 @@ async def get_budget_details(user_id: str, request: GetBudgetDetailsRequest):
         raise e
     
 
-@router.patch("/budget/{user_id}/edit_limit/{budget_id}")
+@router.patch("/budget/{user_id}/edit_limit/{budget_id}", response_model=EditBudgetResponse)
 async def edit_budget_limit(user_id: str, budget_id: str, request: EditBudgetDetailRequest):
     try:
         new_budget_limit = request.new_budget_limit
@@ -78,12 +80,14 @@ async def edit_budget_limit(user_id: str, budget_id: str, request: EditBudgetDet
         )
 
         return updated_budget_status
+    except BudgetNotFoundException as e:
+        raise e
     except Exception as e:
         logger.error(f"Error in edit_budget_limit: {e}")
         raise e
 
 
-@router.delete("/budget/{user_id}/delete/{budget_id}")
+@router.delete("/budget/{user_id}/delete/{budget_id}", response_model=DeleteBudgetResponse)
 async def delete_budget(user_id: str, budget_id: str):
     try:
         budget = BudgetUseCase()
@@ -96,12 +100,14 @@ async def delete_budget(user_id: str, budget_id: str):
         deletion_status = budget.delete_budget(payload=payload)
 
         return deletion_status
+    except BudgetNotFoundException as e:
+        raise e
     except Exception as e:
         logger.error(f"Error in delete_budget: {e}")
         raise e
     
 
-@router.post("/budget/{user_id}/create")
+@router.post("/budget/{user_id}/create", response_model=CreateBudgetResponse)
 async def create_budget(user_id: str, request: CreateBudgetRequest):
     try:
         budget_limit_amount = request.budget_limit

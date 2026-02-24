@@ -8,8 +8,10 @@ from domain.models.io_models.transaction_io_models import (
     GetTransactionResponse,
     TransactionDetail,
     CreateTransactionPayload,
-    CreateTransactionDBRequest
+    CreateTransactionDBRequest,
+    CreateTransactionResponse
 )
+from domain.exceptions import TransactionNotFoundException
 from domain.models.io_models.budget_io_models import (
     UpdateAmountInBudgetDBRequest
 )
@@ -20,7 +22,7 @@ class TransactionUseCase:
     def __init__(self):
         self.transaction_database = TransactionDatabase()
 
-    def get_transactions(self, payload: GetTransactionPayload):
+    def get_transactions(self, payload: GetTransactionPayload) -> GetTransactionResponse:
         try:
             self.user_id = payload.user_id
 
@@ -53,12 +55,14 @@ class TransactionUseCase:
             )
 
             return transaction_details
+        except TransactionNotFoundException as e:
+            raise e
         except Exception as e:
             logger.error(f"Error in get_transactions use case: {e}")
             raise e
         
 
-    def create_transaction(self, payload: CreateTransactionPayload):
+    def create_transaction(self, payload: CreateTransactionPayload) -> CreateTransactionResponse:
         try:
             user_id = payload.user_id
             budget_id = payload.budget_id
@@ -108,6 +112,8 @@ class TransactionUseCase:
 
             return create_transaction_response
 
+        except TransactionNotFoundException as e:
+            raise e
         except Exception as e:
             logger.error(f"Error in create_transaction use case: {e}")
             raise e
