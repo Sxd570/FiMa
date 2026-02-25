@@ -40,7 +40,7 @@ class TransactionDomain:
                 endpoint=f"/transactions/{user_id}",
                 payload=payload,
             )
-            response = api_request.execute()
+            response = api_request.execute() or {}
             return GetTransactionsResponse(**response)
         except Exception as e:
             logger.error(f"Error in TransactionDomain.get_transactions: {str(e)}")
@@ -69,7 +69,7 @@ class TransactionDomain:
                 endpoint=f"/transactions/{user_id}",
                 payload=payload,
             )
-            response = api_request.execute()
+            response = api_request.execute() or {}
             return CreateTransactionResponse(**response)
         except Exception as e:
             logger.error(f"Error in TransactionDomain.create_transaction: {str(e)}")

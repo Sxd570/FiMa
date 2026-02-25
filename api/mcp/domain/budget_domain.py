@@ -38,7 +38,7 @@ class BudgetDomain:
                 endpoint=endpoint,
                 payload=payload,
             )
-            response_data = api_request.execute()
+            response_data = api_request.execute() or {}
             return GetBudgetOverviewResponse(**response_data)
         except Exception as e:
             logger.error(f"Error in BudgetDomain.get_budget_overview: {str(e)}")
@@ -59,7 +59,7 @@ class BudgetDomain:
                 endpoint=endpoint,
                 payload=payload,
             )
-            response_data = api_request.execute()
+            response_data = api_request.execute() or {}
             return GetBudgetDetailsResponse(**response_data)
         except Exception as e:
             logger.error(f"Error in BudgetDomain.get_budget_details: {str(e)}")
@@ -81,7 +81,7 @@ class BudgetDomain:
                 endpoint=endpoint,
                 payload=payload,
             )
-            response_data = api_request.execute()
+            response_data = api_request.execute() or {}
             return EditBudgetLimitResponse(**response_data)
         except Exception as e:
             logger.error(f"Error in BudgetDomain.edit_budget_limit: {str(e)}")
@@ -98,7 +98,7 @@ class BudgetDomain:
                 http_method=APIConstants.KEY_DELETE_METHOD.value,
                 endpoint=endpoint,
             )
-            response_data = api_request.execute()
+            response_data = api_request.execute() or {}
             return DeleteBudgetResponse(**response_data)
         except Exception as e:
             logger.error(f"Error in BudgetDomain.delete_budget: {str(e)}")
@@ -125,7 +125,7 @@ class BudgetDomain:
                 endpoint=endpoint,
                 payload=payload,
             )
-            response_data = api_request.execute()
+            response_data = api_request.execute() or {}
             return CreateBudgetResponse(**response_data)
         except Exception as e:
             logger.error(f"Error in BudgetDomain.create_budget: {str(e)}")
