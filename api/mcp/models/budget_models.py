@@ -14,7 +14,7 @@ class GetBudgetOverviewResponse(BaseModel):
 
 class BudgetDetail(BaseModel):
     budget_id: Optional[str] = Field(None, description="Unique identifier for the budget.")
-    category_name: Optional[str] = Field(None, description="Name of the budget category.")
+    budget_name: Optional[str] = Field(None, description="Name of the budget category.")
     budget_allocated_amount: Optional[float] = Field(None, description="Amount allocated for the budget.")
     budget_spent_amount: Optional[float] = Field(None, description="Amount spent from the budget.")
     budget_allocated_month: Optional[str] = Field(None, description="The month for which the budget is allocated (format 'YYYY-MM').")
