@@ -2,7 +2,7 @@ from strands import tool
 
 from domain.agent.base import AgentFactory
 from domain.prompts import AGENT_API_SYSTEM_INSTRUCTIONS
-from domain.use_cases.mcp_client import create_mcp_tools
+from domain.use_cases.mcp_client import get_mcp_client
 
 from shared.logger import Logger
 logger = Logger(__name__)
@@ -13,11 +13,11 @@ def agent_api_agent_as_tool(callback_handler=None):
     def agent_api_bot(query: str) -> str:
         """
         This tool invokes the API Agent, which is responsible for retrieving
-        accurate and user-specific financial data from the  Fima platform.
+        accurate and user-specific financial data from the Fima platform.
 
         Parameters:
         - query (str): A natural language description of the data to fetch.
-        
+
         Returns:
         - str: JSON or structured text response containing the requested financial data.
 
@@ -31,21 +31,23 @@ def agent_api_agent_as_tool(callback_handler=None):
         """
 
         try:
-            mcp_tools = create_mcp_tools() 
+            # Keep the MCP connection open for the entire duration of the agent call
+            with get_mcp_client() as mcp_client:
+                mcp_tools = mcp_client.list_tools_sync()
 
-            agent_api_bot_factory = AgentFactory(
-                system_prompt=AGENT_API_SYSTEM_INSTRUCTIONS,
-                callback_handler=callback_handler,
-                tool_list=mcp_tools
-            )
+                agent_factory = AgentFactory(
+                    system_prompt=AGENT_API_SYSTEM_INSTRUCTIONS,
+                    callback_handler=callback_handler,
+                    tool_list=mcp_tools
+                )
 
-            agent = agent_api_bot_factory.create_agent()
+                agent = agent_factory.create_agent()
+                
+                response = agent(query)
 
-            response = agent(query)
-
-            return str(response.message)
+                return str(response.message)
         except Exception as e:
-            logger.error("Exception in get_agent_api_as_tools", str(e))
+            logger.error("Exception in agent_api_bot", str(e))
             raise e
 
     return agent_api_bot
