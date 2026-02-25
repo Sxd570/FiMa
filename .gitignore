@@ -28,4 +28,3 @@ dist-ssr
 *.pyc
 __pycache__
 .serverless
-poc/*
