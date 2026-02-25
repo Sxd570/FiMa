@@ -22,7 +22,7 @@ export default function Penny() {
   const connectWebSocket = () => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) return;
 
-    const ws = new WebSocket("ws://localhost:8001/penny/v1/ws/123/chat");
+    const ws = new WebSocket("ws://localhost:8001/penny/v1/ws/876822d6-091c-5188-80b7-f781dc93ae22/chat");
     wsRef.current = ws;
 
     ws.onopen = () => console.log("WS connected");
@@ -67,10 +67,10 @@ export default function Penny() {
     };
   };
 
-  // useEffect(() => {
-  //   connectWebSocket();
-  //   return () => clearTimeout(reconnectTimer.current);
-  // }, []);
+  useEffect(() => {
+    connectWebSocket();
+    return () => clearTimeout(reconnectTimer.current);
+  }, []);
 
   const sendMessage = () => {
     if (!input.trim()) return;

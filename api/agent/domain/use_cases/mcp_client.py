@@ -18,7 +18,7 @@ logger = Logger(__name__)
 class MCPClient:
     """Client for communicating with the FiMa MCP Server."""
 
-    def __init__(self, base_url: str = "http://localhost:8000"):
+    def __init__(self, base_url: str = "http://localhost:8002"):
         """
         Initialize MCP Client.
 

@@ -1,0 +1,9 @@
+{
+	"servers": {
+		"fima-mcp-server": {
+			"url": "http://localhost:8002/mcp",
+			"type": "http"
+		}
+	},
+	"inputs": []
+}

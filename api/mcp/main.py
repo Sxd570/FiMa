@@ -20,6 +20,6 @@ if __name__ == "__main__":
 
     http_app = mcp.http_app(stateless_http=True)
 
-    logger.debug("Starting FiMa MCP server with uvicorn on 0.0.0.0:8000")
-    uvicorn.run(http_app, host="0.0.0.0", port=8000)
+    logger.debug("Starting FiMa MCP server with uvicorn on 0.0.0.0:8002")
+    uvicorn.run(http_app, host="0.0.0.0", port=8002)
 
