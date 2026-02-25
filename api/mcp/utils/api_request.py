@@ -8,10 +8,11 @@ logger = Logger(__name__)
 
 
 class APIRequest:
-    def __init__(self, http_method, endpoint, payload=None):
+    def __init__(self, http_method, endpoint, payload=None, params=None):
         self.http_method = http_method
         self.endpoint = endpoint
         self.payload = payload
+        self.params = params
         self.url = self.generate_url(endpoint)
         self.headers = {
             "Content-Type": "application/json"
@@ -41,6 +42,7 @@ class APIRequest:
                 method=self.http_method,
                 url=self.url,
                 headers=self.headers,
+                params=self.params,
                 json=self.payload
             )
             if response.status_code in (200, 202):

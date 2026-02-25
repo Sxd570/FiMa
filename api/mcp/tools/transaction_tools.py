@@ -9,7 +9,6 @@ from models.transaction_models import (
     TransactionType,
     GetTransactionsResponse,
     CreateTransactionResponse,
-    TransactionFilters,
 )
 from utils.logger import Logger
 
@@ -25,10 +24,6 @@ def get_transactions(
         description=(
             "The unique ID of the user whose transactions are to be fetched."
         ),
-    ),
-    filters: Optional[TransactionFilters] = Field(
-        None,
-        description="Optional filters for transactions.",
     ),
     limit: int = Field(
         15,
@@ -47,6 +42,18 @@ def get_transactions(
             "the result set."
         ),
     ),
+    from_date: Optional[str] = Field(
+        None,
+        description="Filter transactions from this date (format: YYYY-MM-DD).",
+    ),
+    to_date: Optional[str] = Field(
+        None,
+        description="Filter transactions up to this date (format: YYYY-MM-DD).",
+    ),
+    budget_id: Optional[UUID] = Field(
+        None,
+        description="Filter transactions belonging to a specific budget ID.",
+    ),
 ) -> GetTransactionsResponse:
     """
     Fetch transactions for a given user with optional filters, limit,
@@ -55,9 +62,11 @@ def get_transactions(
     try:
         return _transaction_domain.get_transactions(
             user_id=user_id,
-            filters=filters,
             limit=limit,
             offset=offset,
+            from_date=from_date,
+            to_date=to_date,
+            budget_id=budget_id,
         )
     except Exception as e:
         logger.error(f"Error in tool get_transactions: {str(e)}")

@@ -37,7 +37,7 @@ class GoalDomain:
 
     def get_goal_details(self, user_id: UUID) -> GetGoalDetailsResponse:
         try:
-            endpoint = f"/goals/details/{user_id}"
+            endpoint = f"/goals/{user_id}"
             api_request = APIRequest(
                 http_method=APIConstants.KEY_GET_METHOD.value,
                 endpoint=endpoint,

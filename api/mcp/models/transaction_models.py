@@ -26,7 +26,9 @@ class CreateTransactionResponse(BaseModel):
     message: Optional[str] = Field(None, description="Message indicating success or failure of the transaction creation.")
 
 
-class TransactionFilters(BaseModel):
-    from_date: Optional[str] = Field(None, description="Start date for filtering transactions in 'YYYY-MM-DD' format.")
-    to_date: Optional[str] = Field(None, description="End date for filtering transactions in 'YYYY-MM-DD' format.")
-    budget_id: Optional[UUID] = Field(None, description="The budget ID to filter transactions by.")
+class GetTransactionsRequest(BaseModel):
+    limit: Optional[int] = Field(None, ge=1, description="Limit the number of transactions returned")
+    offset: Optional[int] = Field(None, ge=0, description="Offset for pagination")
+    from_date: Optional[str] = Field(None, description="Filter from date (YYYY-MM-DD)")
+    to_date: Optional[str] = Field(None, description="Filter to date (YYYY-MM-DD)")
+    budget_id: Optional[UUID] = Field(None, description="Filter by budget ID")

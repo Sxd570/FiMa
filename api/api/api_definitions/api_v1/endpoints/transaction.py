@@ -1,8 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from shared.logger import Logger
+from typing import Optional
 from domain.use_cases.transaction import TransactionUseCase
 from domain.models.io_models.transaction_io_models import (
-    GetTransactionRequest,
     GetTransactionPayload,
     CreateTransactionRequest,
     CreateTransactionPayload,
@@ -15,18 +15,23 @@ router = APIRouter()
 logger = Logger(__name__)
 
 
-@router.post("/transactions/{user_id}/details", response_model=GetTransactionResponse)
-def get_transactions(user_id: str, request: GetTransactionRequest):
+@router.get("/transactions/{user_id}", response_model=GetTransactionResponse)
+def get_transactions(
+    user_id: str,
+    limit: Optional[int] = Query(None, ge=1, description="Limit the number of transactions returned"),
+    offset: Optional[int] = Query(None, ge=0, description="Offset for pagination"),
+    from_date: Optional[str] = Query(None, description="Filter from date (YYYY-MM-DD)"),
+    to_date: Optional[str] = Query(None, description="Filter to date (YYYY-MM-DD)"),
+    budget_id: Optional[str] = Query(None, description="Filter by budget ID"),
+):
     try:
-        filters = request.filters if hasattr(request, 'filters') and request.filters is not None else None
-        limit = request.limit if hasattr(request, 'limit') and request.limit is not None else None
-        offset = request.offset if hasattr(request, 'offset') and request.offset is not None else None
-
         payload = GetTransactionPayload(
             user_id=user_id,
-            filters=filters,
             limit=limit,
-            offset=offset
+            offset=offset,
+            from_date=from_date,
+            to_date=to_date,
+            budget_id=budget_id,
         )
 
         transaction = TransactionUseCase()

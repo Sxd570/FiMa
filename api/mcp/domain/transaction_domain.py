@@ -6,7 +6,7 @@ from models.transaction_models import (
     TransactionType,
     GetTransactionsResponse,
     CreateTransactionResponse,
-    TransactionFilters,
+    GetTransactionsRequest,
 )
 from utils.api_request import APIRequest
 from utils.logger import Logger
@@ -23,22 +23,29 @@ class TransactionDomain:
     def get_transactions(
         self,
         user_id: UUID,
-        filters: Optional[TransactionFilters],
-        limit: int,
-        offset: int,
+        limit: Optional[int],
+        offset: Optional[int],
+        from_date: Optional[str] = None,
+        to_date: Optional[str] = None,
+        budget_id: Optional[UUID] = None,
     ) -> GetTransactionsResponse:
         try:
-            payload: Dict[str, Any] = {
-                TransactionConstants.KEY_LIMIT.value: limit,
-                TransactionConstants.KEY_OFFSET.value: offset,
-            }
-            if filters is not None:
-                payload[TransactionConstants.KEY_FILTERS.value] = filters.dict()
+            params: Dict[str, Any] = {}
+            if limit is not None:
+                params[TransactionConstants.KEY_LIMIT.value] = limit
+            if offset is not None:
+                params[TransactionConstants.KEY_OFFSET.value] = offset
+            if from_date is not None:
+                params["from_date"] = from_date
+            if to_date is not None:
+                params["to_date"] = to_date
+            if budget_id is not None:
+                params["budget_id"] = str(budget_id)
 
             api_request = APIRequest(
                 http_method=APIConstants.KEY_GET_METHOD.value,
                 endpoint=f"/transactions/{user_id}",
-                payload=payload,
+                params=params,
             )
             response = api_request.execute() or {}
             return GetTransactionsResponse(**response)

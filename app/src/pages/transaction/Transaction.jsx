@@ -14,22 +14,17 @@ export default function Transaction() {
 
   const fetchTransactions = async () => {
     try {
-      const filters = {};
-      if (fromDate) filters.from_date = fromDate;
-      if (toDate) filters.to_date = toDate;
-
-      const payload = {
-        filters: Object.keys(filters).length > 0 ? filters : {},
+      const params = {
         limit: parseInt(entriesPerPage),
         offset: 0,
       };
+      if (fromDate) params.from_date = fromDate;
+      if (toDate) params.to_date = toDate;
 
       const data = await getTransactions(
         "876822d6-091c-5188-80b7-f781dc93ae22",
-        payload
+        params
       );
-      // Assuming the API returns the list directly or in a property. 
-      // Adjust based on actual API response structure.
       setTransactions(data.transactions || (Array.isArray(data) ? data : []));
     } catch (error) {
       console.error("Failed to fetch transactions:", error);

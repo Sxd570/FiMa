@@ -30,13 +30,13 @@ class BudgetDomain:
     ) -> GetBudgetOverviewResponse:
         try:
             endpoint = f"/budget/{user_id}/overview"
-            payload = {
+            params = {
                 BudgetConstants.KEY_BUDGET_MONTH.value: budget_month
             }
             api_request = APIRequest(
                 http_method=APIConstants.KEY_GET_METHOD.value,
                 endpoint=endpoint,
-                payload=payload,
+                params=params,
             )
             response_data = api_request.execute() or {}
             return GetBudgetOverviewResponse(**response_data)
@@ -51,13 +51,13 @@ class BudgetDomain:
     ) -> GetBudgetDetailsResponse:
         try:
             endpoint = f"/budget/{user_id}/details"
-            payload = {
+            params = {
                 BudgetConstants.KEY_BUDGET_MONTH.value: budget_month
             }
             api_request = APIRequest(
                 http_method=APIConstants.KEY_GET_METHOD.value,
                 endpoint=endpoint,
-                payload=payload,
+                params=params,
             )
             response_data = api_request.execute() or {}
             return GetBudgetDetailsResponse(**response_data)

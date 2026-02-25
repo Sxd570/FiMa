@@ -26,7 +26,14 @@ class TransactionUseCase:
         try:
             self.user_id = payload.user_id
 
-            filters = payload.filters if payload.filters else {}
+            filters = {}
+            if payload.from_date:
+                filters["from_date"] = payload.from_date
+            if payload.to_date:
+                filters["to_date"] = payload.to_date
+            if payload.budget_id:
+                filters["budget_id"] = payload.budget_id
+
             limit = payload.limit if payload.limit else 15
             offset = payload.offset if payload.offset else 0
 
