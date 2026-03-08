@@ -197,12 +197,9 @@ def register_goal_tools(mcp: FastMCP) -> None:
     """
     Register goal tools on a FastMCP instance.
     """
-    mcp.tool()(_logging_middleware.wrap_tool(get_goals_overview))
-    mcp.tool()(_logging_middleware.wrap_tool(get_goal_details))
-    mcp.tool()(_logging_middleware.wrap_tool(create_goal))
-    mcp.tool()(_logging_middleware.wrap_tool(delete_goal))
-    mcp.tool()(_logging_middleware.wrap_tool(edit_goal))
-    mcp.tool()(_logging_middleware.wrap_tool(add_amount_to_goal))
-
-    # i want to do this format
+    mcp.tool(get_goals_overview)
+    mcp.tool(get_goal_details)
+    mcp.tool(create_goal)
+    mcp.tool(delete_goal)
+    mcp.tool(edit_goal)
     mcp.tool(add_amount_to_goal)

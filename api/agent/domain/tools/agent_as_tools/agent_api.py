@@ -3,6 +3,7 @@ from strands import tool
 from domain.agent.base import AgentFactory
 from domain.prompts import AGENT_API_SYSTEM_INSTRUCTIONS
 from domain.use_cases.mcp_client import get_mcp_client
+from domain.tools.get_current_date import get_current_date_tool
 
 from shared.logger import Logger
 logger = Logger(__name__)
@@ -35,10 +36,12 @@ def agent_api_agent_as_tool(callback_handler=None):
             with get_mcp_client() as mcp_client:
                 mcp_tools = mcp_client.list_tools_sync()
 
+                mcp_tools_list = mcp_tools + [get_current_date_tool()]
+
                 agent_factory = AgentFactory(
                     system_prompt=AGENT_API_SYSTEM_INSTRUCTIONS,
                     callback_handler=callback_handler,
-                    tool_list=mcp_tools
+                    tool_list=mcp_tools_list
                 )
 
                 agent = agent_factory.create_agent()

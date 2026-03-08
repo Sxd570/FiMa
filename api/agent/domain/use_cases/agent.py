@@ -7,6 +7,7 @@ from domain.agent.base import AgentFactory
 from domain.prompts import ORCHESTRATOR_SYSTEM_INSTRUCTIONS
 from domain.tools.agent_as_tools.agent_api import agent_api_agent_as_tool
 from domain.tools.agent_as_tools.ui_smith import ui_smith_agent_as_tool
+from domain.tools.get_current_date import get_current_date_tool
 from domain.use_cases.callback_handler import WebSocketCallback
 
 from shared.logger import Logger
@@ -31,9 +32,7 @@ class AgentUseCase:
                     agent_api_agent_as_tool(
                         callback_handler=WebSocketCallback(self.websocket, "agent_api")
                     ),
-                    ui_smith_agent_as_tool(
-                        callback_handler=WebSocketCallback(self.websocket, "ui_smith")
-                    )
+                    get_current_date_tool()
                 ]
             )
             return orchestrator_bot_factory.create_agent()
