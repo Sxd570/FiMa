@@ -4,7 +4,6 @@ from typing import Optional
 from uuid import UUID
 
 from domain.goal_domain import GoalDomain
-from middleware import LoggingMiddleware
 from models.goal_models import (
     GetGoalsOverviewResponse,
     GetGoalDetailsResponse,
@@ -18,7 +17,6 @@ from utils.logger import Logger
 
 logger = Logger(__name__)
 _goal_domain = GoalDomain()
-_logging_middleware = LoggingMiddleware(__name__)
 
 
 def get_goals_overview(

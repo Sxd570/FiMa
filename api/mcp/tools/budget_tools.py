@@ -2,7 +2,6 @@ from fastmcp import FastMCP
 from pydantic import Field
 
 from domain.budget_domain import BudgetDomain
-from middleware import LoggingMiddleware
 from models.budget_models import (
     GetBudgetOverviewResponse,
     GetBudgetDetailsResponse,
@@ -15,7 +14,6 @@ from utils.logger import Logger
 
 logger = Logger(__name__)
 _budget_domain = BudgetDomain()
-_logging_middleware = LoggingMiddleware(__name__)
 
 
 def get_budget_overview(

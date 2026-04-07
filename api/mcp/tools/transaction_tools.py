@@ -4,7 +4,6 @@ from typing import Optional
 from uuid import UUID
 
 from domain.transaction_domain import TransactionDomain
-from middleware import LoggingMiddleware
 from models.transaction_models import (
     TransactionType,
     GetTransactionsResponse,
@@ -15,7 +14,6 @@ from utils.logger import Logger
 
 logger = Logger(__name__)
 _transaction_domain = TransactionDomain()
-_logging_middleware = LoggingMiddleware(__name__)
 
 
 def get_transactions(
