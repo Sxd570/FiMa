@@ -29,7 +29,13 @@ def execute_code_tool(mcp_client: Any, user_id: str) -> Callable:
         A @tool decorated function ready to be used by the agent
     """
     # Import here to avoid circular imports
-    from domain.use_cases.sandbox_environment import execute_code as sandbox_execute
+    from domain.use_cases.sandbox_environment import SandboxEnvironment
+
+    # Create sandbox instance
+    sandbox = SandboxEnvironment(
+        mcp_client=mcp_client,
+        user_id=user_id,
+    )
 
     @tool
     def execute_code(code: str) -> str:
@@ -109,11 +115,7 @@ def execute_code_tool(mcp_client: Any, user_id: str) -> Callable:
         """
         logger.info("execute_code tool invoked")
 
-        execution_result = sandbox_execute(
-            code=code,
-            mcp_client=mcp_client,
-            user_id=user_id,
-        )
+        execution_result = sandbox.execute(code)
 
         if execution_result["success"]:
             try:
