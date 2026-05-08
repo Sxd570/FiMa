@@ -1,5 +1,6 @@
 from fastmcp import FastMCP
 from pydantic import Field
+from uuid import UUID
 
 from domain.budget_domain import BudgetDomain
 from models.budget_models import (
@@ -17,7 +18,7 @@ _budget_domain = BudgetDomain()
 
 
 def get_budget_overview(
-    user_id: str = Field(..., description="The ID of the user (UUID string)."),
+    user_id: UUID = Field(..., description="The unique ID of the user."),
     budget_month: str = Field(
         ..., description="The month for which to get the budget overview in 'YYYY-MM' format."
     ),
@@ -34,7 +35,7 @@ def get_budget_overview(
 
 
 def get_budget_details(
-    user_id: str = Field(..., description="The ID of the user (UUID string)."),
+    user_id: UUID = Field(..., description="The unique ID of the user."),
     budget_month: str = Field(
         ..., description="The month for which to get the budget details in 'YYYY-MM' format."
     ),
@@ -51,12 +52,12 @@ def get_budget_details(
 
 
 def edit_budget_limit(
-    user_id: str = Field(..., description="The ID of the user (UUID string)."),
-    budget_id: str = Field(
-        ..., description="The ID of the budget to be edited (UUID string)."
+    user_id: UUID = Field(..., description="The unique ID of the user."),
+    budget_id: UUID = Field(
+        ..., description="The unique ID of the budget to be edited."
     ),
     new_budget_limit: float = Field(
-        ..., description="The new limit to be set for the budget."
+        ..., gt=1, description="The new limit to be set for the budget (must be greater than 1)."
     ),
 ) -> EditBudgetLimitResponse:
     """Edit the limit of an existing budget."""
@@ -72,9 +73,9 @@ def edit_budget_limit(
 
 
 def delete_budget(
-    user_id: str = Field(..., description="The ID of the user (UUID string)."),
-    budget_id: str = Field(
-        ..., description="The ID of the budget to be deleted (UUID string)."
+    user_id: UUID = Field(..., description="The unique ID of the user."),
+    budget_id: UUID = Field(
+        ..., description="The unique ID of the budget to be deleted."
     ),
 ) -> DeleteBudgetResponse:
     """Delete an existing budget."""
@@ -89,8 +90,8 @@ def delete_budget(
 
 
 def create_budget(
-    user_id: str = Field(..., description="The ID of the user (UUID string)."),
-    budget_limit: float = Field(..., description="The limit for the new budget."),
+    user_id: UUID = Field(..., description="The unique ID of the user."),
+    budget_limit: float = Field(..., gt=1, description="The limit for the new budget (must be greater than 1)."),
     budget_name: str = Field(..., description="The name of the new budget."),
     budget_month: str = Field(
         ..., description="The month for which the budget is being created in 'YYYY-MM' format."

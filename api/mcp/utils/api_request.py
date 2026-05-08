@@ -45,17 +45,19 @@ class APIRequest:
                 params=self.params,
                 json=self.payload
             )
-            if response.status_code in (200, 202):
+            if response.status_code in (200, 201, 202):
                 return response.json()
             else:
                 logger.warning(
                     f"API returned non-success status {response.status_code} "
                     f"for {self.http_method} {self.url}: {response.text}"
                 )
-                return {}
+                raise ValueError(
+                    f"API error {response.status_code}: {response.text}"
+                )
         except Exception as e:
-            logger.error(f"Error occurred while making API request: {e}")
-            return {}
+            logger.error(f"Error occurred while making API request: {str(e)}")
+            raise
         
 
 

@@ -94,8 +94,8 @@ def create_transaction(
     ),
     transaction_amount: float = Field(
         ...,
-        gt=0,
-        description="Amount of the transaction (must be greater than 0).",
+        gt=1,
+        description="Amount of the transaction (must be greater than 1).",
     ),
     transaction_date: str = Field(
         ...,

@@ -5,15 +5,21 @@ Uses strands-agents' built-in MCPClient with streamable HTTP transport
 to connect to the FastMCP server (stateless_http=True).
 """
 
+import os
+
+from dotenv import load_dotenv
 from mcp.client.streamable_http import streamable_http_client
 from strands.tools.mcp import MCPClient
 
 from shared.logger import Logger
 
 
+load_dotenv()
 logger = Logger(__name__)
 
-MCP_SERVER_URL = "http://localhost:8002"
+
+def _create_transport(mcp_server_url: str):
+    return streamable_http_client(f"{mcp_server_url}/mcp")
 
 
 def get_mcp_client() -> MCPClient:
@@ -32,5 +38,9 @@ def get_mcp_client() -> MCPClient:
     Returns:
         MCPClient: A strands MCPClient instance using streamable HTTP transport.
     """
-    logger.debug(f"Creating MCP client for {MCP_SERVER_URL}")
-    return MCPClient(lambda: streamable_http_client(f"{MCP_SERVER_URL}/mcp"))
+    mcp_server_url = os.getenv("MCP_SERVER_URL")
+    if not mcp_server_url:
+        raise ValueError("MCP_SERVER_URL environment variable is not set")
+    
+    logger.debug(f"Creating MCP client for {mcp_server_url}")
+    return MCPClient(lambda: _create_transport(mcp_server_url))

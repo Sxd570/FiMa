@@ -6,7 +6,6 @@ from models.transaction_models import (
     TransactionType,
     GetTransactionsResponse,
     CreateTransactionResponse,
-    GetTransactionsRequest,
 )
 from utils.api_request import APIRequest
 from utils.logger import Logger
@@ -36,9 +35,9 @@ class TransactionDomain:
             if offset is not None:
                 params[TransactionConstants.KEY_OFFSET.value] = offset
             if from_date is not None:
-                params["from_date"] = from_date
+                params[TransactionConstants.KEY_FROM_DATE.value] = from_date
             if to_date is not None:
-                params["to_date"] = to_date
+                params[TransactionConstants.KEY_TO_DATE.value] = to_date
             if budget_id is not None:
                 params["budget_id"] = str(budget_id)
 
@@ -47,7 +46,7 @@ class TransactionDomain:
                 endpoint=f"/transactions/{user_id}",
                 params=params,
             )
-            response = api_request.execute() or {}
+            response = api_request.execute()
             return GetTransactionsResponse(**response)
         except Exception as e:
             logger.error(f"Error in TransactionDomain.get_transactions: {str(e)}")
@@ -76,7 +75,7 @@ class TransactionDomain:
                 endpoint=f"/transactions/{user_id}",
                 payload=payload,
             )
-            response = api_request.execute() or {}
+            response = api_request.execute()
             return CreateTransactionResponse(**response)
         except Exception as e:
             logger.error(f"Error in TransactionDomain.create_transaction: {str(e)}")

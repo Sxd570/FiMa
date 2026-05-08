@@ -70,8 +70,8 @@ def create_goal(
     ),
     goal_target_amount: float = Field(
         ...,
-        gt=0,
-        description="Target amount for the goal (must be greater than 0).",
+        gt=1,
+        description="Target amount for the goal (must be greater than 1).",
     ),
 ) -> CreateGoalResponse:
     """Create a new goal for a user."""
@@ -132,14 +132,14 @@ def edit_goal(
     ),
     goal_target_amount: Optional[float] = Field(
         None,
-        gt=0,
-        description="The new target amount for the goal.",
+        gt=1,
+        description="The new target amount for the goal (must be greater than 1).",
     ),
     goal_current_amount: Optional[float] = Field(
         None,
-        ge=0,
+        gt=1,
         description=(
-            "The updated current amount saved towards the goal."
+            "The updated current amount saved towards the goal (must be greater than 1)."
         ),
     ),
 ) -> EditGoalResponse:
@@ -173,9 +173,9 @@ def add_amount_to_goal(
     ),
     amount_to_add: float = Field(
         ...,
-        gt=0,
+        gt=1,
         description=(
-            "The amount to add to the goal's current amount."
+            "The amount to add to the goal's current amount (must be greater than 1)."
         ),
     ),
 ) -> AddAmountToGoalResponse:

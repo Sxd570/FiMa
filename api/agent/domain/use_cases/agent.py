@@ -30,7 +30,8 @@ class AgentUseCase:
                 callback_handler=WebSocketCallback(self.websocket, "orchestrator"),
                 tool_list=[
                     agent_api_agent_as_tool(
-                        callback_handler=WebSocketCallback(self.websocket, "agent_api")
+                        callback_handler=WebSocketCallback(self.websocket, "agent_api"),
+                        user_id=self.user_id
                     ),
                     get_current_date_tool()
                 ]

@@ -13,7 +13,7 @@ class GetBudgetOverviewResponse(BaseModel):
 
 
 class BudgetDetail(BaseModel):
-    budget_id: Optional[str] = Field(None, description="Unique identifier for the budget.")
+    budget_id: Optional[UUID] = Field(None, description="Unique identifier for the budget.")
     budget_name: Optional[str] = Field(None, description="Name of the budget category.")
     budget_allocated_amount: Optional[float] = Field(None, description="Amount allocated for the budget.")
     budget_spent_amount: Optional[float] = Field(None, description="Amount spent from the budget.")
@@ -38,4 +38,4 @@ class DeleteBudgetResponse(BaseModel):
 
 class CreateBudgetResponse(BaseModel):
     message: Optional[str] = Field(None, description="Confirmation message indicating the budget has been created.")
-    budget_id: Optional[str] = Field(None, description="The ID of the newly created budget.")
+    budget_id: Optional[UUID] = Field(None, description="The ID of the newly created budget.")

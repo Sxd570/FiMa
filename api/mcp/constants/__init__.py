@@ -7,6 +7,8 @@ class TransactionConstants(Enum):
     KEY_TRANSACTION_INFO = "transaction_info"
     KEY_TRANSACTION_AMOUNT = "transaction_amount"
     KEY_TRANSACTION_DATE = "transaction_date"
+    KEY_FROM_DATE = "from_date"
+    KEY_TO_DATE = "to_date"
     KEY_FILTERS = "filters"
     KEY_LIMIT = "limit"
     KEY_OFFSET = "offset"

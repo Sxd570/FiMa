@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Optional
 from uuid import UUID
 
 from constants import APIConstants, GoalConstants
@@ -29,7 +29,7 @@ class GoalDomain:
                 http_method=APIConstants.KEY_GET_METHOD.value,
                 endpoint=endpoint,
             )
-            response = api_request.execute() or {}
+            response = api_request.execute()
             return GetGoalsOverviewResponse(**response)
         except Exception as e:
             logger.error(f"Error in GoalDomain.get_goals_overview: {str(e)}")
@@ -42,7 +42,7 @@ class GoalDomain:
                 http_method=APIConstants.KEY_GET_METHOD.value,
                 endpoint=endpoint,
             )
-            response = api_request.execute() or {}
+            response = api_request.execute()
             return GetGoalDetailsResponse(**response)
         except Exception as e:
             logger.error(f"Error in GoalDomain.get_goal_details: {str(e)}")
@@ -67,7 +67,7 @@ class GoalDomain:
                 endpoint=endpoint,
                 payload=payload,
             )
-            response = api_request.execute() or {}
+            response = api_request.execute()
             return CreateGoalResponse(**response)
         except Exception as e:
             logger.error(f"Error in GoalDomain.create_goal: {str(e)}")
@@ -88,7 +88,7 @@ class GoalDomain:
                 endpoint=endpoint,
                 payload=payload,
             )
-            response = api_request.execute() or {}
+            response = api_request.execute()
             return DeleteGoalResponse(**response)
         except Exception as e:
             logger.error(f"Error in GoalDomain.delete_goal: {str(e)}")
@@ -124,7 +124,7 @@ class GoalDomain:
                 endpoint=endpoint,
                 payload=payload,
             )
-            response = api_request.execute() or {}
+            response = api_request.execute()
             return EditGoalResponse(**response)
         except Exception as e:
             logger.error(f"Error in GoalDomain.edit_goal: {str(e)}")
@@ -147,7 +147,7 @@ class GoalDomain:
                 endpoint=endpoint,
                 payload=payload,
             )
-            response = api_request.execute() or {}
+            response = api_request.execute()
             return AddAmountToGoalResponse(**response)
         except Exception as e:
             logger.error(f"Error in GoalDomain.add_amount_to_goal: {str(e)}")

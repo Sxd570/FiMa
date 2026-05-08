@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from uuid import UUID
 
 from constants import APIConstants, BudgetConstants
 from models.budget_models import (
@@ -25,7 +25,7 @@ class BudgetDomain:
 
     def get_budget_overview(
         self,
-        user_id: str,
+        user_id: UUID,
         budget_month: str,
     ) -> GetBudgetOverviewResponse:
         try:
@@ -38,7 +38,7 @@ class BudgetDomain:
                 endpoint=endpoint,
                 params=params,
             )
-            response_data = api_request.execute() or {}
+            response_data = api_request.execute()
             return GetBudgetOverviewResponse(**response_data)
         except Exception as e:
             logger.error(f"Error in BudgetDomain.get_budget_overview: {str(e)}")
@@ -46,7 +46,7 @@ class BudgetDomain:
 
     def get_budget_details(
         self,
-        user_id: str,
+        user_id: UUID,
         budget_month: str,
     ) -> GetBudgetDetailsResponse:
         try:
@@ -59,7 +59,7 @@ class BudgetDomain:
                 endpoint=endpoint,
                 params=params,
             )
-            response_data = api_request.execute() or {}
+            response_data = api_request.execute()
             return GetBudgetDetailsResponse(**response_data)
         except Exception as e:
             logger.error(f"Error in BudgetDomain.get_budget_details: {str(e)}")
@@ -67,8 +67,8 @@ class BudgetDomain:
 
     def edit_budget_limit(
         self,
-        user_id: str,
-        budget_id: str,
+        user_id: UUID,
+        budget_id: UUID,
         new_budget_limit: float,
     ) -> EditBudgetLimitResponse:
         try:
@@ -81,7 +81,7 @@ class BudgetDomain:
                 endpoint=endpoint,
                 payload=payload,
             )
-            response_data = api_request.execute() or {}
+            response_data = api_request.execute()
             return EditBudgetLimitResponse(**response_data)
         except Exception as e:
             logger.error(f"Error in BudgetDomain.edit_budget_limit: {str(e)}")
@@ -89,8 +89,8 @@ class BudgetDomain:
 
     def delete_budget(
         self,
-        user_id: str,
-        budget_id: str,
+        user_id: UUID,
+        budget_id: UUID,
     ) -> DeleteBudgetResponse:
         try:
             endpoint = f"/budget/{user_id}/delete/{budget_id}"
@@ -98,7 +98,7 @@ class BudgetDomain:
                 http_method=APIConstants.KEY_DELETE_METHOD.value,
                 endpoint=endpoint,
             )
-            response_data = api_request.execute() or {}
+            response_data = api_request.execute()
             return DeleteBudgetResponse(**response_data)
         except Exception as e:
             logger.error(f"Error in BudgetDomain.delete_budget: {str(e)}")
@@ -106,7 +106,7 @@ class BudgetDomain:
 
     def create_budget(
         self,
-        user_id: str,
+        user_id: UUID,
         budget_limit: float,
         budget_name: str,
         budget_month: str,
@@ -125,7 +125,7 @@ class BudgetDomain:
                 endpoint=endpoint,
                 payload=payload,
             )
-            response_data = api_request.execute() or {}
+            response_data = api_request.execute()
             return CreateBudgetResponse(**response_data)
         except Exception as e:
             logger.error(f"Error in BudgetDomain.create_budget: {str(e)}")
