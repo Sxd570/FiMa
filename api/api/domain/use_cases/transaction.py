@@ -37,16 +37,23 @@ class TransactionUseCase:
             limit = payload.limit if payload.limit else 15
             offset = payload.offset if payload.offset else 0
 
+            # Fetch one extra record to determine has_more
             db_request = GetTransactionDBRequest(
                 user_id=self.user_id,
                 filters=filters,
-                limit=limit,
+                limit=limit + 1,
                 offset=offset
             )
 
             transactions_data = self.transaction_database.get_transactions(
                 db_request=db_request
             )
+
+            # Check if there are more records
+            has_more = len(transactions_data.transactions) > limit
+            
+            # Return only the requested limit
+            transactions_to_return = transactions_data.transactions[:limit]
 
             transaction_details = GetTransactionResponse(
                 transactions=[
@@ -57,8 +64,9 @@ class TransactionUseCase:
                         transaction_amount=float(transaction.transaction_amount),
                         transaction_date=transaction.transaction_date,
                         budget_name=transaction.budget_name
-                    ) for transaction in transactions_data.transactions
-                ]
+                    ) for transaction in transactions_to_return
+                ],
+                has_more=has_more
             )
 
             return transaction_details

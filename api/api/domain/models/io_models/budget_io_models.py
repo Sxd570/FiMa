@@ -14,6 +14,8 @@ class GetBudgetOverviewPayload(BaseModel):
 
 class GetBudgetDetailsRequest(BaseModel):
     month: str = Field(..., description="The month for which the budget details are requested, formatted as 'YYYY-MM'.")
+    limit: Optional[int] = Field(None, ge=1, description="Limit the number of budget details returned")
+    offset: Optional[int] = Field(None, ge=0, description="Offset for pagination")
 
 
 class GetBudgetOverviewResponse(BaseModel):
@@ -56,11 +58,14 @@ class BudgetDetailsDBResponse(BaseModel):
 
 class GetBudgetDetailsResponse(BaseModel):
     budget_details: List[BudgetDetail] = Field(..., description="List of budget details for the specified month")
+    has_more: bool = Field(False, description="Indicates if there are more budget details available")
 
 
 class GetBudgetDetailsPayload(BaseModel):
     user_id: str = Field(..., description="User ID of the person requesting the budget details")
     date: str = Field(..., description="The month for which the budget details are requested, formatted as 'YYYY-MM'")
+    limit: Optional[int] = Field(None, ge=1, description="Limit the number of budget details returned")
+    offset: Optional[int] = Field(None, ge=0, description="Offset for pagination")
 
 
 class GetBudgetDetailsDBRequest(BaseModel):

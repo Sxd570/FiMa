@@ -17,6 +17,7 @@ from domain.models.io_models.goals_io_models import (
     GetGoalsDashboardPayload,
     GetGoalsDashboardDBRequest,
     GetGoalsDBRequest,
+    GetGoalDetailsPayload,
     UpdateGoalDetailPayload,
     EditGoalDetailDBRequest,
     DeleteGoalDetailDBRequest,
@@ -60,11 +61,27 @@ class GoalsUseCase:
             raise e
 
 
-    def get_goal_details(self, user_id: str) -> GoalsDetailsResponse:
+    def get_goal_details(self, payload: GetGoalDetailsPayload) -> GoalsDetailsResponse:
         try:
-            self.user_id = user_id
-            db_request = GetGoalsDBRequest(user_id=self.user_id)
+            self.user_id = payload.user_id
+
+            limit = payload.limit if payload.limit else 15
+            offset = payload.offset if payload.offset else 0
+
+            # Fetch one extra record to determine has_more
+            db_request = GetGoalsDBRequest(
+                user_id=self.user_id,
+                limit=limit + 1,
+                offset=offset
+            )
             goal_details = self.goal_database.get_goal_details(db_request=db_request)
+
+            # Check if there are more records
+            has_more = len(goal_details.goal_details) > limit
+            
+            # Return only the requested limit
+            goals_to_return = goal_details.goal_details[:limit]
+
             return GoalsDetailsResponse(
                 goal_details=[
                     GoalDetail(
@@ -80,8 +97,9 @@ class GoalsUseCase:
                         ),
                         is_goal_reached=goal.is_goal_reached,
                     )
-                    for goal in goal_details.goal_details
-                ]
+                    for goal in goals_to_return
+                ],
+                has_more=has_more
             )
         except Exception as e:
             logger.error(f"Error in get_goal_details use case: {e}")

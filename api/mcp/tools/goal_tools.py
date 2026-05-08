@@ -42,10 +42,25 @@ def get_goal_details(
             "The unique ID of the user whose goal details are to be fetched."
         ),
     ),
+    limit: int = Field(
+        15,
+        gt=0,
+        le=100,
+        description="Maximum number of goals to return (default: 15, max: 100).",
+    ),
+    offset: int = Field(
+        0,
+        ge=0,
+        description="Number of goals to skip before starting to collect the result set.",
+    ),
 ) -> GetGoalDetailsResponse:
     """Fetch detailed goal information for a specific user."""
     try:
-        return _goal_domain.get_goal_details(user_id=user_id)
+        return _goal_domain.get_goal_details(
+            user_id=user_id,
+            limit=limit,
+            offset=offset,
+        )
     except Exception as e:
         logger.error(f"Error in tool get_goal_details: {str(e)}")
         raise

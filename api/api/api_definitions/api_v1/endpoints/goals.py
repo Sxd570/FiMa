@@ -12,6 +12,7 @@ from domain.models.io_models.goals_io_models import (
     AddAmountToGoalDetailRequest,
     GetGoalsDashboardRequest,
     GetGoalsDashboardPayload,
+    GetGoalDetailsPayload,
     GoalsOverviewResponse,
     GoalsDetailsResponse,
     CreateGoalResponse,
@@ -36,10 +37,19 @@ async def get_goals_overview(user_id: str):
     
 
 @router.get("/goals/{user_id}", response_model=GoalsDetailsResponse)
-async def get_goal_details(user_id: str):
+async def get_goal_details(
+    user_id: str,
+    limit: int = None,
+    offset: int = None
+):
     try:
         goals = GoalsUseCase()
-        goal_details = goals.get_goal_details(user_id)
+        payload = GetGoalDetailsPayload(
+            user_id=user_id,
+            limit=limit,
+            offset=offset
+        )
+        goal_details = goals.get_goal_details(payload)
         return goal_details
     except Exception as e:
         logger.error(f"Error in get_goal_details: {e}")

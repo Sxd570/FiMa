@@ -81,12 +81,24 @@ class BudgetUseCase:
             self.user_id = payload.user_id
             self.date = payload.date
 
+            limit = payload.limit if payload.limit else 15
+            offset = payload.offset if payload.offset else 0
+
+            # Fetch one extra record to determine has_more
             db_request = GetBudgetDetailsDBRequest(
                 user_id=self.user_id,
-                date=self.date
+                date=self.date,
+                limit=limit + 1,
+                offset=offset
             )
 
             budget_details = self.budget_database.get_budget_details(db_request=db_request)
+
+            # Check if there are more records
+            has_more = len(budget_details.budget_details) > limit
+            
+            # Return only the requested limit
+            details_to_return = budget_details.budget_details[:limit]
 
             return GetBudgetDetailsResponse(
                 budget_details=[
@@ -107,8 +119,9 @@ class BudgetUseCase:
                             else None
                         ),
                     )
-                    for detail in budget_details.budget_details
-                ]
+                    for detail in details_to_return
+                ],
+                has_more=has_more
             )
 
         except Exception as e:

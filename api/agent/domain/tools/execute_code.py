@@ -75,10 +75,17 @@ def execute_code_tool(mcp_client: Any, user_id: str) -> Callable:
         **Important Rules:**
             1. Store your final output in a variable named `result`
             2. Only use call_tool() for GET/read operations
-            3. For pagination, use loops with offset/limit parameters
+            3. For pagination, use the `has_more` field in responses
             4. Respect tool schemas and required parameters
             5. The code has a 30 second timeout
             6. Return only data relevant to the user's request
+
+        **Pagination with has_more:**
+        All paginated endpoints return a `has_more` boolean field indicating
+        if more records exist. Use this instead of checking if list is empty:
+            - get_transactions: returns {transactions: [...], has_more: bool}
+            - get_budget_details: returns {budget_details: [...], has_more: bool}
+            - get_goal_details: returns {goal_details: [...], has_more: bool}
 
         **Example - Fetch all transactions with pagination:**
         ```python
@@ -95,10 +102,12 @@ def execute_code_tool(mcp_client: Any, user_id: str) -> Callable:
             )
 
             transactions = response.get("transactions", [])
-            if not transactions:
+            all_transactions.extend(transactions)
+
+            # Use has_more to check if more records exist
+            if not response.get("has_more", False):
                 break
 
-            all_transactions.extend(transactions)
             offset += limit
 
         result = {

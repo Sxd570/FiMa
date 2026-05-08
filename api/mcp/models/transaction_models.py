@@ -19,6 +19,7 @@ class TransactionItem(BaseModel):
 
 class GetTransactionsResponse(BaseModel):
     transactions: Optional[List[TransactionItem]] = Field(None, description="List of transaction objects.")
+    has_more: Optional[bool] = Field(None, description="Indicates if there are more transactions available.")
 
 
 class CreateTransactionResponse(BaseModel):

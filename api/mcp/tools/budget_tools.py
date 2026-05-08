@@ -39,12 +39,25 @@ def get_budget_details(
     budget_month: str = Field(
         ..., description="The month for which to get the budget details in 'YYYY-MM' format."
     ),
+    limit: int = Field(
+        15,
+        gt=0,
+        le=100,
+        description="Maximum number of budget details to return (default: 15, max: 100).",
+    ),
+    offset: int = Field(
+        0,
+        ge=0,
+        description="Number of budget details to skip before starting to collect the result set.",
+    ),
 ) -> GetBudgetDetailsResponse:
     """Get details of all budgets created by a user for a specific month."""
     try:
         return _budget_domain.get_budget_details(
             user_id=user_id,
             budget_month=budget_month,
+            limit=limit,
+            offset=offset,
         )
     except Exception as e:
         logger.error(f"Error in tool get_budget_details: {str(e)}")

@@ -26,6 +26,7 @@ class BudgetDetail(BaseModel):
 
 class GetBudgetDetailsResponse(BaseModel):
     budget_details: Optional[List[BudgetDetail]] = Field(None, description="List of detailed budget information for the given user and month.")
+    has_more: Optional[bool] = Field(None, description="Indicates if there are more budget details available.")
 
 
 class EditBudgetLimitResponse(BaseModel):

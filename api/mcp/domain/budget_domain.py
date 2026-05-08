@@ -48,11 +48,15 @@ class BudgetDomain:
         self,
         user_id: UUID,
         budget_month: str,
+        limit: int = 15,
+        offset: int = 0,
     ) -> GetBudgetDetailsResponse:
         try:
             endpoint = f"/budget/{user_id}/details"
             params = {
-                BudgetConstants.KEY_BUDGET_MONTH.value: budget_month
+                BudgetConstants.KEY_BUDGET_MONTH.value: budget_month,
+                "limit": limit,
+                "offset": offset,
             }
             api_request = APIRequest(
                 http_method=APIConstants.KEY_GET_METHOD.value,

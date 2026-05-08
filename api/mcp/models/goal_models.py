@@ -23,6 +23,7 @@ class GoalDetail(BaseModel):
 
 class GetGoalDetailsResponse(BaseModel):
     goal_details: Optional[List[GoalDetail]] = Field(None, description="List of goal detail objects for the user.")
+    has_more: Optional[bool] = Field(None, description="Indicates if there are more goals available.")
 
 
 class CreateGoalResponse(BaseModel):

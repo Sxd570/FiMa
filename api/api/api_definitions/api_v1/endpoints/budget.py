@@ -43,13 +43,20 @@ async def get_budget_overview(user_id: str, month: str):
     
 
 @router.get("/budget/{user_id}/details", response_model=GetBudgetDetailsResponse)
-async def get_budget_details(user_id: str, month: str):
+async def get_budget_details(
+    user_id: str,
+    month: str,
+    limit: int = None,
+    offset: int = None
+):
     try:
         budget = BudgetUseCase()
 
         payload = GetBudgetDetailsPayload(
             user_id=user_id,
-            date=month
+            date=month,
+            limit=limit,
+            offset=offset
         )
 
         budget_details = budget.get_budget_details(

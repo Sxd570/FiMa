@@ -35,12 +35,22 @@ class GoalDomain:
             logger.error(f"Error in GoalDomain.get_goals_overview: {str(e)}")
             raise
 
-    def get_goal_details(self, user_id: UUID) -> GetGoalDetailsResponse:
+    def get_goal_details(
+        self,
+        user_id: UUID,
+        limit: int = 15,
+        offset: int = 0,
+    ) -> GetGoalDetailsResponse:
         try:
             endpoint = f"/goals/{user_id}"
+            params = {
+                "limit": limit,
+                "offset": offset,
+            }
             api_request = APIRequest(
                 http_method=APIConstants.KEY_GET_METHOD.value,
                 endpoint=endpoint,
+                params=params,
             )
             response = api_request.execute()
             return GetGoalDetailsResponse(**response)

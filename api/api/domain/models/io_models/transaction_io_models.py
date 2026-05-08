@@ -41,6 +41,7 @@ class GetTransactionDBResponse(BaseModel):
 
 class GetTransactionResponse(BaseModel):
     transactions: List[TransactionDetail] = Field([], description="List of transactions")
+    has_more: bool = Field(False, description="Indicates if there are more transactions available")
 
 
 class CreateTransactionRequest(BaseModel):

@@ -169,6 +169,12 @@ class BudgetDatabase(BudgetInterface):
                 *filter_group
             )
 
+            if db_request.limit:
+                query = query.limit(db_request.limit)
+
+            if db_request.offset:
+                query = query.offset(db_request.offset)
+
             db_response = query.all()
 
             if not db_response:

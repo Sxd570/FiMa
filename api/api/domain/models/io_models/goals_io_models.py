@@ -103,6 +103,12 @@ class GetGoalsDBRequest(BaseModel):
     offset: Optional[int] = Field(None, description="Offset for pagination")
 
 
+class GetGoalDetailsPayload(BaseModel):
+    user_id: str = Field(..., description="Unique identifier for the user")
+    limit: Optional[int] = Field(None, ge=1, description="Number of goals to return")
+    offset: Optional[int] = Field(None, ge=0, description="Offset for pagination")
+
+
 class CreateGoalDetailRequest(BaseModel):
     goal_name: str = Field(..., description="Name of the goal")
     goal_description: Optional[str] = Field(None, description="Description of the goal")
@@ -149,6 +155,7 @@ class GoalsOverviewResponse(BaseModel):
 
 class GoalsDetailsResponse(BaseModel):
     goal_details: Optional[List[GoalDetail]] = None
+    has_more: bool = Field(False, description="Indicates if there are more goals available")
 
 
 class CreateGoalResponse(BaseModel):
