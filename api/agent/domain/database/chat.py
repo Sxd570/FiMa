@@ -1,5 +1,5 @@
 from shared.logger import Logger
-from domain.models.tables.conversation import Conversations
+from domain.models.schemas.conversation import Conversations
 from domain.models.io_models.conversations_io_model import (
     ListConversationDBResponse,
     Conversation, ListConversationDBPayload,

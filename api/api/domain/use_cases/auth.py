@@ -47,7 +47,6 @@ class AuthUseCase:
             return login_response
 
         except (UserNotFoundException, InvalidCredentialsException) as e:
-            raise e
             logger.error(f"Login usecase failed: {str(e)}")
             raise e
         
