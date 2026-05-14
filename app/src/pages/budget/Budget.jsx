@@ -33,7 +33,7 @@ export default function Budget() {
       return;
     }
 
-    response_data = await createBudgetService("876822d6-091c-5188-80b7-f781dc93ae22", {
+    response_data = await createBudgetService("a9c0963f-337c-5884-885c-8c8f8f8d3d82", {
       budget_name: newBudgetName,
       budget_limit: newBudgetLimit,
       budget_month: selectedMonth
@@ -49,7 +49,7 @@ export default function Budget() {
   const getBudgetOverviewData = useCallback(async () => {
     try {
       const data = await getBudgetOverview(
-        "876822d6-091c-5188-80b7-f781dc93ae22", 
+        "a9c0963f-337c-5884-885c-8c8f8f8d3d82", 
         selectedMonth
       );
       setOverviewData(data);
@@ -61,7 +61,7 @@ export default function Budget() {
   const getBudgetDetailData = useCallback(async () => {
     try {
       const data = await getBudgetDetails(
-        "876822d6-091c-5188-80b7-f781dc93ae22",
+        "a9c0963f-337c-5884-885c-8c8f8f8d3d82",
         selectedMonth
       );
       setBudgets(data.budget_details || []);

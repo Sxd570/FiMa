@@ -150,7 +150,7 @@ class GoalDomain:
             endpoint = f"/goals/{user_id}"
             payload = {
                 GoalConstants.KEY_GOAL_ID.value: str(goal_id),
-                GoalConstants.KEY_GOAL_CURRENT_AMOUNT.value: amount_to_add,
+                GoalConstants.KEY_AMOUNT_TO_ADD.value: amount_to_add,
             }
             api_request = APIRequest(
                 http_method=APIConstants.KEY_PATCH_METHOD.value,

@@ -22,7 +22,7 @@ export default function Penny() {
   const connectWebSocket = () => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) return;
 
-    const ws = new WebSocket("ws://localhost:8001/penny/v1/ws/876822d6-091c-5188-80b7-f781dc93ae22/chat");
+    const ws = new WebSocket("ws://localhost:8001/penny/v1/ws/a9c0963f-337c-5884-885c-8c8f8f8d3d82/chat");
     wsRef.current = ws;
 
     ws.onopen = () => console.log("WS connected");
