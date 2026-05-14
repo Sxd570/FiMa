@@ -2,7 +2,7 @@ import uuid
 import requests
 from datetime import datetime
 
-USER_ID = "876822d6-091c-5188-80b7-f781dc93ae22"
+USER_ID = "a9c0963f-337c-5884-885c-8c8f8f8d3d82"
 BASE_URL = "http://localhost:8000/api/v1"
 
 BUDGET_IDS: dict = {}

@@ -44,8 +44,8 @@ class GoalDomain:
         try:
             endpoint = f"/goals/{user_id}"
             params = {
-                "limit": limit,
-                "offset": offset,
+                GoalConstants.KEY_LIMIT.value: limit,
+                GoalConstants.KEY_OFFSET.value: offset,
             }
             api_request = APIRequest(
                 http_method=APIConstants.KEY_GET_METHOD.value,

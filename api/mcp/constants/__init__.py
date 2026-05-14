@@ -19,7 +19,8 @@ class TransactionConstants(Enum):
 
 
 class BudgetConstants(Enum):
-    KEY_BUDGET_MONTH = "month"
+    KEY_BUDGET_MONTH = "budget_month"
+    KEY_BUDGET_MONTH_QUERY = "month"
     KEY_USER_ID = "user_id"
     KEY_BUDGET_ID = "budget_id"
     KEY_NEW_BUDGET_LIMIT = "new_budget_limit"
@@ -27,6 +28,8 @@ class BudgetConstants(Enum):
     KEY_TRANSACTION_TYPE = "transaction_type"
     KEY_DESCRIPTION = "description"
     KEY_BUDGET_LIMIT = "budget_limit"
+    KEY_LIMIT = "limit"
+    KEY_OFFSET = "offset"
 
 
 class APIConstants(Enum):
@@ -45,4 +48,7 @@ class GoalConstants(Enum):
     KEY_GOAL_TARGET_AMOUNT = "goal_target_amount"
     KEY_GOAL_CURRENT_AMOUNT = "goal_current_amount"
     KEY_GOAL_COMPLETED = "is_goal_completed"
+    KEY_LIMIT = "limit"
+    KEY_OFFSET = "offset"
+    KEY_AMOUNT_TO_ADD = "amount_to_add"
 

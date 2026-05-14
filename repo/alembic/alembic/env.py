@@ -41,8 +41,8 @@ target_metadata = None
 #     return f"mysql+pymysql://{user}:{password}@{host}:{port}/{db}"
 
 def get_url():
-    user = "fima"
-    password = "Fima1234!"
+    user = "devuser"
+    password = "tR5nQb8j"
     host = "localhost"
     port = "3307"
     db = "fima"

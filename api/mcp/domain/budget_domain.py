@@ -31,7 +31,7 @@ class BudgetDomain:
         try:
             endpoint = f"/budget/{user_id}/overview"
             params = {
-                BudgetConstants.KEY_BUDGET_MONTH.value: budget_month
+                BudgetConstants.KEY_BUDGET_MONTH_QUERY.value: budget_month
             }
             api_request = APIRequest(
                 http_method=APIConstants.KEY_GET_METHOD.value,
@@ -54,9 +54,9 @@ class BudgetDomain:
         try:
             endpoint = f"/budget/{user_id}/details"
             params = {
-                BudgetConstants.KEY_BUDGET_MONTH.value: budget_month,
-                "limit": limit,
-                "offset": offset,
+                BudgetConstants.KEY_BUDGET_MONTH_QUERY.value: budget_month,
+                BudgetConstants.KEY_LIMIT.value: limit,
+                BudgetConstants.KEY_OFFSET.value: offset,
             }
             api_request = APIRequest(
                 http_method=APIConstants.KEY_GET_METHOD.value,

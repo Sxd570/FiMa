@@ -1,7 +1,7 @@
 {
 	"servers": {
 		"fima-mcp-server": {
-			"url": "http://localhost:8002/mcp",
+			"url": "http://127.0.0.1:8002/mcp",
 			"type": "http"
 		}
 	},

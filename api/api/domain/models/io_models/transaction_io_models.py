@@ -19,11 +19,9 @@ class GetTransactionPayload(BaseModel):
 
 class GetTransactionDBRequest(BaseModel):
     user_id: str
+    filters: Optional[dict] = Field(None, description="Filters to apply to the transaction query")
     limit: Optional[int] = Field(None, ge=1, description="Limit the number of transactions returned")
     offset: Optional[int] = Field(None, ge=0, description="Offset for pagination")
-    from_date: Optional[str] = Field(None, description="Filter transactions from this date (YYYY-MM-DD)")
-    to_date: Optional[str] = Field(None, description="Filter transactions up to this date (YYYY-MM-DD)")
-    budget_id: Optional[str] = Field(None, description="Filter transactions by budget ID")
 
 
 class TransactionDetail(BaseModel):

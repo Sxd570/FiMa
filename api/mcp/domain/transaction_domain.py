@@ -39,7 +39,7 @@ class TransactionDomain:
             if to_date is not None:
                 params[TransactionConstants.KEY_TO_DATE.value] = to_date
             if budget_id is not None:
-                params["budget_id"] = str(budget_id)
+                params[TransactionConstants.KEY_BUDGET_ID.value] = str(budget_id)
 
             api_request = APIRequest(
                 http_method=APIConstants.KEY_GET_METHOD.value,
