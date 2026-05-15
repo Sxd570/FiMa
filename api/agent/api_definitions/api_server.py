@@ -28,6 +28,8 @@ app.include_router(api_router)
 # Middleware for Logging Requests
 @app.middleware("http")
 async def log_user_requests(request: Request, call_next):
+    if request.scope["type"] == "websocket":
+        return await call_next(request)
     # Always get user_id from headers, default to 'anonymous'
     user_id = request.headers.get("user_id")
     logging.info(f"User: {user_id} | Method: {request.method} | Path: {request.url.path}")
@@ -38,6 +40,8 @@ async def log_user_requests(request: Request, call_next):
 # Global Exception Handlers
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
+    if request.scope["type"] == "websocket":
+        raise exc
     user_id = request.headers.get("user_id")
     logging.error(f"User: {user_id} | Path: {request.url.path} | Unhandled Exception: {exc}")
     return JSONResponse(
@@ -47,6 +51,8 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 @app.exception_handler(ValueError)
 async def value_error_handler(request: Request, exc: ValueError):
+    if request.scope["type"] == "websocket":
+        raise exc
     user_id = request.headers.get("user_id")
     logging.warning(f"User: {user_id} | Path: {request.url.path} | ValueError: {exc}")
     return JSONResponse(

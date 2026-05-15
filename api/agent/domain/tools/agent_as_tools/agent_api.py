@@ -1,4 +1,5 @@
 import json
+import os
 from strands import tool
 
 from domain.agent.base import AgentFactory
@@ -23,9 +24,9 @@ def _create_list_tools_tool(mcp_tools: list):
     tool_schemas = []
     for t in mcp_tools:
         schema = {
-            "name": t.name,
-            "description": t.description,
-            "parameters": t.parameters if hasattr(t, 'parameters') else {},
+            "name": t.tool_name,
+            "description": t.mcp_tool.description,
+            "parameters": t.mcp_tool.inputSchema if hasattr(t.mcp_tool, 'inputSchema') else {},
         }
         tool_schemas.append(schema)
     
@@ -49,22 +50,7 @@ def agent_api_agent_as_tool(callback_handler=None, user_id: str = None):
     @tool
     def agent_api_bot(query: str) -> str:
         """
-        This tool invokes the API Agent, which is responsible for retrieving
-        accurate and user-specific financial data from the Fima platform.
-
-        Parameters:
-        - query (str): A natural language description of the data to fetch.
-
-        Returns:
-        - str: JSON or structured text response containing the requested financial data.
-
-        Error Handling:
-        - If the query lacks required context, the API Agent may request clarification.
-        - If data is unavailable or retrieval fails, it will return a clear, factual message
-          rather than fabricated or estimated data.
-
-        Raises:
-        - Exception: If any internal error occurs during data retrieval.
+        TODO: Write tool description.
         """
 
         try:
@@ -74,10 +60,10 @@ def agent_api_agent_as_tool(callback_handler=None, user_id: str = None):
 
                 # Separate GET (read) tools from non-GET (write) tools
                 # GET operations go through execute_code, non-GET are direct tools
-                non_get_tools = [t for t in mcp_tools if not _is_get_tool(t.name)]
+                non_get_tools = [t for t in mcp_tools if not _is_get_tool(t.tool_name)]
                 
                 # Create the execute_code tool with MCP client and user_id
-                execute_code_tool = execute_code_tool(
+                exec_code_tool = execute_code_tool(
                     mcp_client=mcp_client,
                     user_id=user_id or "",
                 )
@@ -91,13 +77,14 @@ def agent_api_agent_as_tool(callback_handler=None, user_id: str = None):
                 # - non-GET MCP tools: for create/update/delete operations
                 # - get_current_date: utility tool
                 tools_list = [
-                    execute_code_tool,
+                    exec_code_tool,
                     list_tools_tool,
                     get_current_date_tool(),
                 ] + non_get_tools
 
                 agent_factory = AgentFactory(
                     system_prompt=AGENT_API_SYSTEM_INSTRUCTIONS,
+                    model_name=os.getenv("AGENT_API_MODEL_NAME"),
                     callback_handler=callback_handler,
                     tool_list=tools_list
                 )

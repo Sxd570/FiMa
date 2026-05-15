@@ -12,6 +12,12 @@ class WebSocketCallback:
         self._loop = asyncio.get_running_loop()
 
     def __call__(self, **kwargs):
+        if "reasoningText" in kwargs:
+            thinking_chunk = kwargs["reasoningText"]
+            asyncio.run_coroutine_threadsafe(
+                self._send_thinking_chunk_async(thinking_chunk),
+                self._loop
+            )
         if "data" in kwargs:
             chunk = kwargs["data"]
             self.response += chunk
@@ -19,6 +25,16 @@ class WebSocketCallback:
                 self._send_chunk_async(chunk),
                 self._loop
             )
+
+    async def _send_thinking_chunk_async(self, chunk: str):
+        try:
+            await self.websocket.send_json({
+                "type": "thinking_chunk",
+                "agent": self.agent_name,
+                "data": chunk
+            })
+        except Exception as e:
+            logger.error(f"Error sending thinking chunk from {self.agent_name}: {e}")
 
     async def _send_chunk_async(self, chunk: str):
         try:

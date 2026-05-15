@@ -1,4 +1,5 @@
 import asyncio
+import os
 from fastapi import WebSocket, WebSocketDisconnect
 from strands import Agent
 from concurrent.futures import ThreadPoolExecutor
@@ -27,6 +28,7 @@ class AgentUseCase:
         try:
             orchestrator_bot_factory = AgentFactory(
                 system_prompt=ORCHESTRATOR_SYSTEM_INSTRUCTIONS,
+                model_name=os.getenv("ORCHESTRATOR_MODEL_NAME"),
                 callback_handler=WebSocketCallback(self.websocket, "orchestrator"),
                 tool_list=[
                     agent_api_agent_as_tool(

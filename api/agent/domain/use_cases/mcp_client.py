@@ -8,7 +8,7 @@ to connect to the FastMCP server (stateless_http=True).
 import os
 
 from dotenv import load_dotenv
-from mcp.client.streamable_http import streamable_http_client
+from mcp.client.streamable_http import streamablehttp_client
 from strands.tools.mcp import MCPClient
 
 from shared.logger import Logger
@@ -19,7 +19,7 @@ logger = Logger(__name__)
 
 
 def _create_transport(mcp_server_url: str):
-    return streamable_http_client(f"{mcp_server_url}/mcp")
+    return streamablehttp_client(f"{mcp_server_url}/mcp")
 
 
 def get_mcp_client() -> MCPClient:
