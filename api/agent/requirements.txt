@@ -1,6 +1,5 @@
 fastapi
 fastapi[standard]
-mangum
 uvicorn
 pydantic
 strands-agents
