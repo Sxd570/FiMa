@@ -3,6 +3,7 @@ import os
 from fastapi import WebSocket, WebSocketDisconnect
 from concurrent.futures import ThreadPoolExecutor
 
+from constants import AgentID
 from domain.agent.base import AgentFactory
 from domain.prompts import ORCHESTRATOR_SYSTEM_INSTRUCTIONS
 from domain.tools.agent_as_tools.analyst import analyst_agent_as_tool
@@ -28,7 +29,7 @@ class AgentUseCase:
             orchestrator = AgentFactory(
                 system_prompt=ORCHESTRATOR_SYSTEM_INSTRUCTIONS,
                 model_name=os.getenv("ORCHESTRATOR_MODEL_NAME"),
-                agent_id="orchestrator_agent",
+                agent_id=AgentID.ORCHESTRATOR.value,
                 shared_callback=shared_callback,
                 silent=False,
                 tool_list=[

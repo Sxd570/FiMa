@@ -14,11 +14,14 @@ from domain.exceptions import ConversationNotFoundException
 
 logger = Logger(__name__)
 
+_mysql_db_session = MySQLDatabase()
+_mongo_db_session = MongoDatabase()
+
 
 class ChatDatabase:
     def __init__(self):
-        self.mysql_db = MySQLDatabase()
-        self.mongo_db = MongoDatabase()
+        self.mysql_db = _mysql_db_session
+        self.mongo_db = _mongo_db_session
 
         self.mysql_db_session = None
         self.mongo_db_session = None

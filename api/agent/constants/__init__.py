@@ -1,5 +1,11 @@
 from enum import Enum
 
+class AgentID(Enum):
+    ORCHESTRATOR = "orchestrator_agent"
+    ANALYST = "analyst_agent"
+    ARTIFACT = "artifact_agent"
+
+
 class TransactionConstants(Enum):
     KEY_BUDGET_ID = "budget_id"
     KEY_TRANSACTION_TYPE = "transaction_type"

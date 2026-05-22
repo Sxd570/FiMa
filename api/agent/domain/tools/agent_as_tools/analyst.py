@@ -1,6 +1,7 @@
 import os
 from strands import tool
 
+from constants import AgentID
 from domain.agent.base import AgentFactory
 from domain.prompts.analyst import ANALYST_SYSTEM_INSTRUCTIONS
 from domain.use_cases.callback_handler import AgentCallbackHandler
@@ -42,7 +43,7 @@ def analyst_agent_as_tool(shared_callback: AgentCallbackHandler, user_id: str):
                 agent_factory = AgentFactory(
                     system_prompt=system_prompt,
                     model_name=os.getenv("ANALYST_MODEL_NAME"),
-                    agent_id="analyst_agent",
+                    agent_id=AgentID.ANALYST.value,
                     shared_callback=shared_callback,
                     silent=True,
                     tool_list=tools_list,
