@@ -32,8 +32,7 @@ class AgentUseCase:
                 shared_callback=shared_callback,
                 silent=False,
                 tool_list=[
-                    analyst_agent_as_tool(shared_callback, self.user_id),
-                    get_current_date_tool(),
+                    analyst_agent_as_tool(shared_callback, self.user_id)
                 ],
             ).create_agent()
 

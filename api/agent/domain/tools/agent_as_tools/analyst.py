@@ -37,7 +37,7 @@ def analyst_agent_as_tool(shared_callback: AgentCallbackHandler, user_id: str):
                 mcp_tools = mcp_client.list_tools_sync()
                 tools_list = mcp_tools + [get_current_date_tool()]
 
-                system_prompt = ANALYST_SYSTEM_INSTRUCTIONS + f"\n\nCurrent user ID: {user_id}"
+                system_prompt = ANALYST_SYSTEM_INSTRUCTIONS + f"\n\nuser ID: {user_id}"
 
                 agent_factory = AgentFactory(
                     system_prompt=system_prompt,

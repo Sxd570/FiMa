@@ -140,7 +140,6 @@ export default function Penny() {
             updated[updated.length - 1] = last;
             return updated;
           });
-          pushDebugEvent(msg);
         } else if (msg.type === "chunk") {
           const chunk = msg.data || "";
           const agent = msg.agent_id || msg.agent || "unknown";
@@ -155,7 +154,6 @@ export default function Penny() {
             updated[updated.length - 1] = last;
             return updated;
           });
-          pushDebugEvent(msg);
         } else if (msg.type === "tool_use_started" || msg.type === "tool_result") {
           pushDebugEvent(msg);
         } else if (msg.type === "response_end") {
@@ -400,20 +398,7 @@ function DebugEvent({ ev }) {
         <span className={styles.debugEventName}>{ev.tool}</span>
       </>
     );
-  } else if (ev.type === "thinking_chunk") {
-    body = (
-      <>
-        <span className={styles.debugEventTag} data-kind="reasoning">reasoning</span>
-        <span className={styles.debugEventName}>{(ev.data || "").slice(0, 60)}…</span>
-      </>
-    );
-  } else if (ev.type === "chunk") {
-    body = (
-      <>
-        <span className={styles.debugEventTag} data-kind="response">response</span>
-        <span className={styles.debugEventName}>{(ev.data || "").slice(0, 60)}…</span>
-      </>
-    );
+
   } else if (ev.type === "response_error") {
     body = (
       <>
