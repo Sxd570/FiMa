@@ -81,10 +81,12 @@ class AgentCallbackHandler:
         )
         if not tool_use:
             return
+        
         tool_id = tool_use.get("toolUseId")
         tool_name = tool_use.get("name")
         if not tool_id:
             return
+        
         self.tools_used[tool_id] = {
             "name": tool_name,
             "agent_id": agent_id,
@@ -92,6 +94,7 @@ class AgentCallbackHandler:
             "input": None,
             "result": None,
         }
+        
         self.events.append({
             "type": "tool_call",
             "agent_id": agent_id,
@@ -99,6 +102,7 @@ class AgentCallbackHandler:
             "tool": tool_name,
             "tool_id": tool_id,
         })
+        
         # Tool progress is ALWAYS surfaced, even from silent agents.
         self._send({
             "type": "tool_use_started",
@@ -111,9 +115,11 @@ class AgentCallbackHandler:
         current = kwargs.get("current_tool_use")
         if not current:
             return
+        
         tool_id = current.get("toolUseId") or current.get("tool_use_id")
         if not tool_id or tool_id not in self.tools_used:
             return
+        
         self.tools_used[tool_id]["status"] = "in_progress"
         self.tools_used[tool_id]["input"] = current.get("input")
 
@@ -121,6 +127,7 @@ class AgentCallbackHandler:
         message = kwargs.get("message")
         if not message or message.get("role") != "user":
             return
+        
         for block in message.get("content", []) or []:
             tool_result = block.get("toolResult") if isinstance(block, dict) else None
             if not tool_result:

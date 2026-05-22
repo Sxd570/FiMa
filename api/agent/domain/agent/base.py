@@ -1,15 +1,29 @@
 from strands import Agent
 from services.lm_studio_ai import LMStudioAIService
+from domain.use_cases.callback_handler import AgentCallbackHandler, SilentCallbackHandler
 
 from shared.logger import Logger
 logger = Logger()
 
 class AgentFactory:
-    def __init__(self, system_prompt: str, model_name: str, tool_list: list = None, callback_handler=None):
+    def __init__(
+        self,
+        system_prompt: str,
+        model_name: str,
+        agent_id: str,
+        shared_callback: AgentCallbackHandler,
+        silent: bool = False,
+        tool_list: list = None,
+    ):
         self.agentic_ai = None
-        self.callback_handler = callback_handler
         self.system_prompt = system_prompt
         self.tool_list = tool_list or []
+
+        self.callback_handler = SilentCallbackHandler(
+            callback=shared_callback,
+            agent_id=agent_id,
+            silent=silent,
+        )
 
         self.lm_studio = LMStudioAIService()
         self.llm_model = self.lm_studio.initialize_llm(model_name=model_name)
