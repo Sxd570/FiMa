@@ -6,6 +6,7 @@ from models.transaction_models import (
     TransactionType,
     GetTransactionsResponse,
     CreateTransactionResponse,
+    TransactionItem,
 )
 from utils.api_request import APIRequest
 from utils.logger import Logger
@@ -47,7 +48,27 @@ class TransactionDomain:
                 params=params,
             )
             response = api_request.execute()
-            return GetTransactionsResponse(**response)
+            raw_transactions = response.get(TransactionConstants.KEY_TRANSACTIONS.value) or []
+            if not raw_transactions:
+                return GetTransactionsResponse(
+                    transactions=[],
+                    has_more=response.get(TransactionConstants.KEY_HAS_MORE.value),
+                )
+            transactions = [
+                TransactionItem(
+                    transaction_id=item.get(TransactionConstants.KEY_TRANSACTION_ID.value),
+                    budget_name=item.get(TransactionConstants.KEY_BUDGET_NAME.value),
+                    transaction_type=item.get(TransactionConstants.KEY_TRANSACTION_TYPE.value),
+                    transaction_info=item.get(TransactionConstants.KEY_TRANSACTION_INFO.value),
+                    transaction_amount=item.get(TransactionConstants.KEY_TRANSACTION_AMOUNT.value),
+                    transaction_date=item.get(TransactionConstants.KEY_TRANSACTION_DATE.value),
+                )
+                for item in raw_transactions
+            ]
+            return GetTransactionsResponse(
+                transactions=transactions,
+                has_more=response.get(TransactionConstants.KEY_HAS_MORE.value),
+            )
         except Exception as e:
             logger.error(f"Error in TransactionDomain.get_transactions: {str(e)}")
             raise
@@ -76,7 +97,10 @@ class TransactionDomain:
                 payload=payload,
             )
             response = api_request.execute()
-            return CreateTransactionResponse(**response)
+            return CreateTransactionResponse(
+                transaction_id=response.get(TransactionConstants.KEY_TRANSACTION_ID.value),
+                message=response.get(TransactionConstants.KEY_MESSAGE.value),
+            )
         except Exception as e:
             logger.error(f"Error in TransactionDomain.create_transaction: {str(e)}")
             raise

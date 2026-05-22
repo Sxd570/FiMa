@@ -9,6 +9,7 @@ from models.goal_models import (
     DeleteGoalResponse,
     EditGoalResponse,
     AddAmountToGoalResponse,
+    GoalDetail,
 )
 from utils.api_request import APIRequest
 from utils.logger import Logger
@@ -30,7 +31,12 @@ class GoalDomain:
                 endpoint=endpoint,
             )
             response = api_request.execute()
-            return GetGoalsOverviewResponse(**response)
+            return GetGoalsOverviewResponse(
+                total_goals_count=response.get(GoalConstants.KEY_TOTAL_GOALS_COUNT.value),
+                total_goals_completed=response.get(GoalConstants.KEY_TOTAL_GOALS_COMPLETED.value),
+                total_amount_saved=response.get(GoalConstants.KEY_TOTAL_AMOUNT_SAVED.value),
+                total_goal_amount=response.get(GoalConstants.KEY_TOTAL_GOAL_AMOUNT.value),
+            )
         except Exception as e:
             logger.error(f"Error in GoalDomain.get_goals_overview: {str(e)}")
             raise
@@ -53,7 +59,29 @@ class GoalDomain:
                 params=params,
             )
             response = api_request.execute()
-            return GetGoalDetailsResponse(**response)
+            raw_goal_details = response.get(GoalConstants.KEY_GOAL_DETAILS.value) or []
+            if not raw_goal_details:
+                return GetGoalDetailsResponse(
+                    goal_details=[],
+                    has_more=response.get(GoalConstants.KEY_HAS_MORE.value),
+                )
+            goal_details = [
+                GoalDetail(
+                    goal_id=item.get(GoalConstants.KEY_GOAL_ID.value),
+                    goal_name=item.get(GoalConstants.KEY_GOAL_NAME.value),
+                    goal_description=item.get(GoalConstants.KEY_GOAL_DESCRIPTION.value),
+                    goal_target_amount=item.get(GoalConstants.KEY_GOAL_TARGET_AMOUNT.value),
+                    goal_current_amount=item.get(GoalConstants.KEY_GOAL_CURRENT_AMOUNT.value),
+                    goal_remaining_amount=item.get(GoalConstants.KEY_GOAL_REMAINING_AMOUNT.value),
+                    goal_percentage=item.get(GoalConstants.KEY_GOAL_PERCENTAGE.value),
+                    is_goal_reached=item.get(GoalConstants.KEY_IS_GOAL_REACHED.value),
+                )
+                for item in raw_goal_details
+            ]
+            return GetGoalDetailsResponse(
+                goal_details=goal_details,
+                has_more=response.get(GoalConstants.KEY_HAS_MORE.value),
+            )
         except Exception as e:
             logger.error(f"Error in GoalDomain.get_goal_details: {str(e)}")
             raise
@@ -78,7 +106,9 @@ class GoalDomain:
                 payload=payload,
             )
             response = api_request.execute()
-            return CreateGoalResponse(**response)
+            return CreateGoalResponse(
+                status=response.get(GoalConstants.KEY_STATUS.value),
+            )
         except Exception as e:
             logger.error(f"Error in GoalDomain.create_goal: {str(e)}")
             raise
@@ -99,7 +129,10 @@ class GoalDomain:
                 payload=payload,
             )
             response = api_request.execute()
-            return DeleteGoalResponse(**response)
+            return DeleteGoalResponse(
+                status=response.get(GoalConstants.KEY_STATUS.value),
+                goal_id=response.get(GoalConstants.KEY_GOAL_ID.value),
+            )
         except Exception as e:
             logger.error(f"Error in GoalDomain.delete_goal: {str(e)}")
             raise
@@ -135,7 +168,9 @@ class GoalDomain:
                 payload=payload,
             )
             response = api_request.execute()
-            return EditGoalResponse(**response)
+            return EditGoalResponse(
+                status=response.get(GoalConstants.KEY_STATUS.value),
+            )
         except Exception as e:
             logger.error(f"Error in GoalDomain.edit_goal: {str(e)}")
             raise
@@ -158,7 +193,9 @@ class GoalDomain:
                 payload=payload,
             )
             response = api_request.execute()
-            return AddAmountToGoalResponse(**response)
+            return AddAmountToGoalResponse(
+                status=response.get(GoalConstants.KEY_STATUS.value),
+            )
         except Exception as e:
             logger.error(f"Error in GoalDomain.add_amount_to_goal: {str(e)}")
             raise

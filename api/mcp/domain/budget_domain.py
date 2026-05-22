@@ -7,6 +7,7 @@ from models.budget_models import (
     EditBudgetLimitResponse,
     DeleteBudgetResponse,
     CreateBudgetResponse,
+    BudgetDetail,
 )
 from utils.api_request import APIRequest
 from utils.logger import Logger
@@ -39,7 +40,15 @@ class BudgetDomain:
                 params=params,
             )
             response_data = api_request.execute()
-            return GetBudgetOverviewResponse(**response_data)
+            return GetBudgetOverviewResponse(
+                budget_total_budget=response_data.get(BudgetConstants.KEY_BUDGET_TOTAL_BUDGET.value),
+                budget_total_spent=response_data.get(BudgetConstants.KEY_BUDGET_TOTAL_SPENT.value),
+                budget_near_limit_count=response_data.get(BudgetConstants.KEY_BUDGET_NEAR_LIMIT_COUNT.value),
+                budget_over_limit_count=response_data.get(BudgetConstants.KEY_BUDGET_OVER_LIMIT_COUNT.value),
+                budget_remaining_amount=response_data.get(BudgetConstants.KEY_BUDGET_REMAINING_AMOUNT.value),
+                budget_percentage_spent=response_data.get(BudgetConstants.KEY_BUDGET_PERCENTAGE_SPENT.value),
+                budget_date=response_data.get(BudgetConstants.KEY_BUDGET_DATE.value),
+            )
         except Exception as e:
             logger.error(f"Error in BudgetDomain.get_budget_overview: {str(e)}")
             raise
@@ -64,7 +73,30 @@ class BudgetDomain:
                 params=params,
             )
             response_data = api_request.execute()
-            return GetBudgetDetailsResponse(**response_data)
+            raw_budget_details = response_data.get(BudgetConstants.KEY_BUDGET_DETAILS.value) or []
+            if not raw_budget_details:
+                return GetBudgetDetailsResponse(
+                    budget_details=[],
+                    has_more=response_data.get(BudgetConstants.KEY_HAS_MORE.value),
+                )
+            budget_details = [
+                BudgetDetail(
+                    budget_id=item.get(BudgetConstants.KEY_BUDGET_ID.value),
+                    budget_name=item.get(BudgetConstants.KEY_BUDGET_NAME.value),
+                    budget_allocated_amount=item.get(BudgetConstants.KEY_BUDGET_ALLOCATED_AMOUNT.value),
+                    budget_spent_amount=item.get(BudgetConstants.KEY_BUDGET_SPENT_AMOUNT.value),
+                    budget_allocated_month=item.get(BudgetConstants.KEY_BUDGET_ALLOCATED_MONTH.value),
+                    budget_remaining_amount=item.get(BudgetConstants.KEY_BUDGET_REMAINING_AMOUNT.value),
+                    is_limit_reached=item.get(BudgetConstants.KEY_IS_LIMIT_REACHED.value),
+                    is_over_limit=item.get(BudgetConstants.KEY_IS_OVER_LIMIT.value),
+                    budget_percentage_spent=item.get(BudgetConstants.KEY_BUDGET_PERCENTAGE_SPENT.value),
+                )
+                for item in raw_budget_details
+            ]
+            return GetBudgetDetailsResponse(
+                budget_details=budget_details,
+                has_more=response_data.get(BudgetConstants.KEY_HAS_MORE.value),
+            )
         except Exception as e:
             logger.error(f"Error in BudgetDomain.get_budget_details: {str(e)}")
             raise
@@ -86,7 +118,9 @@ class BudgetDomain:
                 payload=payload,
             )
             response_data = api_request.execute()
-            return EditBudgetLimitResponse(**response_data)
+            return EditBudgetLimitResponse(
+                message=response_data.get(BudgetConstants.KEY_MESSAGE.value),
+            )
         except Exception as e:
             logger.error(f"Error in BudgetDomain.edit_budget_limit: {str(e)}")
             raise
@@ -103,7 +137,9 @@ class BudgetDomain:
                 endpoint=endpoint,
             )
             response_data = api_request.execute()
-            return DeleteBudgetResponse(**response_data)
+            return DeleteBudgetResponse(
+                message=response_data.get(BudgetConstants.KEY_MESSAGE.value),
+            )
         except Exception as e:
             logger.error(f"Error in BudgetDomain.delete_budget: {str(e)}")
             raise
@@ -130,7 +166,10 @@ class BudgetDomain:
                 payload=payload,
             )
             response_data = api_request.execute()
-            return CreateBudgetResponse(**response_data)
+            return CreateBudgetResponse(
+                message=response_data.get(BudgetConstants.KEY_MESSAGE.value),
+                budget_id=response_data.get(BudgetConstants.KEY_BUDGET_ID.value),
+            )
         except Exception as e:
             logger.error(f"Error in BudgetDomain.create_budget: {str(e)}")
             raise

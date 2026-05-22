@@ -16,6 +16,7 @@ class TransactionConstants(Enum):
     KEY_TRANSACTION_ID = "transaction_id"
     KEY_BUDGET_NAME = "budget_name"
     KEY_MESSAGE = "message"
+    KEY_HAS_MORE = "has_more"
 
 
 class BudgetConstants(Enum):
@@ -30,6 +31,21 @@ class BudgetConstants(Enum):
     KEY_BUDGET_LIMIT = "budget_limit"
     KEY_LIMIT = "limit"
     KEY_OFFSET = "offset"
+    KEY_BUDGET_TOTAL_BUDGET = "budget_total_budget"
+    KEY_BUDGET_TOTAL_SPENT = "budget_total_spent"
+    KEY_BUDGET_NEAR_LIMIT_COUNT = "budget_near_limit_count"
+    KEY_BUDGET_OVER_LIMIT_COUNT = "budget_over_limit_count"
+    KEY_BUDGET_REMAINING_AMOUNT = "budget_remaining_amount"
+    KEY_BUDGET_PERCENTAGE_SPENT = "budget_percentage_spent"
+    KEY_BUDGET_DATE = "budget_date"
+    KEY_BUDGET_DETAILS = "budget_details"
+    KEY_BUDGET_ALLOCATED_AMOUNT = "budget_allocated_amount"
+    KEY_BUDGET_SPENT_AMOUNT = "budget_spent_amount"
+    KEY_BUDGET_ALLOCATED_MONTH = "budget_allocated_month"
+    KEY_IS_LIMIT_REACHED = "is_limit_reached"
+    KEY_IS_OVER_LIMIT = "is_over_limit"
+    KEY_HAS_MORE = "has_more"
+    KEY_MESSAGE = "message"
 
 
 class APIConstants(Enum):
@@ -51,4 +67,14 @@ class GoalConstants(Enum):
     KEY_LIMIT = "limit"
     KEY_OFFSET = "offset"
     KEY_AMOUNT_TO_ADD = "amount_to_add"
+    KEY_TOTAL_GOALS_COUNT = "total_goals_count"
+    KEY_TOTAL_GOALS_COMPLETED = "total_goals_completed"
+    KEY_TOTAL_AMOUNT_SAVED = "total_amount_saved"
+    KEY_TOTAL_GOAL_AMOUNT = "total_goal_amount"
+    KEY_GOAL_DETAILS = "goal_details"
+    KEY_GOAL_REMAINING_AMOUNT = "goal_remaining_amount"
+    KEY_GOAL_PERCENTAGE = "goal_percentage"
+    KEY_IS_GOAL_REACHED = "is_goal_reached"
+    KEY_HAS_MORE = "has_more"
+    KEY_STATUS = "status"
 
