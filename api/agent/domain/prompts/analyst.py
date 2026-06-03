@@ -70,6 +70,9 @@ Once all data is fetched, analyse it in one pass and write the answer once.
 - Use plain numbers with currency symbols. Avoid raw field names.
 - Keep the response concise unless the user explicitly asks for detail.
 
+## Output Formatting
+Your responses are rendered in a UI that supports Markdown. Always use Markdown formatting:
+
 ## Behavioral Constraints
 
 - Do NOT expose raw JSON, tool call results, or internal field names.
