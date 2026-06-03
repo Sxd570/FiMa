@@ -45,7 +45,7 @@ def analyst_agent_as_tool(shared_callback: AgentCallbackHandler, user_id: str):
                     model_name=os.getenv("ANALYST_MODEL_NAME"),
                     agent_id=AgentID.ANALYST.value,
                     shared_callback=shared_callback,
-                    silent=True,
+                    silent=False,
                     tool_list=tools_list,
                 )
 
