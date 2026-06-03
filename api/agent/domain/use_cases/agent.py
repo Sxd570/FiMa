@@ -26,15 +26,22 @@ class AgentUseCase:
             loop = asyncio.get_running_loop()
             shared_callback = AgentCallbackHandler(self.websocket, loop)
 
+            orchestrator_model_name = os.getenv("ORCHESTRATOR_MODEL_NAME")
+
+            orchestrator_tool_list = [
+                analyst_agent_as_tool(
+                    shared_callback=shared_callback,
+                    user_id=self.user_id
+                )
+            ]
+
             orchestrator = AgentFactory(
                 system_prompt=ORCHESTRATOR_SYSTEM_INSTRUCTIONS,
-                model_name=os.getenv("ORCHESTRATOR_MODEL_NAME"),
+                model_name=orchestrator_model_name,
                 agent_id=AgentID.ORCHESTRATOR.value,
                 shared_callback=shared_callback,
                 silent=False,
-                tool_list=[
-                    analyst_agent_as_tool(shared_callback, self.user_id)
-                ],
+                tool_list=orchestrator_tool_list,
             ).create_agent()
 
             await self.websocket.send_json({"type": "response_start", "data": ""})

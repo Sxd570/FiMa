@@ -15,7 +15,7 @@ class AgentFactory:
         silent: bool = False,
         tool_list: list = None,
     ):
-        self.agentic_ai = None
+        self.agent_ai = None
         self.system_prompt = system_prompt
         self.tool_list = tool_list or []
 
@@ -31,13 +31,13 @@ class AgentFactory:
         
     def create_agent(self) -> Agent:
         try:
-            self.agentic_ai = Agent(
+            self.agent_ai = Agent(
                 model=self.llm_model,
                 system_prompt=self.system_prompt,
                 callback_handler=self.callback_handler,
                 tools=self.tool_list
             )
-            return self.agentic_ai
+            return self.agent_ai
         except Exception as e:
             logger.error("Error while creating agent", str(e))
             raise e
