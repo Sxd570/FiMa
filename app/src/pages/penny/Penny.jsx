@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import ReactMarkdown from "react-markdown";
 import styles from "./Penny.module.css";
 import { WEBSOCKET_URL } from "../../env";
 
@@ -269,7 +270,9 @@ export default function Penny() {
                   <div key={i} className={`${styles.messageRow} ${styles.left}`}>
                     <div className={styles.assistantGroup}>
                       <div className={`${styles.bubble} ${styles.assistantBubble} ${m.isStreaming ? styles.streaming : ""}`}>
-                        {m.text || <span className={styles.typingDots}><span /><span /><span /></span>}
+                        {m.text
+                            ? <ReactMarkdown>{m.text}</ReactMarkdown>
+                            : <span className={styles.typingDots}><span /><span /><span /></span>}
                       </div>
                       {m.thinking && Object.keys(m.thinking).length > 0 && (
                         <div className={styles.thinkingGroup}>
