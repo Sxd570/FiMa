@@ -1,7 +1,9 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from api_definitions.api_v1.api_router import api_router
+from domain.database.health import Database
 import logging
 
 # Configure Logging
@@ -12,7 +14,21 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("[*] Checking database connection...")
+    try:
+        Database().ping()
+        print("[*] Database connection: OK")
+    except Exception as e:
+        print(f"[*] Database connection: FAILED - {e}")
+
+    yield
+
+    print("[*] Server shutting down.")
+
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

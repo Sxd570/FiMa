@@ -4,9 +4,11 @@ from . import budget
 from . import goals
 from . import transaction
 from . import report
+from . import health
 
 api_endpoints = APIRouter()
 
+api_endpoints.include_router(health.router)
 api_endpoints.include_router(auth.router)
 api_endpoints.include_router(budget.router)
 api_endpoints.include_router(goals.router)
